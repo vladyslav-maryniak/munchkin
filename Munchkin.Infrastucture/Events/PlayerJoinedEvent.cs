@@ -3,7 +3,7 @@ using Munchkin.Infrastucture.Projections;
 
 namespace Munchkin.Infrastucture.Events
 {
-    public record PlayerJoined(Guid GameId, Player Player) : IGameEvent
+    public record PlayerJoinedEvent(Guid GameId, Player Player) : IGameEvent
     {
         public void Apply(Game game)
         {
