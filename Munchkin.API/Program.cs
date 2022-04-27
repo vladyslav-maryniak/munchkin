@@ -8,6 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHostedService<HostedEventService>();
 builder.Services.AddSingleton<IEventRepository, EventStoreService>();
 
+builder.Services.AddMediatR(typeof(Munchkin.Logic.Entrypoints.MediatREntrypoint).Assembly);
+builder.Services.AddAutoMapper(
+    assemblies: new[]
+    {
+        typeof(Munchkin.Logic.Entrypoints.AutoMapperEntrypoint).Assembly,
+        typeof(Munchkin.API.Entrypoints.AutoMapperEntrypoint).Assembly
+    }
+);
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
