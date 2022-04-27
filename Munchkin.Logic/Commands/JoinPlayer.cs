@@ -11,17 +11,17 @@ namespace Munchkin.Logic.Commands
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly IEventRepository repository;
+            private readonly IEventService service;
 
-            public Handler(IEventRepository repository)
+            public Handler(IEventService service)
             {
-                this.repository = repository;
+                this.service = service;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 PlayerJoined @event = new(request.GameId, request.Player);
-                await repository.PublishAsync(@event);
+                await service.PublishAsync(@event);
 
                 return Unit.Value;
             }

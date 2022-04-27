@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Munchkin.DataAccess
 {
-    public class EventStoreService : IEventRepository
+    public class EventStoreService : IEventService
     {
         private const string connectionString = "esdb://localhost:2113?tls=false&keepAliveTimeout=10000&keepAliveInterval=10000";
         private readonly EventStoreClient client;
@@ -17,7 +17,7 @@ namespace Munchkin.DataAccess
             client = new EventStoreClient(settings);
         }
 
-        public Task PublishAsync(IEvent @event)
+        public Task PublishAsync(IGameEvent @event)
         {
             var eventData = SerializeEvent(@event);
             var streamId = BuildStreamId(@event.GameId);
@@ -26,28 +26,33 @@ namespace Munchkin.DataAccess
         }
 
         public Task<StreamSubscription> SubscribeAsync(
-            Func<StreamSubscription, ResolvedEvent, CancellationToken, Task> eventAppeared)
+            Action<IGameEvent> eventAppeared)
         {
             return client.SubscribeToAllAsync(
                 FromAll.End,
-                eventAppeared,
+                (subscription, resolvedEvent, cancellationToken) => 
+                {
+                    var @event = DeserializeEvent(resolvedEvent);
+                    eventAppeared(@event);
+                    return Task.CompletedTask;
+                },
                 filterOptions: new SubscriptionFilterOptions(EventTypeFilter.ExcludeSystemEvents())
             );
         }
 
-        private EventData SerializeEvent(IEvent @event)
+        private EventData SerializeEvent(IGameEvent @event)
         {
             var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
             return new(Uuid.NewUuid(), @event.GetType().Name, bytes);
         }
 
-        public IEvent DeserializeEvent(ResolvedEvent resolvedEvent)
+        private IGameEvent DeserializeEvent(ResolvedEvent resolvedEvent)
         {
             var eventType = Type.GetType(BuildTypeName(resolvedEvent));
             if (eventType == null) throw new Exception();
 
             var decodedObject = Encoding.UTF8.GetString(resolvedEvent.Event.Data.ToArray());
-            var @event = (IEvent?)JsonConvert.DeserializeObject(decodedObject, eventType);
+            var @event = (IGameEvent?)JsonConvert.DeserializeObject(decodedObject, eventType);
             if (@event == null) throw new Exception();
 
             return @event;

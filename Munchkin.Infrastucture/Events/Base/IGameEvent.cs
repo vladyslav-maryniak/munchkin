@@ -2,7 +2,7 @@
 
 namespace Munchkin.Infrastucture.Events.Base
 {
-    public interface IEvent
+    public interface IGameEvent
     {
         Guid GameId { get; init; }
 

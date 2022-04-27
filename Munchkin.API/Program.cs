@@ -5,8 +5,8 @@ using Munchkin.DataAccess;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddHostedService<HostedEventService>();
-builder.Services.AddSingleton<IEventRepository, EventStoreService>();
+builder.Services.AddHostedService<EventHostedService>();
+builder.Services.AddSingleton<IEventService, EventStoreService>();
 
 builder.Services.AddMediatR(typeof(Munchkin.Logic.Entrypoints.MediatREntrypoint).Assembly);
 builder.Services.AddAutoMapper(
