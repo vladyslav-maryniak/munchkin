@@ -1,9 +1,13 @@
 using MediatR;
+using Munchkin.API;
+using Munchkin.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddMediatR(typeof(Munchkin.Logic.MediatREntrypoint).Assembly);
+builder.Services.AddHostedService<HostedEventService>();
+builder.Services.AddSingleton<IEventRepository, EventStoreService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
