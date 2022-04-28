@@ -7,7 +7,7 @@ namespace Munchkin.Infrastucture.Events
     {
         public void Apply(Game game)
         {
-            game.JoinPlayer(Player);
+            game.Players.Add(Player);
         }
     }
 }

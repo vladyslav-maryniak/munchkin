@@ -9,10 +9,5 @@
         {
             Id = id;
         }
-
-        public void JoinPlayer(Player p)
-        {
-            Players.Add(p);
-        }
     }
 }

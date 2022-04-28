@@ -1,6 +1,6 @@
 ﻿namespace Munchkin.Infrastucture.Projections
 {
-    public class Player
+    public class Player : IEquatable<Player>
     {
         public Guid Id { get; set; }
         public string Nickname { get; set; }
@@ -9,6 +9,11 @@
         {
             Id = id;
             Nickname = nickname;
+        }
+
+        public bool Equals(Player? other)
+        {
+            return Id == other?.Id && Nickname == other.Nickname;
         }
     }
 }
