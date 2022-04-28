@@ -5,7 +5,7 @@ using Munchkin.Infrastucture.Projections;
 
 namespace Munchkin.Logic.Commands
 {
-    public static class JoinPlayer
+    public class LeavePlayer
     {
         public record Command(Guid GameId, Player Player) : IRequest;
 
@@ -20,7 +20,7 @@ namespace Munchkin.Logic.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                PlayerJoinedEvent @event = new(request.GameId, request.Player);
+                PlayerLeftEvent @event = new(request.GameId, request.Player);
                 await service.PublishAsync(@event);
 
                 return Unit.Value;

@@ -10,6 +10,7 @@ namespace Munchkin.API.AutoMapperProfiles
         public CommandProfile()
         {
             CreateMap<JoinPlayerDto, JoinPlayer.Command>();
+            CreateMap<LeavePlayerDto, LeavePlayer.Command>();
             CreateMap<PlayerDto, Player>();
         }
     }

@@ -27,5 +27,14 @@ namespace Munchkin.API.Controllers
             
             return Ok();
         }
+
+        [HttpPost("leave")]
+        public async Task<ActionResult> LeavePlayerAsync(LeavePlayerDto dto)
+        {
+            var command = mapper.Map<LeavePlayer.Command>(dto);
+            await mediator.Send(command);
+
+            return Ok();
+        }
     }
 }
