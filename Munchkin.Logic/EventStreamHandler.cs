@@ -1,5 +1,5 @@
 ﻿using EventStore.Client;
-using Munchkin.DataAccess;
+using Munchkin.DataAccess.Base;
 using Munchkin.Infrastucture.Events.Base;
 
 namespace Munchkin.Logic
@@ -28,9 +28,9 @@ namespace Munchkin.Logic
             return instance.InitializeAsync();
         }
 
-        private void EventAppeared(IGameEvent @event)
+        private async Task EventAppeared(IGameEvent @event)
         {
-            var game = repository.GetGame(@event.GameId);
+            var game = await repository.GetGameAsync(@event.GameId);
             @event.Apply(game);
         }
 

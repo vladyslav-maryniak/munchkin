@@ -1,4 +1,4 @@
-﻿using Munchkin.DataAccess;
+﻿using Munchkin.DataAccess.Base;
 using Munchkin.Logic;
 
 namespace Munchkin.API

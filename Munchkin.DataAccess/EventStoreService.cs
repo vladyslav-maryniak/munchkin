@@ -1,4 +1,5 @@
 ﻿using EventStore.Client;
+using Munchkin.DataAccess.Base;
 using Munchkin.Infrastucture.Events;
 using Munchkin.Infrastucture.Events.Base;
 using Newtonsoft.Json;
@@ -26,15 +27,14 @@ namespace Munchkin.DataAccess
         }
 
         public Task<StreamSubscription> SubscribeAsync(
-            Action<IGameEvent> eventAppeared)
+            Func<IGameEvent, Task> eventAppeared)
         {
             return client.SubscribeToAllAsync(
                 FromAll.End,
-                (subscription, resolvedEvent, cancellationToken) => 
+                (subscription, resolvedEvent, cancellationToken) =>
                 {
                     var @event = DeserializeEvent(resolvedEvent);
-                    eventAppeared(@event);
-                    return Task.CompletedTask;
+                    return eventAppeared(@event);
                 },
                 filterOptions: new SubscriptionFilterOptions(EventTypeFilter.ExcludeSystemEvents())
             );
