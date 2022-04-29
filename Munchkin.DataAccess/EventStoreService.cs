@@ -11,11 +11,16 @@ namespace Munchkin.DataAccess
     {
         private const string connectionString = "esdb://localhost:2113?tls=false&keepAliveTimeout=10000&keepAliveInterval=10000";
         private readonly EventStoreClient client;
+        private readonly JsonSerializerSettings jsonSerializerSettings;
 
         public EventStoreService()
         {
             var settings = EventStoreClientSettings.Create(connectionString);
             client = new EventStoreClient(settings);
+            jsonSerializerSettings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            };
         }
 
         public Task PublishAsync(IGameEvent @event)
@@ -42,7 +47,7 @@ namespace Munchkin.DataAccess
 
         private EventData SerializeEvent(IGameEvent @event)
         {
-            var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
+            var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event, jsonSerializerSettings));
             return new(Uuid.NewUuid(), @event.GetType().Name, bytes);
         }
 
@@ -52,7 +57,7 @@ namespace Munchkin.DataAccess
             if (eventType == null) throw new Exception();
 
             var decodedObject = Encoding.UTF8.GetString(resolvedEvent.Event.Data.ToArray());
-            var @event = (IGameEvent?)JsonConvert.DeserializeObject(decodedObject, eventType);
+            var @event = JsonConvert.DeserializeObject(decodedObject, eventType, jsonSerializerSettings) as IGameEvent;
             if (@event == null) throw new Exception();
 
             return @event;
