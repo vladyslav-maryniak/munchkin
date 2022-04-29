@@ -7,7 +7,8 @@ namespace Munchkin.Infrastucture.Events
     {
         public void Apply(Game game)
         {
-            game.Players.Add(Player);
+            var character = new Character(Player);
+            game.Characters.Add(character);
         }
     }
 }
