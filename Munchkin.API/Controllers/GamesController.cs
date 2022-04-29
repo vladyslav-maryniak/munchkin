@@ -55,5 +55,14 @@ namespace Munchkin.API.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{gameId:guid}/initiate-combat")]
+        public async Task<ActionResult> InitiateCombatAsync(Guid gameId, EventDto dto)
+        {
+            var command = new InitiateCombat.Command(gameId, dto.PlayerId);
+            await mediator.Send(command);
+
+            return Ok();
+        }
     }
 }

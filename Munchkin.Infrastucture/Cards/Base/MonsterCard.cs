@@ -4,5 +4,6 @@
     {
         public abstract int Level { get; }
         public abstract string BadStuff { get; }
+        public abstract int VictoryLevels { get; }
     }
 }
