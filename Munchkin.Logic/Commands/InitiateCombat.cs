@@ -30,10 +30,9 @@ namespace Munchkin.Logic.Commands
                     .Aggregate((result, x) => result + x);
                 var characterCombatStrength = character.Level;
 
-                // TODO: Rule Violation: character's combat strength must be more than monster's
-                IGameEvent @event = characterCombatStrength >= monsterCombatStrength ?
+                IGameEvent @event = characterCombatStrength > monsterCombatStrength ?
                     new PlayerWonCombatEvent(request.GameId, request.PlayerId) :
-                    new PlayerRanAwayEvent(request.GameId, request.PlayerId);
+                    new PlayerAskedForHelpEvent(request.GameId, request.PlayerId);
 
                 await service.PublishAsync(@event);
 
