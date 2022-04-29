@@ -1,4 +1,5 @@
 ﻿using Munchkin.Infrastucture.Cards.Base;
+using Munchkin.Infrastucture.Projections;
 
 namespace Munchkin.Infrastucture.Cards.Doors.Monsters
 {
@@ -9,5 +10,10 @@ namespace Munchkin.Infrastucture.Cards.Doors.Monsters
         public override string Description => "A create from Hell. +3 against Clerics.";
         public override string BadStuff => "She whacks you. Lose a level.";
         public override int VictoryLevels => 1;
+
+        public override void ApplyBadStuff(Character character)
+        {
+            character.Level -= 1;
+        }
     }
 }

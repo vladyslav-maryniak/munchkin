@@ -1,4 +1,5 @@
 ﻿using Munchkin.Infrastucture.Cards.Base;
+using Munchkin.Infrastucture.Projections;
 
 namespace Munchkin.Infrastucture.Cards.Doors.Monsters
 {
@@ -9,5 +10,10 @@ namespace Munchkin.Infrastucture.Cards.Doors.Monsters
         public override string Description => "+5 against Dwarves.";
         public override string BadStuff => "Kicks, bites, and smells awful. Lose 2 levels.";
         public override int VictoryLevels => 1;
+
+        public override void ApplyBadStuff(Character character)
+        {
+            character.Level -= 2;
+        }
     }
 }

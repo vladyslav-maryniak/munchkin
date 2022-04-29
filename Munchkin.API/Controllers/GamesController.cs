@@ -73,5 +73,14 @@ namespace Munchkin.API.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{gameId:guid}/resolve-run-away-roll")]
+        public async Task<ActionResult> ResolveRunAwayAsync(Guid gameId, EventDto dto)
+        {
+            var command = new ResolveRunAwayRoll.Command(gameId, dto.PlayerId);
+            await mediator.Send(command);
+
+            return Ok();
+        }
     }
 }

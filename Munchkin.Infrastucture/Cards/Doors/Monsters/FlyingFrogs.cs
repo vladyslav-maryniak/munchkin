@@ -1,4 +1,5 @@
 ﻿using Munchkin.Infrastucture.Cards.Base;
+using Munchkin.Infrastucture.Projections;
 
 namespace Munchkin.Infrastucture.Cards.Doors.Monsters
 {
@@ -9,5 +10,10 @@ namespace Munchkin.Infrastucture.Cards.Doors.Monsters
         public override string Description => "-1 to Run Away";
         public override string BadStuff => "They bite! Lose 2 levels.";
         public override int VictoryLevels => 1;
+
+        public override void ApplyBadStuff(Character character)
+        {
+            character.Level -= 2;
+        }
     }
 }
