@@ -3,10 +3,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Munchkin.API.DTOs;
 using Munchkin.Logic.Commands;
+using Munchkin.Logic.Queries;
 
 namespace Munchkin.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/games")]
     [ApiController]
     public class GamesController : ControllerBase
     {
@@ -19,19 +20,37 @@ namespace Munchkin.API.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPost("join")]
-        public async Task<ActionResult> JoinPlayerAsync(JoinPlayerDto dto)
+        [HttpGet("{gameId:guid}")]
+        public async Task<ActionResult<GameDto>> GetGameAsync(Guid gameId)
         {
-            var command = mapper.Map<JoinPlayer.Command>(dto);
+            var query = new GetGame.Query(gameId);
+            var response = await mediator.Send(query);
+
+            return Ok(mapper.Map<GameDto>(response.Game));
+        }
+
+        [HttpPost("{gameId:guid}/join")]
+        public async Task<ActionResult> JoinPlayerAsync(Guid gameId, EventDto dto)
+        {
+            var command = new JoinPlayer.Command(gameId, dto.PlayerId);
             await mediator.Send(command);
             
             return Ok();
         }
 
-        [HttpPost("leave")]
-        public async Task<ActionResult> LeavePlayerAsync(LeavePlayerDto dto)
+        [HttpPost("{gameId:guid}/leave")]
+        public async Task<ActionResult> LeavePlayerAsync(Guid gameId, EventDto dto)
         {
-            var command = mapper.Map<LeavePlayer.Command>(dto);
+            var command = new LeavePlayer.Command(gameId, dto.PlayerId);
+            await mediator.Send(command);
+
+            return Ok();
+        }
+
+        [HttpPost("{gameId:guid}/draw-card")]
+        public async Task<ActionResult> DrawCardAsync(Guid gameId, EventDto dto)
+        {
+            var command = new DrawCard.Command(gameId, dto.PlayerId);
             await mediator.Send(command);
 
             return Ok();

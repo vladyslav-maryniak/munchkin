@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Munchkin.API.DTOs;
+using Munchkin.Infrastucture.Cards.Base;
 using Munchkin.Infrastucture.Projections;
-using Munchkin.Logic.Commands;
 
 namespace Munchkin.API.AutoMapperProfiles
 {
@@ -9,9 +9,12 @@ namespace Munchkin.API.AutoMapperProfiles
     {
         public CommandProfile()
         {
-            CreateMap<JoinPlayerDto, JoinPlayer.Command>();
-            CreateMap<LeavePlayerDto, LeavePlayer.Command>();
-            CreateMap<PlayerDto, Player>();
+            CreateMap<Game, GameDto>();
+            CreateMap<Table, TableDto>();
+            CreateMap<MonsterCard, MonsterCardDto>();
+
+            CreateMap<CharacterDto, Character>().ReverseMap();
+            CreateMap<PlayerDto, Player>().ReverseMap();
         }
     }
 }
