@@ -82,5 +82,14 @@ namespace Munchkin.API.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{gameId:guid}/come-to-help")]
+        public async Task<ActionResult> ComeToHelpAsync(Guid gameId, EventDto dto)
+        {
+            var command = new ComeToHelp.Command(gameId, dto.PlayerId);
+            await mediator.Send(command);
+
+            return Ok();
+        }
     }
 }
