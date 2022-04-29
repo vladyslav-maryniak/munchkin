@@ -91,5 +91,14 @@ namespace Munchkin.API.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{gameId:guid}/resume-combat")]
+        public async Task<ActionResult> ResumeGameAsync(Guid gameId, EventDto dto)
+        {
+            var command = new ResumeCombat.Command(gameId, dto.PlayerId);
+            await mediator.Send(command);
+
+            return Ok();
+        }
     }
 }
