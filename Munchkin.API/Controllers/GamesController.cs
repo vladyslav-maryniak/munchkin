@@ -64,5 +64,14 @@ namespace Munchkin.API.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{gameId:guid}/roll-die")]
+        public async Task<ActionResult> RollDieAsync(Guid gameId, EventDto dto)
+        {
+            var command = new RollDie.Command(gameId, dto.PlayerId);
+            await mediator.Send(command);
+
+            return Ok();
+        }
     }
 }
