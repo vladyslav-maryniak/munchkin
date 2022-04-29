@@ -1,13 +1,12 @@
 ﻿using MediatR;
-using Munchkin.DataAccess;
+using Munchkin.DataAccess.Base;
 using Munchkin.Infrastucture.Events;
-using Munchkin.Infrastucture.Projections;
 
 namespace Munchkin.Logic.Commands
 {
     public class LeavePlayer
     {
-        public record Command(Guid GameId, Player Player) : IRequest;
+        public record Command(Guid GameId, Guid PlayerId) : IRequest;
 
         public class Handler : IRequestHandler<Command>
         {
@@ -20,7 +19,7 @@ namespace Munchkin.Logic.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                PlayerLeftEvent @event = new(request.GameId, request.Player);
+                PlayerLeftEvent @event = new(request.GameId, request.PlayerId);
                 await service.PublishAsync(@event);
 
                 return Unit.Value;
