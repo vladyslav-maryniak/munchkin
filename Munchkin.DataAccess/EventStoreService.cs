@@ -1,6 +1,5 @@
 ﻿using EventStore.Client;
 using Munchkin.DataAccess.Base;
-using Munchkin.Infrastucture.Events;
 using Munchkin.Infrastucture.Events.Base;
 using Newtonsoft.Json;
 using System.Text;
@@ -26,7 +25,7 @@ namespace Munchkin.DataAccess
         public Task PublishAsync(IGameEvent @event)
         {
             var eventData = SerializeEvent(@event);
-            var streamId = BuildStreamId(@event.GameId);
+            var streamId = @event.GameId.BuildStreamId();
 
             return client.AppendToStreamAsync(streamId, StreamState.Any, new[] { eventData });
         }
@@ -53,22 +52,14 @@ namespace Munchkin.DataAccess
 
         private IGameEvent DeserializeEvent(ResolvedEvent resolvedEvent)
         {
-            var eventType = Type.GetType(BuildTypeName(resolvedEvent));
+            var eventType = Type.GetType(resolvedEvent.BuildTypeName());
             if (eventType == null) throw new Exception();
 
             var decodedObject = Encoding.UTF8.GetString(resolvedEvent.Event.Data.ToArray());
-            var @event = JsonConvert.DeserializeObject(decodedObject, eventType, jsonSerializerSettings) as IGameEvent;
+            var @event = (IGameEvent?)JsonConvert.DeserializeObject(decodedObject, eventType, jsonSerializerSettings);
             if (@event == null) throw new Exception();
 
             return @event;
         }
-
-        private string BuildTypeName(ResolvedEvent resolvedEvent)
-        {
-            var type = typeof(EventEntrypoint);
-            return $"{type.Namespace}.{resolvedEvent.Event.EventType}, {type.Assembly}";
-        }
-
-        private string BuildStreamId(Guid gameId) => $"MunchkinGameStream_{gameId}";
     }
 }
