@@ -3,7 +3,7 @@
     public class Player : IEquatable<Player>
     {
         public Guid Id { get; set; }
-        public string Nickname { get; set; } = string.Empty;
+        public string Nickname { get; set; }
 
         public Player(Guid id, string nickname)
         {
