@@ -6,7 +6,7 @@ namespace Munchkin.Domain.Commands
 {
     public static class ComeToHelp
     {
-        public record Command(Guid GameId, Guid PlayerId) : IRequest;
+        public record Command(Guid GameId, Guid CharacterId) : IRequest;
 
         public class Handler : IRequestHandler<Command>
         {
@@ -19,7 +19,7 @@ namespace Munchkin.Domain.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var @event = new PlayerGotHelpEvent(request.GameId, request.PlayerId);
+                var @event = new CharacterGotHelpEvent(request.GameId, request.CharacterId);
 
                 await service.PublishAsync(@event);
 

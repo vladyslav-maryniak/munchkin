@@ -30,7 +30,7 @@ namespace Munchkin.API.Controllers
         }
 
         [HttpPost("{gameId:guid}/join")]
-        public async Task<ActionResult> JoinPlayerAsync(Guid gameId, EventDto dto)
+        public async Task<ActionResult> JoinPlayerAsync(Guid gameId, PlayerEventDto dto)
         {
             var command = new JoinPlayer.Command(gameId, dto.PlayerId);
             await mediator.Send(command);
@@ -39,7 +39,7 @@ namespace Munchkin.API.Controllers
         }
 
         [HttpPost("{gameId:guid}/leave")]
-        public async Task<ActionResult> LeavePlayerAsync(Guid gameId, EventDto dto)
+        public async Task<ActionResult> LeavePlayerAsync(Guid gameId, PlayerEventDto dto)
         {
             var command = new LeavePlayer.Command(gameId, dto.PlayerId);
             await mediator.Send(command);
@@ -48,7 +48,7 @@ namespace Munchkin.API.Controllers
         }
 
         [HttpPost("{gameId:guid}/draw-card")]
-        public async Task<ActionResult> DrawCardAsync(Guid gameId, EventDto dto)
+        public async Task<ActionResult> DrawCardAsync(Guid gameId, PlayerEventDto dto)
         {
             var command = new DrawCard.Command(gameId, dto.PlayerId);
             await mediator.Send(command);
@@ -57,16 +57,16 @@ namespace Munchkin.API.Controllers
         }
 
         [HttpPost("{gameId:guid}/initiate-combat")]
-        public async Task<ActionResult> InitiateCombatAsync(Guid gameId, EventDto dto)
+        public async Task<ActionResult> InitiateCombatAsync(Guid gameId, CharacterEventDto dto)
         {
-            var command = new InitiateCombat.Command(gameId, dto.PlayerId);
+            var command = new InitiateCombat.Command(gameId, dto.CharacterId);
             await mediator.Send(command);
 
             return Ok();
         }
 
         [HttpPost("{gameId:guid}/roll-die")]
-        public async Task<ActionResult> RollDieAsync(Guid gameId, EventDto dto)
+        public async Task<ActionResult> RollDieAsync(Guid gameId, PlayerEventDto dto)
         {
             var command = new RollDie.Command(gameId, dto.PlayerId);
             await mediator.Send(command);
@@ -75,27 +75,27 @@ namespace Munchkin.API.Controllers
         }
 
         [HttpPost("{gameId:guid}/resolve-run-away-roll")]
-        public async Task<ActionResult> ResolveRunAwayAsync(Guid gameId, EventDto dto)
+        public async Task<ActionResult> ResolveRunAwayAsync(Guid gameId, CharacterEventDto dto)
         {
-            var command = new ResolveRunAwayRoll.Command(gameId, dto.PlayerId);
+            var command = new ResolveRunAwayRoll.Command(gameId, dto.CharacterId);
             await mediator.Send(command);
 
             return Ok();
         }
 
         [HttpPost("{gameId:guid}/come-to-help")]
-        public async Task<ActionResult> ComeToHelpAsync(Guid gameId, EventDto dto)
+        public async Task<ActionResult> ComeToHelpAsync(Guid gameId, CharacterEventDto dto)
         {
-            var command = new ComeToHelp.Command(gameId, dto.PlayerId);
+            var command = new ComeToHelp.Command(gameId, dto.CharacterId);
             await mediator.Send(command);
 
             return Ok();
         }
 
         [HttpPost("{gameId:guid}/resume-combat")]
-        public async Task<ActionResult> ResumeGameAsync(Guid gameId, EventDto dto)
+        public async Task<ActionResult> ResumeGameAsync(Guid gameId, CharacterEventDto dto)
         {
-            var command = new ResumeCombat.Command(gameId, dto.PlayerId);
+            var command = new ResumeCombat.Command(gameId, dto.CharacterId);
             await mediator.Send(command);
 
             return Ok();

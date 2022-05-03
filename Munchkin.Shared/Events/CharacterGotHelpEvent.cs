@@ -3,11 +3,11 @@ using Munchkin.Shared.Projections;
 
 namespace Munchkin.Shared.Events
 {
-    public record PlayerGotHelpEvent(Guid GameId, Guid PlayerId) : IGameEvent
+    public record CharacterGotHelpEvent(Guid GameId, Guid CharacterId) : IGameEvent
     {
         public void Apply(Game game)
         {
-            var character = game.Characters.First(x => x.Player.Id == PlayerId);
+            var character = game.Characters.First(x => x.Id == CharacterId);
             game.Table.CharacterSquad.Add(character);
         }
     }

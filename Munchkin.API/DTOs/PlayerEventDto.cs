@@ -1,6 +1,6 @@
 ﻿namespace Munchkin.API.DTOs
 {
-    public class EventDto
+    public class PlayerEventDto
     {
         public Guid PlayerId { get; set; }
     }

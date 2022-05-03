@@ -3,7 +3,7 @@ using Munchkin.Shared.Projections;
 
 namespace Munchkin.Shared.Events
 {
-    public record PlayerRanAwayEvent(Guid GameId, Guid PlayerId) : IGameEvent
+    public record CharacterRanAwayEvent(Guid GameId, Guid CharacterId) : IGameEvent
     {
         public void Apply(Game game)
         {

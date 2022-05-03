@@ -7,7 +7,7 @@ namespace Munchkin.Domain.Commands
 {
     public static class ResumeCombat
     {
-        public record Command(Guid GameId, Guid PlayerId) : IRequest;
+        public record Command(Guid GameId, Guid CharacterId) : IRequest;
 
         public class Handler : IRequestHandler<Command>
         {
@@ -32,8 +32,8 @@ namespace Munchkin.Domain.Commands
                     .Aggregate((result, x) => result + x);
 
                 IGameEvent @event = squadCombatStrength > monsterCombatStrength ?
-                    new PlayerWonCombatEvent(request.GameId, request.PlayerId) :
-                    new PlayerRanAwayEvent(request.GameId, request.PlayerId);
+                    new CharacterWonCombatEvent(request.GameId, request.CharacterId) :
+                    new CharacterRanAwayEvent(request.GameId, request.CharacterId);
 
                 await service.PublishAsync(@event);
 

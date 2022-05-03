@@ -7,7 +7,7 @@ namespace Munchkin.Domain.Commands
 {
     public static class ResolveRunAwayRoll
     {
-        public record Command(Guid GameId, Guid PlayerId) : IRequest;
+        public record Command(Guid GameId, Guid CharacterId) : IRequest;
 
         public class Handler : IRequestHandler<Command>
         {
@@ -25,8 +25,8 @@ namespace Munchkin.Domain.Commands
                 var game = await repository.GetGameAsync(request.GameId);
 
                 IGameEvent @event = game.Table.DieValue > 4 ?
-                    new PlayerEscapedEvent(request.GameId, request.PlayerId) :
-                    new PlayerAppliedBadStuffEvent(request.GameId, request.PlayerId);
+                    new CharacterEscapedEvent(request.GameId, request.CharacterId) :
+                    new CharacterAppliedBadStuffEvent(request.GameId, request.CharacterId);
 
                 await service.PublishAsync(@event);
 
