@@ -2,8 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Munchkin.API.DTOs;
-using Munchkin.Logic.Commands;
-using Munchkin.Logic.Queries;
+using Munchkin.Domain.Commands;
+using Munchkin.Domain.Queries;
 
 namespace Munchkin.API.Controllers
 {

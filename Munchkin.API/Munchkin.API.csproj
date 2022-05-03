@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Munchkin.Logic\Munchkin.Logic.csproj" />
+    <ProjectReference Include="..\Munchkin.Domain\Munchkin.Domain.csproj" />
+    <ProjectReference Include="..\Munchkin.Shared\Munchkin.Shared.csproj" />
   </ItemGroup>
 
 </Project>

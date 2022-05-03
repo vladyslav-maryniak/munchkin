@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Munchkin.API.DTOs;
-using Munchkin.Infrastucture.Cards.Base;
-using Munchkin.Infrastucture.Projections;
+using Munchkin.Shared.Cards.Base;
+using Munchkin.Shared.Projections;
 
 namespace Munchkin.API.AutoMapperProfiles
 {

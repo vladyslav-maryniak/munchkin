@@ -1,5 +1,5 @@
-﻿using Munchkin.DataAccess.Base;
-using Munchkin.Logic;
+﻿using Munchkin.Application.Services;
+using Munchkin.Application.Services.Base;
 
 namespace Munchkin.API
 {
