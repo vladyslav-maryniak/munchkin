@@ -4,9 +4,9 @@ using Munchkin.Shared.Projections;
 
 namespace Munchkin.Domain.Queries
 {
-    public static class GetGame
+    public static class GetPlayer
     {
-        public record Query(Guid GameId) : IRequest<Response>;
+        public record Query(Guid PlayerId) : IRequest<Response>;
 
         public class Handler : IRequestHandler<Query, Response>
         {
@@ -19,11 +19,11 @@ namespace Munchkin.Domain.Queries
 
             public async Task<Response> Handle(Query request, CancellationToken cancellationToken)
             {
-                var game = await repository.GetGameAsync(request.GameId);
-                return new Response(game);
+                var player = await repository.GetPlayerAsync(request.PlayerId);
+                return new Response(player);
             }
         }
 
-        public record Response(Game Game);
+        public record Response(Player Player);
     }
 }

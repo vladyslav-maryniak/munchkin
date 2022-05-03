@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Munchkin.Application.Services.Base;
+using Munchkin.Domain.Queries;
 using Munchkin.Shared.Events;
 
 namespace Munchkin.Domain.Commands
@@ -10,21 +10,19 @@ namespace Munchkin.Domain.Commands
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly IGameRepository repository;
-            private readonly IEventService service;
+            private readonly IMediator mediator;
 
-            public Handler(IGameRepository repository, IEventService service)
+            public Handler(IMediator mediator)
             {
-                this.repository = repository;
-                this.service = service;
+                this.mediator = mediator;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var player = await repository.GetPlayerAsync(request.PlayerId);
-                var @event = new PlayerJoinedEvent(request.GameId, player);
+                var response = await mediator.Send(new GetPlayer.Query(request.PlayerId));
+                var @event = new PlayerJoinedEvent(request.GameId, response.Player);
 
-                await service.PublishAsync(@event);
+                await mediator.Send(new PublishEvent.Command(@event));
 
                 return Unit.Value;
             }

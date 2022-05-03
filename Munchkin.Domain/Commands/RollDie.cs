@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Munchkin.Application.Services.Base;
 using Munchkin.Shared.Events;
 
 namespace Munchkin.Domain.Commands
@@ -10,11 +9,11 @@ namespace Munchkin.Domain.Commands
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly IEventService service;
+            private readonly IMediator mediator;
 
-            public Handler(IEventService service)
+            public Handler(IMediator mediator)
             {
-                this.service = service;
+                this.mediator = mediator;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
@@ -23,7 +22,7 @@ namespace Munchkin.Domain.Commands
                 var dieValue = r.Next(1, 7);
                 var @event = new PlayerRolledDieEvent(request.GameId, request.PlayerId, dieValue);
 
-                await service.PublishAsync(@event);
+                await mediator.Send(new PublishEvent.Command(@event));
 
                 return Unit.Value;
             }

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Munchkin.Application.Services.Base;
+using Munchkin.Domain.Queries;
 using Munchkin.Shared.Events;
 using Munchkin.Shared.Events.Base;
 
@@ -11,18 +11,17 @@ namespace Munchkin.Domain.Commands
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly IEventService service;
-            private readonly IGameRepository repository;
+            private readonly IMediator mediator;
 
-            public Handler(IEventService service, IGameRepository repository)
+            public Handler(IMediator mediator)
             {
-                this.service = service;
-                this.repository = repository;
+                this.mediator = mediator;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var game = await repository.GetGameAsync(request.GameId);
+                var response = await mediator.Send(new GetGame.Query(request.GameId));
+                var game = response.Game;
 
                 var monsterCombatStrength = game.Table.MonsterCards
                     .Select(x => x.Level)
@@ -35,7 +34,7 @@ namespace Munchkin.Domain.Commands
                     new CharacterWonCombatEvent(request.GameId, request.CharacterId) :
                     new CharacterRanAwayEvent(request.GameId, request.CharacterId);
 
-                await service.PublishAsync(@event);
+                await mediator.Send(new PublishEvent.Command(@event));
 
                 return Unit.Value;
             }

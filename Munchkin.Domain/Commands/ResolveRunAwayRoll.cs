@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Munchkin.Application.Services.Base;
+using Munchkin.Domain.Queries;
 using Munchkin.Shared.Events;
 using Munchkin.Shared.Events.Base;
 
@@ -11,24 +11,22 @@ namespace Munchkin.Domain.Commands
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly IEventService service;
-            private readonly IGameRepository repository;
+            private readonly IMediator mediator;
 
-            public Handler(IEventService service, IGameRepository repository)
+            public Handler(IMediator mediator)
             {
-                this.service = service;
-                this.repository = repository;
+                this.mediator = mediator;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var game = await repository.GetGameAsync(request.GameId);
+                var response = await mediator.Send(new GetGame.Query(request.GameId));
 
-                IGameEvent @event = game.Table.DieValue > 4 ?
+                IGameEvent @event = response.Game.Table.DieValue > 4 ?
                     new CharacterEscapedEvent(request.GameId, request.CharacterId) :
                     new CharacterAppliedBadStuffEvent(request.GameId, request.CharacterId);
 
-                await service.PublishAsync(@event);
+                await mediator.Send(new PublishEvent.Command(@event));
 
                 return Unit.Value;
             }
