@@ -12,9 +12,9 @@ namespace Munchkin.Logic.Commands
         public class Handler : IRequestHandler<Command>
         {
             private readonly IEventService service;
-            private readonly IEventRepository repository;
+            private readonly IGameRepository repository;
 
-            public Handler(IEventService service, IEventRepository repository)
+            public Handler(IEventService service, IGameRepository repository)
             {
                 this.service = service;
                 this.repository = repository;

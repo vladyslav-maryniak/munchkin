@@ -2,7 +2,7 @@
 
 namespace Munchkin.DataAccess.Base
 {
-    public interface IEventRepository
+    public interface IGameRepository
     {
         Task<Game> GetGameAsync(Guid id);
         Task<Player> GetPlayerAsync(Guid id);

@@ -10,9 +10,9 @@ namespace Munchkin.Logic.Queries
 
         public class Handler : IRequestHandler<Query, Response>
         {
-            private readonly IEventRepository repository;
+            private readonly IGameRepository repository;
 
-            public Handler(IEventRepository repository)
+            public Handler(IGameRepository repository)
             {
                 this.repository = repository;
             }

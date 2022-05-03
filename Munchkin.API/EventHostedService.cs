@@ -6,10 +6,10 @@ namespace Munchkin.API
     public class EventHostedService : IHostedService
     {
         private readonly IEventService service;
-        private readonly IEventRepository repository;
+        private readonly IGameRepository repository;
         private EventStreamHandler? eventService;
 
-        public EventHostedService(IEventService service, IEventRepository repository)
+        public EventHostedService(IEventService service, IGameRepository repository)
         {
             this.service = service;
             this.repository = repository;

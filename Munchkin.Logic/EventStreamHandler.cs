@@ -7,10 +7,10 @@ namespace Munchkin.Logic
     public class EventStreamHandler : IDisposable
     {
         private readonly IEventService service;
-        private readonly IEventRepository repository;
+        private readonly IGameRepository repository;
         private StreamSubscription? subscription;
         
-        private EventStreamHandler(IEventService service, IEventRepository repository)
+        private EventStreamHandler(IEventService service, IGameRepository repository)
         {
             this.service = service;
             this.repository = repository;
@@ -22,7 +22,7 @@ namespace Munchkin.Logic
             return this;
         }
 
-        public static Task<EventStreamHandler> CreateAsync(IEventService service, IEventRepository repository)
+        public static Task<EventStreamHandler> CreateAsync(IEventService service, IGameRepository repository)
         {
             var instance = new EventStreamHandler(service, repository);
             return instance.InitializeAsync();

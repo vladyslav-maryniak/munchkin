@@ -6,7 +6,7 @@ using Munchkin.Infrastucture.Projections;
 
 namespace Munchkin.DataAccess
 {
-    public class EventRepository : IEventRepository
+    public class GameRepository : IGameRepository
     {
         private readonly List<Game> games = new()
         {
