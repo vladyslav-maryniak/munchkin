@@ -2,7 +2,12 @@
 using Munchkin.Shared.Cards.Base;
 using Munchkin.Shared.Cards.Doors.Curses;
 using Munchkin.Shared.Cards.Doors.Monsters;
-using Munchkin.Shared.Projections;
+using Munchkin.Shared.Cards.Treasures.Items.Armor;
+using Munchkin.Shared.Cards.Treasures.Items.Footgear;
+using Munchkin.Shared.Cards.Treasures.Items.Headgear;
+using Munchkin.Shared.Cards.Treasures.Items.OneHand;
+using Munchkin.Shared.Cards.Treasures.Items.TwoHands;
+using Munchkin.Shared.Models;
 
 namespace Munchkin.Application.Services
 {
@@ -13,13 +18,11 @@ namespace Munchkin.Application.Services
             new Game
             {
                 Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-                DoorDeck = new(new DoorCard[]
+                Table = new()
                 {
-                    new DuckOfDoom(),
-                    new UndeadHorse(),
-                    new FlyingFrogs(),
-                    new MaulRat(),
-                })
+                    DoorDeck = GetDoorDeck(),
+                    TreasureDeck = GetTreasureDeck()
+                }
             }
         };
 
@@ -38,6 +41,37 @@ namespace Munchkin.Application.Services
         public Task<Player> GetPlayerAsync(Guid id)
         {
             return Task.FromResult(players.First(x => x.Id == id));
+        }
+
+        private static Stack<DoorCard> GetDoorDeck()
+        {
+            Stack<DoorCard> doorDeck = new();
+
+            for (int i = 0; i < 4; i++)
+            {
+                doorDeck.Push(new DuckOfDoom());
+                doorDeck.Push(new UndeadHorse());
+                doorDeck.Push(new FlyingFrogs());
+                doorDeck.Push(new MaulRat());
+            }
+
+            return doorDeck;
+        }
+
+        private static Stack<TreasureCard> GetTreasureDeck()
+        {
+            Stack<TreasureCard> treasureDeck = new();
+
+            for (int i = 0; i < 3; i++)
+            {
+                treasureDeck.Push(new FlamingArmor());
+                treasureDeck.Push(new BootsOfButtKicking());
+                treasureDeck.Push(new HelmOfCourage());
+                treasureDeck.Push(new SneakyBastardSword());
+                treasureDeck.Push(new ElevenFootPole());
+            }
+
+            return treasureDeck;
         }
     }
 }
