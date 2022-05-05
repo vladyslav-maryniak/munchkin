@@ -1,4 +1,4 @@
-﻿using Munchkin.Shared.Projections;
+﻿using Munchkin.Shared.Models;
 
 namespace Munchkin.Shared.Cards.Base
 {

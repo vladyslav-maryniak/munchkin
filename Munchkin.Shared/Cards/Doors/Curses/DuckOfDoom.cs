@@ -1,5 +1,5 @@
 ﻿using Munchkin.Shared.Cards.Base;
-using Munchkin.Shared.Projections;
+using Munchkin.Shared.Models;
 
 namespace Munchkin.Shared.Cards.Doors.Curses
 {
