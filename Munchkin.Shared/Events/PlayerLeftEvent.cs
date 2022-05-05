@@ -1,5 +1,5 @@
 ﻿using Munchkin.Shared.Events.Base;
-using Munchkin.Shared.Projections;
+using Munchkin.Shared.Models;
 
 namespace Munchkin.Shared.Events
 {
@@ -7,8 +7,9 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            var character = game.Characters.First(x => x.Player.Id == PlayerId);
-            game.Characters.Remove(character);
+            var place = game.Table.Places.First(x => x.Player.Id == PlayerId);
+            
+            game.Table.Places.Remove(place);
         }
     }
 }

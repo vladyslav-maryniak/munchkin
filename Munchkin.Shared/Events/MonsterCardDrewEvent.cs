@@ -1,6 +1,6 @@
-﻿using Munchkin.Shared.Cards.Base;
+﻿using Munchkin.Shared.Cards.Base.Doors;
 using Munchkin.Shared.Events.Base;
-using Munchkin.Shared.Projections;
+using Munchkin.Shared.Models;
 
 namespace Munchkin.Shared.Events
 {
@@ -8,7 +8,7 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            game.Table.MonsterCards.Add(Card);
+            game.Table.CombatField.MonsterSquad.Add(Card);
         }
     }
 }

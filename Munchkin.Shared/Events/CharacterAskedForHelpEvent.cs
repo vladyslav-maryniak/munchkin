@@ -1,5 +1,5 @@
 ﻿using Munchkin.Shared.Events.Base;
-using Munchkin.Shared.Projections;
+using Munchkin.Shared.Models;
 
 namespace Munchkin.Shared.Events
 {
@@ -7,8 +7,11 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            var character = game.Characters.First(x => x.Id == CharacterId);
-            game.Table.CharacterSquad.Add(character);
+            var character = game.Table.Places
+                .First(x => x.Character.Id == CharacterId)
+                .Character;
+
+            game.Table.CombatField.CharacterSquad.Add(character);
         }
     }
 }
