@@ -47,6 +47,15 @@ namespace Munchkin.API.Controllers
             return Ok();
         }
 
+        [HttpPost("{gameId:guid}/start-game")]
+        public async Task<ActionResult> StartGameAsync(Guid gameId)
+        {
+            var command = new StartGame.Command(gameId);
+            await mediator.Send(command);
+
+            return Ok();
+        }
+
         [HttpPost("{gameId:guid}/draw-card")]
         public async Task<ActionResult> DrawCardAsync(Guid gameId, PlayerEventDto dto)
         {
