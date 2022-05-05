@@ -1,4 +1,4 @@
-﻿using Munchkin.Shared.Cards.Base;
+﻿using Munchkin.Shared.Cards.Base.Doors;
 
 namespace Munchkin.Shared.Models
 {

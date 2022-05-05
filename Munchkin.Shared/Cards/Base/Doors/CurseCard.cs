@@ -1,6 +1,6 @@
 ﻿using Munchkin.Shared.Models;
 
-namespace Munchkin.Shared.Cards.Base
+namespace Munchkin.Shared.Cards.Base.Doors
 {
     public abstract class CurseCard : DoorCard
     {
