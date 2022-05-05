@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Munchkin.Application.Services.Base;
-using Munchkin.Shared.Projections;
+using Munchkin.Shared.Models;
 
 namespace Munchkin.Domain.Queries
 {

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Munchkin.Domain.Queries;
-using Munchkin.Shared.Cards.Base;
+using Munchkin.Shared.Cards.Base.Doors;
 using Munchkin.Shared.Events;
 using Munchkin.Shared.Events.Base;
 
@@ -22,7 +22,7 @@ namespace Munchkin.Domain.Commands
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var response = await mediator.Send(new GetGame.Query(request.GameId));
-                var card = response.Game.DoorDeck.Pop();
+                var card = response.Game.Table.DoorDeck.Pop();
 
                 IGameEvent @event = card switch
                 {

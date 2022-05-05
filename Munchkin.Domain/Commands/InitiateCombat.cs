@@ -22,12 +22,14 @@ namespace Munchkin.Domain.Commands
             {
                 var response = await mediator.Send(new GetGame.Query(request.GameId));
                 var game = response.Game;
-                var character = game.Characters.First(x => x.Id == request.CharacterId);
+                var character = game.Table.Places
+                    .First(x => x.Character.Id == request.CharacterId)
+                    .Character;
 
-                var monsterCombatStrength = game.Table.MonsterCards
+                var monsterCombatStrength = game.Table.CombatField.MonsterSquad
                     .Select(x => x.Level)
                     .Aggregate((result, x) => result + x);
-                var characterCombatStrength = character.Level;
+                var characterCombatStrength = character.Level + character.Equipment.Bonus;
 
                 IGameEvent @event = characterCombatStrength > monsterCombatStrength ?
                     new CharacterWonCombatEvent(request.GameId, request.CharacterId) :
