@@ -20,13 +20,13 @@ namespace Munchkin.Domain.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var response = await mediator.Send(new GetGame.Query(request.GameId));
+                var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
 
                 IGameEvent @event = response.Game.Table.DieValue > 4 ?
                     new CharacterEscapedEvent(request.GameId, request.CharacterId) :
                     new CharacterAppliedBadStuffEvent(request.GameId, request.CharacterId);
 
-                await mediator.Send(new PublishEvent.Command(@event));
+                await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 
                 return Unit.Value;
             }

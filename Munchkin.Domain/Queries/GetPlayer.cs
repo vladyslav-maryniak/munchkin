@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Munchkin.Application.Services.Base;
-using Munchkin.Shared.Projections;
+using Munchkin.Shared.Models;
 
 namespace Munchkin.Domain.Queries
 {
@@ -19,7 +19,7 @@ namespace Munchkin.Domain.Queries
 
             public async Task<Response> Handle(Query request, CancellationToken cancellationToken)
             {
-                var player = await repository.GetPlayerAsync(request.PlayerId);
+                var player = await repository.GetPlayerAsync(request.PlayerId, cancellationToken);
                 return new Response(player);
             }
         }

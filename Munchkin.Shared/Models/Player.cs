@@ -1,4 +1,4 @@
-﻿namespace Munchkin.Shared.Projections
+﻿namespace Munchkin.Shared.Models
 {
     public class Player : IEquatable<Player>
     {

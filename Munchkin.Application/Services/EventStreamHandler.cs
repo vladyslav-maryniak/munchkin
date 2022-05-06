@@ -16,16 +16,17 @@ namespace Munchkin.Application.Services
             this.repository = repository;
         }
 
-        private async Task<EventStreamHandler> InitializeAsync()
+        private async Task<EventStreamHandler> InitializeAsync(CancellationToken cancellationToken = default)
         {
-            subscription = await service.SubscribeAsync(EventAppeared);
+            subscription = await service.SubscribeAsync(EventAppeared, cancellationToken);
             return this;
         }
 
-        public static Task<EventStreamHandler> CreateAsync(IEventService service, IGameRepository repository)
+        public static Task<EventStreamHandler> CreateAsync(
+            IEventService service, IGameRepository repository, CancellationToken cancellationToken = default)
         {
             var instance = new EventStreamHandler(service, repository);
-            return instance.InitializeAsync();
+            return instance.InitializeAsync(cancellationToken);
         }
 
         private async Task EventAppeared(IGameEvent @event)

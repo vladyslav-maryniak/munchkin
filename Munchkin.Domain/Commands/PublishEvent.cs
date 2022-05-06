@@ -19,7 +19,7 @@ namespace Munchkin.Domain.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                await service.PublishAsync(request.Event);
+                await service.PublishAsync(request.Event, cancellationToken);
 
                 return Unit.Value;
             }

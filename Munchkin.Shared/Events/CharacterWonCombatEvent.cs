@@ -1,5 +1,5 @@
 ﻿using Munchkin.Shared.Events.Base;
-using Munchkin.Shared.Projections;
+using Munchkin.Shared.Models;
 
 namespace Munchkin.Shared.Events
 {
@@ -7,12 +7,15 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            var character = game.Characters.First(x => x.Id == CharacterId);
-            character.Level += game.Table.MonsterCards
+            var character = game.Table.Places
+                    .First(x => x.Character.Id == CharacterId)
+                    .Character;
+
+            character.Level += game.Table.CombatField.MonsterSquad
                 .Select(x => x.VictoryLevels)
                 .Aggregate((result, x) => result + x);
 
-            game.Table = new();
+            game.Table.CombatField.Clear();
         }
     }
 }

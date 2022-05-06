@@ -3,7 +3,8 @@
     public class GameDto
     {
         public Guid Id { get; set; }
-        public List<CharacterDto> Characters { get; set; } = new();
+        public int TurnIndex { get; set; }
+        public List<PlayerDto> Lobby { get; set; } = new();
         public TableDto Table { get; set; } = new();
     }
 }

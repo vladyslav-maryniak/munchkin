@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Munchkin.Domain.Queries;
-using Munchkin.Shared.Cards.Base;
+using Munchkin.Shared.Cards.Base.Doors;
 using Munchkin.Shared.Events;
 using Munchkin.Shared.Events.Base;
 
@@ -21,9 +21,15 @@ namespace Munchkin.Domain.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var response = await mediator.Send(new GetGame.Query(request.GameId));
-                var card = response.Game.DoorDeck.Pop();
+                var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
+                var game = response.Game;
 
+                if (game.IsPlayerTurn(request.PlayerId) == false)
+                {
+                    return Unit.Value;
+                }
+
+                var card = game.Table.DoorDeck.Pop();
                 IGameEvent @event = card switch
                 {
                     MonsterCard monsterCard => new MonsterCardDrewEvent(request.GameId, request.PlayerId, monsterCard),
@@ -31,7 +37,8 @@ namespace Munchkin.Domain.Commands
                     _ => throw new NotImplementedException(),
                 };
 
-                await mediator.Send(new PublishEvent.Command(@event));
+                await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
+                game.TurnIndex++;
 
                 return Unit.Value;
             }

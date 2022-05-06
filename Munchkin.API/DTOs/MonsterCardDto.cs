@@ -2,6 +2,7 @@
 {
     public class MonsterCardDto
     {
+        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Level { get; set; }
         public string BadStuff { get; set; } = string.Empty;
