@@ -7,6 +7,7 @@ using Munchkin.Shared.Cards.Treasures.Items.Footgear;
 using Munchkin.Shared.Cards.Treasures.Items.Headgear;
 using Munchkin.Shared.Cards.Treasures.Items.OneHand;
 using Munchkin.Shared.Cards.Treasures.Items.TwoHands;
+using Munchkin.Shared.Cards.Treasures.OneShots;
 using Munchkin.Shared.Models;
 
 namespace Munchkin.Application.Services
@@ -67,8 +68,10 @@ namespace Munchkin.Application.Services
                 treasureDeck.Push(new FlamingArmor());
                 treasureDeck.Push(new BootsOfButtKicking());
                 treasureDeck.Push(new HelmOfCourage());
+                treasureDeck.Push(new LoadedDie());
                 treasureDeck.Push(new SneakyBastardSword());
                 treasureDeck.Push(new ElevenFootPole());
+                treasureDeck.Push(new Doppleganger());
             }
 
             return treasureDeck;
