@@ -24,13 +24,12 @@ namespace Munchkin.Domain.Commands
                 var response = await mediator.Send(new GetGame.Query(request.GameId));
                 var game = response.Game;
                 var place = game.Table.Places.First(x => x.Player.Id == request.PlayerId);
-                
-                var character = place.Character;
                 var card = place.InHandCards.First(x => x.Id == request.CardId);
 
                 IGameEvent @event = card switch
                 {
-                    ItemCard itemCard => new ItemCardPlayedEvent(request.GameId, character.Id, itemCard.Id),
+                    ItemCard => new ItemCardPlayedEvent(
+                        request.GameId, request.PlayerId, request.CardId),
                     _ => throw new NotImplementedException()
                 };
 
