@@ -17,7 +17,7 @@ namespace Munchkin.API
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            eventService = await EventStreamHandler.CreateAsync(service, repository);
+            eventService = await EventStreamHandler.CreateAsync(service, repository, cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

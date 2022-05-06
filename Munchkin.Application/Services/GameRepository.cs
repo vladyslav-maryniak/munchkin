@@ -35,12 +35,12 @@ namespace Munchkin.Application.Services
             new(Guid.Parse("2e79c0b3-b9c3-442f-b480-731291141337"), "Julie"),
         };
 
-        public Task<Game> GetGameAsync(Guid id)
+        public Task<Game> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(games.First(x => x.Id == id));
         }
 
-        public Task<Player> GetPlayerAsync(Guid id)
+        public Task<Player> GetPlayerAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(players.First(x => x.Id == id));
         }

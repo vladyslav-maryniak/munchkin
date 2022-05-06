@@ -21,7 +21,7 @@ namespace Munchkin.Domain.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var response = await mediator.Send(new GetGame.Query(request.GameId));
+                var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
                 var game = response.Game;
 
                 if (game.IsPlayerTurn(request.PlayerId) == false)
@@ -37,7 +37,7 @@ namespace Munchkin.Domain.Commands
                     _ => throw new NotImplementedException(),
                 };
 
-                await mediator.Send(new PublishEvent.Command(@event));
+                await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
                 game.TurnIndex++;
 
                 return Unit.Value;

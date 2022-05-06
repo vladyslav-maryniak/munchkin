@@ -20,7 +20,7 @@ namespace Munchkin.Domain.Commands
             {
                 var @event = new GameStartedEvent(request.GameId);
 
-                await mediator.Send(new PublishEvent.Command(@event));
+                await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 
                 return Unit.Value;
             }

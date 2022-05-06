@@ -22,16 +22,21 @@ namespace Munchkin.Application.Services
             };
         }
 
-        public Task PublishAsync(IGameEvent @event)
+        public Task PublishAsync(IGameEvent @event, CancellationToken cancellationToken = default)
         {
             var eventData = SerializeEvent(@event);
             var streamId = @event.GameId.BuildStreamId();
 
-            return client.AppendToStreamAsync(streamId, StreamState.Any, new[] { eventData });
+            return client.AppendToStreamAsync(
+                streamId,
+                StreamState.Any,
+                new[] { eventData },
+                cancellationToken: cancellationToken
+            );
         }
 
         public Task<StreamSubscription> SubscribeAsync(
-            Func<IGameEvent, Task> eventAppeared)
+            Func<IGameEvent, Task> eventAppeared, CancellationToken cancellationToken = default)
         {
             return client.SubscribeToAllAsync(
                 FromAll.End,
@@ -40,7 +45,8 @@ namespace Munchkin.Application.Services
                     var @event = DeserializeEvent(resolvedEvent);
                     return eventAppeared(@event);
                 },
-                filterOptions: new SubscriptionFilterOptions(EventTypeFilter.ExcludeSystemEvents())
+                filterOptions: new SubscriptionFilterOptions(EventTypeFilter.ExcludeSystemEvents()),
+                cancellationToken: cancellationToken
             );
         }
 

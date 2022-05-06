@@ -4,7 +4,7 @@ namespace Munchkin.Application.Services.Base
 {
     public interface IGameRepository
     {
-        Task<Game> GetGameAsync(Guid id);
-        Task<Player> GetPlayerAsync(Guid id);
+        Task<Game> GetGameAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<Player> GetPlayerAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }

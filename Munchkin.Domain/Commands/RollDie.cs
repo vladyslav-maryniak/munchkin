@@ -22,7 +22,7 @@ namespace Munchkin.Domain.Commands
                 var dieValue = r.Next(1, 7);
                 var @event = new PlayerRolledDieEvent(request.GameId, request.PlayerId, dieValue);
 
-                await mediator.Send(new PublishEvent.Command(@event));
+                await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 
                 return Unit.Value;
             }

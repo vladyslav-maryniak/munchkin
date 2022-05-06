@@ -5,7 +5,8 @@ namespace Munchkin.Application.Services.Base
 {
     public interface IEventService
     {
-        Task PublishAsync(IGameEvent @event);
-        Task<StreamSubscription> SubscribeAsync(Func<IGameEvent, Task> eventAppeared);
+        Task PublishAsync(IGameEvent @event, CancellationToken cancellationToken = default);
+        Task<StreamSubscription> SubscribeAsync(
+            Func<IGameEvent, Task> eventAppeared, CancellationToken cancellationToken = default);
     }
 }

@@ -20,7 +20,7 @@ namespace Munchkin.Domain.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var response = await mediator.Send(new GetGame.Query(request.GameId));
+                var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
                 var game = response.Game;
                 var character = game.Table.Places
                     .First(x => x.Character.Id == request.CharacterId)
@@ -35,7 +35,7 @@ namespace Munchkin.Domain.Commands
                     new CharacterWonCombatEvent(request.GameId, request.CharacterId) :
                     new CharacterAskedForHelpEvent(request.GameId, request.CharacterId);
 
-                await mediator.Send(new PublishEvent.Command(@event));
+                await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 
                 return Unit.Value;
             }
