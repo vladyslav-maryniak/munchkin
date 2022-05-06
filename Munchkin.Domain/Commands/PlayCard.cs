@@ -33,6 +33,8 @@ namespace Munchkin.Domain.Commands
                         request.GameId, request.PlayerId, request.CardId),
                     OneShotCard => new OneShotCardPlayedEvent(
                         request.GameId, request.PlayerId, request.CardId, request.MetaData),
+                    GoUpLevelCard => new GoUpLevelCardPlayedEvent(
+                        request.GameId, request.PlayerId, request.CardId),
                     _ => throw new NotImplementedException()
                 };
 

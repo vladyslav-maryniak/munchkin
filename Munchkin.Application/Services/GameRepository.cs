@@ -2,6 +2,7 @@
 using Munchkin.Shared.Cards.Base;
 using Munchkin.Shared.Cards.Doors.Curses;
 using Munchkin.Shared.Cards.Doors.Monsters;
+using Munchkin.Shared.Cards.Treasures.GoUpLevels;
 using Munchkin.Shared.Cards.Treasures.Items.Armor;
 using Munchkin.Shared.Cards.Treasures.Items.Footgear;
 using Munchkin.Shared.Cards.Treasures.Items.Headgear;
@@ -65,13 +66,16 @@ namespace Munchkin.Application.Services
 
             for (int i = 0; i < 3; i++)
             {
+                treasureDeck.Push(new InvokeObscureRules());
                 treasureDeck.Push(new FlamingArmor());
                 treasureDeck.Push(new BootsOfButtKicking());
                 treasureDeck.Push(new HelmOfCourage());
                 treasureDeck.Push(new LoadedDie());
+                treasureDeck.Push(new ConvenientAdditionError());
                 treasureDeck.Push(new SneakyBastardSword());
                 treasureDeck.Push(new ElevenFootPole());
                 treasureDeck.Push(new Doppleganger());
+                treasureDeck.Push(new BoilAnAnthill());
             }
 
             return treasureDeck;
