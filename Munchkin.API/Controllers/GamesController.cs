@@ -124,7 +124,7 @@ namespace Munchkin.API.Controllers
         public async Task<ActionResult> PlayCardAsync(
             Guid gameId, PlayCardEventDto dto, CancellationToken cancellationToken)
         {
-            var command = new PlayCard.Command(gameId, dto.PlayerId, dto.CardId, dto.MetaData);
+            var command = new PlayCard.Command(gameId, dto.PlayerId, dto.CardId, dto.Metadata);
             await mediator.Send(command, cancellationToken);
 
             return Ok();

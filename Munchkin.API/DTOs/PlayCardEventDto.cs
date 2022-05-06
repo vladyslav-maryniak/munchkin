@@ -4,6 +4,6 @@
     {
         public Guid PlayerId { get; set; }
         public Guid CardId { get; set; }
-        public Dictionary<string, string> MetaData { get; set; } = new();
+        public Dictionary<string, string> Metadata { get; set; } = new();
     }
 }
