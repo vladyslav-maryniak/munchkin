@@ -20,6 +20,15 @@ namespace Munchkin.API.Controllers
             this.mapper = mapper;
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Guid>> CreateGameAsync(CancellationToken cancellationToken)
+        {
+            var command = new CreateGame.Command();
+            var response = await mediator.Send(command, cancellationToken);
+
+            return Ok(mapper.Map<CreatedGameDto>(response.Game));
+        }
+
         [HttpGet("{gameId:guid}")]
         public async Task<ActionResult<GameDto>> GetGameAsync(
             Guid gameId, CancellationToken cancellationToken)

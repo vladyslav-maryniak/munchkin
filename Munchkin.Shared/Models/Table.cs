@@ -9,5 +9,11 @@ namespace Munchkin.Shared.Models
         public Stack<TreasureCard> TreasureDeck { get; set; } = new();
         public CombatField CombatField { get; set; } = new();
         public int DieValue { get; set; } = 1;
+
+        public Table(Stack<DoorCard> doorDeck, Stack<TreasureCard> treasureDeck)
+        {
+            DoorDeck = doorDeck;
+            TreasureDeck = treasureDeck;
+        }
     }
 }

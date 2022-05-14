@@ -11,6 +11,8 @@ namespace Munchkin.API.AutoMapperProfiles
     {
         public CommandProfile()
         {
+            CreateMap<Game, CreatedGameDto>();
+
             CreateMap<Game, GameDto>();
             CreateMap<Table, TableDto>();
             CreateMap<Place, PlaceDto>();

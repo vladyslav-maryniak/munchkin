@@ -15,18 +15,7 @@ namespace Munchkin.Application.Services
 {
     public class GameRepository : IGameRepository
     {
-        private readonly List<Game> games = new()
-        {
-            new Game
-            {
-                Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-                Table = new()
-                {
-                    DoorDeck = GetDoorDeck(),
-                    TreasureDeck = GetTreasureDeck()
-                }
-            }
-        };
+        private readonly List<Game> games = new();
 
         private readonly List<Player> players = new()
         {
@@ -34,6 +23,18 @@ namespace Munchkin.Application.Services
             new(Guid.Parse("0c8380d2-17e9-404b-9f24-5bc36536db86"), "Martin"),
             new(Guid.Parse("2e79c0b3-b9c3-442f-b480-731291141337"), "Julie"),
         };
+
+        public Task<Game> CreateGameAsync(CancellationToken cancellationToken = default)
+        {
+            var doorDeck = GetDoorDeck();
+            var treasureDeck = GetTreasureDeck();
+            var table = new Table(doorDeck, treasureDeck);
+
+            var game = new Game(table);
+
+            games.Add(game);
+            return Task.FromResult(game);
+        }
 
         public Task<Game> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
         {
