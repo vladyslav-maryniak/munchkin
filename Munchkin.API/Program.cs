@@ -1,8 +1,10 @@
 using MediatR;
 using Munchkin.API;
+using Munchkin.API.Options;
 using Munchkin.Application.Services;
 using Munchkin.Application.Services.Base;
 using Munchkin.Shared.Hubs;
+using Munchkin.Shared.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,14 @@ builder.Services.AddAutoMapper(
         typeof(Munchkin.API.Entrypoints.AutoMapperEntrypoint).Assembly
     }
 );
+
+var mongoDbOptions = builder.Configuration
+    .GetSection(nameof(MongoDbOptions))
+    .Get<MongoDbOptions>();
+builder.Services
+    .AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>(
+        mongoDbOptions.ConnectionString, mongoDbOptions.Name);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
