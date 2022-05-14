@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Munchkin.API.DTOs;
 using Munchkin.Domain.Commands;
@@ -7,8 +8,9 @@ using Munchkin.Domain.Queries;
 
 namespace Munchkin.API.Controllers
 {
-    [Route("api/games")]
+    [Authorize]
     [ApiController]
+    [Route("api/games")]
     public class GamesController : ControllerBase
     {
         private readonly IMediator mediator;
