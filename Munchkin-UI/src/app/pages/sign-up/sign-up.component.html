@@ -1,0 +1,64 @@
+<div class="container">
+  <div>
+    <h1>Sign Up</h1>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-container">
+        <mat-form-field>
+          <mat-label id="nickname-label">Nickname</mat-label>
+          <input
+            type="text"
+            [(ngModel)]="nickname"
+            matInput
+            name="nickname-input"
+            aria-labelledby="nickname-label"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label id="email-label">Email</mat-label>
+          <input
+            type="text"
+            [(ngModel)]="email"
+            matInput
+            name="email-input"
+            aria-labelledby="email-label"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label id="password-label">Password</mat-label>
+          <input
+            type="password"
+            [(ngModel)]="password"
+            matInput
+            name="password-input"
+            aria-labelledby="password-label"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label id="pwd-confirmation-label">Confirm password</mat-label>
+          <input
+            type="password"
+            [(ngModel)]="pwdConfirmation"
+            matInput
+            name="pwd-confirmation-input"
+            aria-labelledby="pwd-confirmation-label"
+          />
+        </mat-form-field>
+
+        <div class="sign-up-link">
+          <a [routerLink]="['/sign-in']" [queryParams]="{ returnUrl }">
+            Sign in
+          </a>
+        </div>
+
+        <div class="submit-btn">
+          <button mat-raised-button color="primary" type="submit">
+            Sing up
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
