@@ -2,6 +2,7 @@ using MediatR;
 using Munchkin.API;
 using Munchkin.Application.Services;
 using Munchkin.Application.Services.Base;
+using Munchkin.Shared.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddHostedService<EventHostedService>();
 builder.Services.AddSingleton<IEventService, EventStoreService>();
 builder.Services.AddSingleton<IGameRepository, GameRepository>();
 
+builder.Services.AddSignalR();
 builder.Services.AddMediatR(typeof(Munchkin.Domain.Entrypoints.MediatREntrypoint).Assembly);
 builder.Services.AddAutoMapper(
     assemblies: new[]
@@ -38,5 +40,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<EventHub>("/event");
 
 app.Run();

@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using Munchkin.Domain.Queries;
 using Munchkin.Shared.Events;
+using Munchkin.Shared.Hubs;
 
 namespace Munchkin.Domain.Commands
 {
@@ -11,10 +13,12 @@ namespace Munchkin.Domain.Commands
         public class Handler : IRequestHandler<Command>
         {
             private readonly IMediator mediator;
+            private readonly IHubContext<EventHub> hub;
 
-            public Handler(IMediator mediator)
+            public Handler(IMediator mediator, IHubContext<EventHub> hub)
             {
                 this.mediator = mediator;
+                this.hub = hub;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
@@ -30,6 +34,7 @@ namespace Munchkin.Domain.Commands
                 var @event = new PlayerJoinedEvent(request.GameId, playerResponse.Player);
 
                 await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
+                await hub.Clients.All.SendAsync(request.GameId.ToString(), nameof(PlayerJoinedEvent), cancellationToken);
 
                 return Unit.Value;
             }
