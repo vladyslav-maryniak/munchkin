@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; }
         public int TurnIndex { get; set; }
-        public List<Player> Lobby { get; set; } = new();
+        public GameLobby Lobby { get; set; } = new();
         public Table Table { get; set; }
 
         public Game(Table table)

@@ -7,7 +7,7 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            game.Lobby.Add(Player);
+            game.Lobby.Players.Add(Player);
         }
     }
 }

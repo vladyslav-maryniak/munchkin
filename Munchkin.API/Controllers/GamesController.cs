@@ -39,6 +39,16 @@ namespace Munchkin.API.Controllers
             return Ok(mapper.Map<GameDto>(response.Game));
         }
 
+        [HttpGet("{gameId:guid}/lobby")]
+        public async Task<ActionResult<GameLobbyDto>> GetGameLobbyAsync(
+            Guid gameId, CancellationToken cancellationToken)
+        {
+            var query = new GetGameLobby.Query(gameId);
+            var response = await mediator.Send(query, cancellationToken);
+
+            return Ok(mapper.Map<GameLobbyDto>(response.Lobby));
+        }
+
         [HttpPost("{gameId:guid}/join")]
         public async Task<ActionResult> JoinPlayerAsync(
             Guid gameId, PlayerEventDto dto, CancellationToken cancellationToken)

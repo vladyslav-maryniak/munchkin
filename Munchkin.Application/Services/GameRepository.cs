@@ -41,6 +41,16 @@ namespace Munchkin.Application.Services
             return Task.FromResult(games.First(x => x.Id == id));
         }
 
+        public Task<GameLobby> GetGameLobbyAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var lobby = games
+                .Select(x => new { x.Id, x.Lobby })
+                .First(x => x.Id == id)
+                .Lobby;
+
+            return Task.FromResult(lobby);
+        }
+
         public Task<Player> GetPlayerAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(players.First(x => x.Id == id));

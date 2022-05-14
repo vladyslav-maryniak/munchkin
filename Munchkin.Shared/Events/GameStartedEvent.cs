@@ -8,7 +8,7 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            foreach (var player in game.Lobby)
+            foreach (var player in game.Lobby.Players)
             {
                 var place = new Place(player, new Character());
                 place.InHandCards.AddRange(game.Table.DoorDeck.DrawCards(count: 4));
@@ -17,7 +17,7 @@ namespace Munchkin.Shared.Events
                 game.Table.Places.Add(place);
             }
 
-            game.Lobby.Clear();
+            game.Lobby.Players.Clear();
         }
     }
 }
