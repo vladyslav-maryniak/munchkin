@@ -1,0 +1,27 @@
+<div class="container">
+  <div>
+    <mat-form-field floatLabel="always" appearance="standard">
+      <mat-label id="joinGameLink">Join Game Link</mat-label>
+      <input
+        aria-labelledby="joinGameLink"
+        matInput
+        readonly
+        value="{{ joinLink }}"
+        #joinGameLinkClipboard
+      />
+    </mat-form-field>
+
+    <button mat-button [ngxClipboard]="joinGameLinkClipboard">Copy</button>
+  </div>
+
+  <div>
+    <mat-form-field floatLabel="always" appearance="outline">
+      <mat-label id="lobby">Lobby</mat-label>
+      <mat-chip-list aria-labelledby="lobby">
+        <mat-chip *ngFor="let player of players">{{
+          player.nickname
+        }}</mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+  </div>
+</div>

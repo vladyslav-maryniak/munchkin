@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MaterialImportsModule } from './material-imports/material-imports.module';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -12,6 +13,7 @@ import { AuthenticationInterceptor } from './interceptors/authentication.interce
 import { HomeComponent } from './pages/home/home.component';
 import { SignInComponent } from './pages/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
+import { GameLobbyComponent } from './pages/game-lobby/game-lobby.component';
 
 const appRoutes: Routes = [
   {
@@ -29,6 +31,11 @@ const appRoutes: Routes = [
     component: SignUpComponent,
     canActivate: [AuthenticationGuard],
   },
+  {
+    path: 'game/:game-id/lobby',
+    component: GameLobbyComponent,
+    canActivate: [AuthenticationGuard],
+  },
   { path: '**', redirectTo: 'home' },
 ];
 
@@ -38,6 +45,7 @@ const appRoutes: Routes = [
     HomeComponent,
     SignInComponent,
     SignUpComponent,
+    GameLobbyComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,6 +53,7 @@ const appRoutes: Routes = [
     FormsModule,
     HttpClientModule,
     MaterialImportsModule,
+    ClipboardModule,
     RouterModule.forRoot(appRoutes),
   ],
   providers: [
