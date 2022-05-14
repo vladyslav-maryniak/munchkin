@@ -36,6 +36,15 @@ namespace Munchkin.Application.Services
             return Task.FromResult(game);
         }
 
+        public Task<Player> CreatePlayerAsync(
+            Guid playerId, string nickname, CancellationToken cancellationToken = default)
+        {
+            var player = new Player(playerId, nickname);
+            players.Add(player);
+
+            return Task.FromResult(player);
+        }
+
         public Task<Game> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(games.First(x => x.Id == id));
