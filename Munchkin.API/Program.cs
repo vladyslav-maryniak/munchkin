@@ -1,10 +1,10 @@
 using MediatR;
 using Munchkin.API;
-using Munchkin.API.Options;
 using Munchkin.Application.Services;
 using Munchkin.Application.Services.Base;
 using Munchkin.Shared.Hubs;
 using Munchkin.Shared.Identity;
+using Munchkin.Shared.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,13 +23,16 @@ builder.Services.AddAutoMapper(
     }
 );
 
-var mongoDbOptions = builder.Configuration
-    .GetSection(nameof(MongoDbOptions))
-    .Get<MongoDbOptions>();
+builder.Services.Configure<GameMongoDbOptions>(
+    builder.Configuration.GetSection(nameof(GameMongoDbOptions)));
+
+var identityMongoDbOptions = builder.Configuration
+    .GetSection(nameof(IdentityMongoDbOptions))
+    .Get<IdentityMongoDbOptions>();
 builder.Services
     .AddIdentity<ApplicationUser, ApplicationRole>()
     .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>(
-        mongoDbOptions.ConnectionString, mongoDbOptions.Name);
+        identityMongoDbOptions.ConnectionString, identityMongoDbOptions.DatabaseName);
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
