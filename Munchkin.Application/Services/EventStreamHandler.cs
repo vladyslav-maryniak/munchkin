@@ -33,6 +33,7 @@ namespace Munchkin.Application.Services
         {
             var game = await repository.GetGameAsync(@event.GameId);
             @event.Apply(game);
+            await repository.UpdateGameAsync(game);
         }
 
         public void Dispose()

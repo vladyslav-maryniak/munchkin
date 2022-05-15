@@ -1,4 +1,6 @@
-﻿using Munchkin.Application.Services.Base;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using Munchkin.Application.Services.Base;
 using Munchkin.Shared.Cards.Base;
 using Munchkin.Shared.Cards.Doors.Curses;
 using Munchkin.Shared.Cards.Doors.Monsters;
@@ -10,59 +12,63 @@ using Munchkin.Shared.Cards.Treasures.Items.OneHand;
 using Munchkin.Shared.Cards.Treasures.Items.TwoHands;
 using Munchkin.Shared.Cards.Treasures.OneShots;
 using Munchkin.Shared.Models;
+using Munchkin.Shared.Options;
 
 namespace Munchkin.Application.Services
 {
     public class GameRepository : IGameRepository
     {
-        private readonly List<Game> games = new();
+        private readonly IMongoCollection<Game> games;
+        private readonly IMongoCollection<Player> players;
 
-        private readonly List<Player> players = new()
+        public GameRepository(IOptions<GameMongoDbOptions> options)
         {
-            new(Guid.Parse("a0cfe7fc-b71c-4129-ab11-6346efdbe0ed"), "Bob"),
-            new(Guid.Parse("0c8380d2-17e9-404b-9f24-5bc36536db86"), "Martin"),
-            new(Guid.Parse("2e79c0b3-b9c3-442f-b480-731291141337"), "Julie"),
-        };
+            var mongoClient = new MongoClient(options.Value.ConnectionString);
+            var mongoDb = mongoClient.GetDatabase(options.Value.DatabaseName);
+            games = mongoDb.GetCollection<Game>("Games");
+            players = mongoDb.GetCollection<Player>("Players");
+        }
 
-        public Task<Game> CreateGameAsync(CancellationToken cancellationToken = default)
+        public async Task<Game> CreateGameAsync(CancellationToken cancellationToken = default)
         {
             var doorDeck = GetDoorDeck();
             var treasureDeck = GetTreasureDeck();
             var table = new Table(doorDeck, treasureDeck);
-
             var game = new Game(table);
 
-            games.Add(game);
-            return Task.FromResult(game);
+            await games.InsertOneAsync(game, new(), cancellationToken);
+
+            return game;
         }
 
-        public Task<Player> CreatePlayerAsync(
-            Guid playerId, string nickname, CancellationToken cancellationToken = default)
+        public async Task<Player> CreatePlayerAsync(Guid playerId, string nickname, CancellationToken cancellationToken = default)
         {
             var player = new Player(playerId, nickname);
-            players.Add(player);
 
-            return Task.FromResult(player);
+            await players.InsertOneAsync(player, new(), cancellationToken);
+
+            return player;
         }
 
         public Task<Game> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(games.First(x => x.Id == id));
+            return games.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
         }
 
-        public Task<GameLobby> GetGameLobbyAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<GameLobby> GetGameLobbyAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var lobby = games
-                .Select(x => new { x.Id, x.Lobby })
-                .First(x => x.Id == id)
-                .Lobby;
-
-            return Task.FromResult(lobby);
+            var game = await games.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+            return game.Lobby;
         }
 
         public Task<Player> GetPlayerAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(players.First(x => x.Id == id));
+            return players.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public Task UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
+        {
+            return games.ReplaceOneAsync(x => x.Id == game.Id, game, cancellationToken: cancellationToken);
         }
 
         private static Stack<DoorCard> GetDoorDeck()

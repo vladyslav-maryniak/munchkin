@@ -10,5 +10,6 @@ namespace Munchkin.Application.Services.Base
         Task<Game> GetGameAsync(Guid id, CancellationToken cancellationToken = default);
         Task<GameLobby> GetGameLobbyAsync(Guid id, CancellationToken cancellationToken = default);
         Task<Player> GetPlayerAsync(Guid id, CancellationToken cancellationToken = default);
+        Task UpdateGameAsync(Game game, CancellationToken cancellationToken = default);
     }
 }
