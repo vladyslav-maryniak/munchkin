@@ -1,7 +1,12 @@
-﻿namespace Munchkin.Shared.Models
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDbGenericRepository.Attributes;
+
+namespace Munchkin.Shared.Models
 {
+    [CollectionName("Players")]
     public class Player : IEquatable<Player>
     {
+        [BsonId]
         public Guid Id { get; set; }
         public string Nickname { get; set; }
 
