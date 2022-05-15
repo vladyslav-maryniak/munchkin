@@ -1,4 +1,4 @@
-﻿namespace Munchkin.API.DTOs
+﻿namespace Munchkin.API.DTOs.Identity
 {
     public class UserDto
     {

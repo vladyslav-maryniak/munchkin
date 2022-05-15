@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Munchkin.API.DTOs;
+using Munchkin.API.DTOs.Identity;
 using Munchkin.Domain.Commands.Identity;
 
 namespace Munchkin.API.Controllers
