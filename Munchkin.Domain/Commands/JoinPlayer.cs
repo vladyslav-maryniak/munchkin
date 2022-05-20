@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using Munchkin.Application.Hubs;
 using Munchkin.Domain.Queries;
 using Munchkin.Shared.Events;
-using Munchkin.Shared.Hubs;
 
 namespace Munchkin.Domain.Commands
 {

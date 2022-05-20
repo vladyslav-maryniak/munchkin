@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace Munchkin.Shared.Hubs
+namespace Munchkin.Application.Hubs
 {
     public class EventHub : Hub
     {

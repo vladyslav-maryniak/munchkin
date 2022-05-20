@@ -1,8 +1,8 @@
 using MediatR;
 using Munchkin.API;
+using Munchkin.Application.Hubs;
 using Munchkin.Application.Services;
 using Munchkin.Application.Services.Base;
-using Munchkin.Shared.Hubs;
 using Munchkin.Shared.Identity;
 using Munchkin.Shared.Options;
 
