@@ -25,7 +25,7 @@ namespace Munchkin.Domain.Commands
                 var game = await repository.CreateGameAsync(cancellationToken);
                 var @event = new GameCreatedEvent(game.Id);
 
-                await mediator.Send(new PublishEvent.Command(@event));
+                await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 
                 return new Response(game);
             }
