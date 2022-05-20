@@ -5,8 +5,8 @@ namespace Munchkin.Shared.Models
     public class Table
     {
         public List<Place> Places { get; set; } = new();
-        public Stack<DoorCard> DoorDeck { get; set; } = new();
-        public Stack<TreasureCard> TreasureDeck { get; set; } = new();
+        public Stack<DoorCard> DoorDeck { get; set; }
+        public Stack<TreasureCard> TreasureDeck { get; set; }
         public CombatField CombatField { get; set; } = new();
         public int DieValue { get; set; } = 1;
 
