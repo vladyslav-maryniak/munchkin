@@ -64,8 +64,6 @@ app.UseCors(builder => builder
     .AllowCredentials()
 );
 
-//app.UseHttpsRedirection();
-
 app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
