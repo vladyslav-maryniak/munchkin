@@ -1,0 +1,21 @@
+<div class="header">
+  <mat-toolbar>
+    <span>Munchkin</span>
+    <span class="toolbar-spacer">
+      <div *ngIf="signedPlayer">Hi, {{ signedPlayer?.nickname }}!</div>
+    </span>
+    <button
+      type="button"
+      mat-raised-button
+      color="primary"
+      (click)="signOut()"
+      *ngIf="signedPlayer"
+    >
+      Sign out
+    </button>
+  </mat-toolbar>
+</div>
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

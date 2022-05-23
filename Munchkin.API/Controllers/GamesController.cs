@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Munchkin.API.DTOs;
 using Munchkin.Domain.Commands;
@@ -7,8 +8,9 @@ using Munchkin.Domain.Queries;
 
 namespace Munchkin.API.Controllers
 {
-    [Route("api/games")]
+    [Authorize]
     [ApiController]
+    [Route("api/games")]
     public class GamesController : ControllerBase
     {
         private readonly IMediator mediator;
@@ -20,6 +22,15 @@ namespace Munchkin.API.Controllers
             this.mapper = mapper;
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Guid>> CreateGameAsync(CancellationToken cancellationToken)
+        {
+            var command = new CreateGame.Command();
+            var response = await mediator.Send(command, cancellationToken);
+
+            return Ok(mapper.Map<CreatedGameDto>(response.Game));
+        }
+
         [HttpGet("{gameId:guid}")]
         public async Task<ActionResult<GameDto>> GetGameAsync(
             Guid gameId, CancellationToken cancellationToken)
@@ -28,6 +39,16 @@ namespace Munchkin.API.Controllers
             var response = await mediator.Send(query, cancellationToken);
 
             return Ok(mapper.Map<GameDto>(response.Game));
+        }
+
+        [HttpGet("{gameId:guid}/lobby")]
+        public async Task<ActionResult<GameLobbyDto>> GetGameLobbyAsync(
+            Guid gameId, CancellationToken cancellationToken)
+        {
+            var query = new GetGameLobby.Query(gameId);
+            var response = await mediator.Send(query, cancellationToken);
+
+            return Ok(mapper.Map<GameLobbyDto>(response.Lobby));
         }
 
         [HttpPost("{gameId:guid}/join")]
