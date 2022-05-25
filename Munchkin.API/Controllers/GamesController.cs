@@ -151,6 +151,16 @@ namespace Munchkin.API.Controllers
             return Ok();
         }
 
+        [HttpPost("{gameId:guid}/stop-asking-for-help")]
+        public async Task<ActionResult> StopAskingForHelpAsync(
+            Guid gameId, CancellationToken cancellationToken)
+        {
+            var command = new StopAskingForHelp.Command(gameId);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
         [HttpPost("{gameId:guid}/resume-combat")]
         public async Task<ActionResult> ResumeGameAsync(
             Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)
