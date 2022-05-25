@@ -12,6 +12,9 @@ namespace Munchkin.API.AutoMapperProfiles
         public CommandProfile()
         {
             CreateMap<Game, CreatedGameDto>();
+            CreateMap<Game, PlayerGameDto>()
+                .ForMember(dest => dest.Lobby, opt => opt.MapFrom(src => src.Lobby.Players))
+                .ForMember(dest => dest.Table, opt => opt.MapFrom(src => src.Table.Places.Select(x => x.Player)));
 
             CreateMap<Game, GameDto>();
             CreateMap<GameLobby, GameLobbyDto>();
@@ -21,7 +24,6 @@ namespace Munchkin.API.AutoMapperProfiles
             CreateMap<Equipment, EquipmentDto>();
             
             CreateMap<MunchkinCard, MunchkinCardDto>();
-            CreateMap<MonsterCard, MonsterCardDto>();
 
             CreateMap<HeadgearCard, ItemCardDto>();
             CreateMap<ArmorCard, ItemCardDto>();

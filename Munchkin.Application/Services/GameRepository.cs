@@ -61,6 +61,13 @@ namespace Munchkin.Application.Services
             return context.Players.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
         }
 
+        public async Task<List<Game>> GetPlayerGamesAsync(Guid playerId, CancellationToken cancellationToken = default)
+        {
+            return await context.Games
+                .Find(x => x.Table.Places.Any(x => x.Player.Id == playerId) || x.Lobby.Players.Any(x => x.Id == playerId))
+                .ToListAsync(cancellationToken);
+        }
+
         public Task UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
         {
             return context.Games.ReplaceOneAsync(x => x.Id == game.Id, game, cancellationToken: cancellationToken);
