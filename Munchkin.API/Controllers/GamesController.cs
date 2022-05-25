@@ -51,6 +51,16 @@ namespace Munchkin.API.Controllers
             return Ok(mapper.Map<GameLobbyDto>(response.Lobby));
         }
 
+        [HttpPost("{gameId:guid}/update-state")]
+        public async Task<ActionResult> UpdateGameStateAsync(
+            Guid gameId, GameStateDto dto, CancellationToken cancellationToken)
+        {
+            var command = new UpdateGameState.Command(gameId, dto.State);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
         [HttpPost("{gameId:guid}/join")]
         public async Task<ActionResult> JoinPlayerAsync(
             Guid gameId, PlayerEventDto dto, CancellationToken cancellationToken)

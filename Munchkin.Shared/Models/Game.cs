@@ -9,6 +9,7 @@ namespace Munchkin.Shared.Models
         [BsonId]
         public Guid Id { get; set; }
         public int TurnIndex { get; set; }
+        public string? State { get; set; }
         public GameLobby Lobby { get; set; } = new();
         public Table Table { get; set; }
 
