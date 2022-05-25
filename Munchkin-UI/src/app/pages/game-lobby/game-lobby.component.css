@@ -6,3 +6,25 @@
 
   height: 100%;
 }
+
+.join-link-container {
+  display: flex;
+  align-items: center;
+}
+
+.copy-button {
+  margin-left: 0.7em;
+  cursor: pointer;
+  color: #c4c4c4;
+}
+
+.copy-button:hover {
+  color: grey;
+}
+
+.action-btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}

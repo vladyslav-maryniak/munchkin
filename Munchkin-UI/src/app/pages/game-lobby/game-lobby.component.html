@@ -1,5 +1,5 @@
 <div class="container">
-  <div>
+  <div class="join-link-container">
     <mat-form-field floatLabel="always" appearance="standard">
       <mat-label id="joinGameLink">Join Game Link</mat-label>
       <input
@@ -11,7 +11,14 @@
       />
     </mat-form-field>
 
-    <button mat-button [ngxClipboard]="joinGameLinkClipboard">Copy</button>
+    <div class="copy-button">
+      <mat-icon
+        [ngxClipboard]="joinGameLinkClipboard"
+        matTooltip="Copy join link"
+        [matTooltipShowDelay]="500"
+        >file_copy</mat-icon
+      >
+    </div>
   </div>
 
   <div>
@@ -23,5 +30,17 @@
         }}</mat-chip>
       </mat-chip-list>
     </mat-form-field>
+  </div>
+  <div class="action-btn-container">
+    <div>
+      <button mat-raised-button color="primary" (click)="startGame()">
+        Start Game
+      </button>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" (click)="goBack()">
+        Go Back
+      </button>
+    </div>
   </div>
 </div>

@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, UrlSerializer } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Player } from 'src/app/models/player';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { GameService } from 'src/app/services/game.service';
-import * as signalR from '@microsoft/signalr';
-import { environment } from 'src/environments/environment';
+import { SignalrService } from 'src/app/services/signalr.service';
 
 @Component({
   selector: 'app-game-lobby',
@@ -15,11 +15,11 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
   joinLink!: string;
   gameId!: string;
   players: Player[] = [];
-
-  private hubConnection!: signalR.HubConnection;
+  subscription!: Subscription;
 
   constructor(
     private gameService: GameService,
+    private signalrService: SignalrService,
     private authService: AuthenticationService,
     private route: ActivatedRoute,
     private router: Router,
@@ -33,8 +33,9 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
     const player = (await this.authService.getUser()) ?? ({} as Player);
     this.joinLink = this.buildJoinLink(this.gameId, player?.nickname);
 
-    await this.startHubConnection();
-    this.hubConnection.on(this.gameId, this.onPlayerJoinedEvent);
+    await this.signalrService.connect();
+    this.signalrService.follow(this.gameId);
+    this.subscription = this.signalrService.gameEvents.subscribe(this.onEvent);
 
     await this.resolveJoinLink();
   }
@@ -52,16 +53,12 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
     return `${window.location.origin}${query}`;
   }
 
-  private async startHubConnection(): Promise<void> {
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${environment.hostUrl}/event`)
-      .build();
-    await this.hubConnection.start();
-  }
-
-  private onPlayerJoinedEvent = async (event: string): Promise<void> => {
+  private onEvent = async (event: string): Promise<void> => {
     if (event === 'PlayerJoinedEvent') {
       await this.refreshGameLobby();
+    }
+    if (event === 'GameStartedEvent') {
+      await this.router.navigate(['game', this.gameId]);
     }
   };
 
@@ -72,7 +69,16 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
     }
   }
 
+  async goBack() {
+    await this.router.navigate(['home']);
+  }
+
+  async startGame() {
+    await this.gameService.startGame(this.gameId);
+  }
+
   async ngOnDestroy(): Promise<void> {
-    await this.hubConnection.stop();
+    this.subscription.unsubscribe();
+    await this.signalrService.disconnect();
   }
 }
