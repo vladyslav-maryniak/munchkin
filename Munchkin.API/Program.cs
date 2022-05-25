@@ -1,5 +1,8 @@
 using MediatR;
 using Munchkin.API;
+using Munchkin.Application.DbContext.MongoDb;
+using Munchkin.Application.DbContext.MongoDb.Base;
+using Munchkin.Application.DbContext.MongoDb.Extensions;
 using Munchkin.Application.Hubs;
 using Munchkin.Application.Services;
 using Munchkin.Application.Services.Base;
@@ -23,8 +26,11 @@ builder.Services.AddAutoMapper(
     }
 );
 
-builder.Services.Configure<GameMongoDbOptions>(
-    builder.Configuration.GetSection(nameof(GameMongoDbOptions)));
+builder.Services.AddMongoDbContext<IMunchkinDbContext,MunchkinDbContext>(options =>
+{
+    options.ConnectionString = builder.Configuration["MongoDbOptions:ConnectionString"];
+    options.DatabaseName = builder.Configuration["MongoDbOptions:DatabaseName"];
+});
 
 var identityMongoDbOptions = builder.Configuration
     .GetSection(nameof(IdentityMongoDbOptions))
