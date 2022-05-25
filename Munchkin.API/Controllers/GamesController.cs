@@ -111,6 +111,16 @@ namespace Munchkin.API.Controllers
             return Ok();
         }
 
+        [HttpPost("{gameId:guid}/complete-combat")]
+        public async Task<ActionResult> CompleteCombatAsync(
+            Guid gameId, CancellationToken cancellationToken)
+        {
+            var command = new CompleteCombat.Command(gameId);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
         [HttpPost("{gameId:guid}/roll-die")]
         public async Task<ActionResult> RollDieAsync(
             Guid gameId, PlayerEventDto dto, CancellationToken cancellationToken)

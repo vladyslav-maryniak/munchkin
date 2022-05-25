@@ -3,10 +3,12 @@ using Munchkin.Shared.Models;
 
 namespace Munchkin.Shared.Events
 {
-    public record CharacterEscapedEvent(Guid GameId, Guid CharacterId) : IGameEvent
+    public record CombatCompletedEvent(Guid GameId) : IGameEvent
     {
         public void Apply(Game game)
         {
+            game.TurnIndex++;
+            game.Table.CombatField.Clear();
         }
     }
 }

@@ -14,8 +14,6 @@ namespace Munchkin.Shared.Events
             character.Level += game.Table.CombatField.MonsterSquad
                 .Select(x => x.VictoryLevels)
                 .Aggregate((result, x) => result + x);
-
-            game.Table.CombatField.Clear();
         }
     }
 }
