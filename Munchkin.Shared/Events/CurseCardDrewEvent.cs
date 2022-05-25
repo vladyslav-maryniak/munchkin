@@ -14,6 +14,13 @@ namespace Munchkin.Shared.Events
             var card = (CurseCard)game.Table.DoorDeck.Pop();
 
             card.Apply(character);
+
+            if (character.Level < 1)
+            {
+                character.Level = 1;
+            }
+
+            game.TurnIndex++;
         }
     }
 }

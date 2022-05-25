@@ -13,7 +13,10 @@ namespace Munchkin.Shared.Events
 
             game.Table.CombatField.MonsterSquad.ForEach(x => x.ApplyBadStuff(character));
 
-            game.Table.CombatField.Clear();
+            if (character.Level < 1)
+            {
+                character.Level = 1;
+            }
         }
     }
 }

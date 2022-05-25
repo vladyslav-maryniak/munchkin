@@ -20,6 +20,6 @@ namespace Munchkin.Shared.Models
         }
 
         public bool IsPlayerTurn(Guid playerId)
-            => Table.Places[TurnIndex].Player.Id == playerId;
+            => Table.Places[TurnIndex % Table.Places.Count].Player.Id == playerId;
     }
 }
