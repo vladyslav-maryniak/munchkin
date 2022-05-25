@@ -1,12 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDbGenericRepository.Attributes;
-
-namespace Munchkin.Shared.Models
+﻿namespace Munchkin.Shared.Models
 {
-    [CollectionName("Games")]
     public class Game
     {
-        [BsonId]
         public Guid Id { get; set; }
         public int TurnIndex { get; set; }
         public string? State { get; set; }
