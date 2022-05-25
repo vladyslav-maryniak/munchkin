@@ -1,0 +1,15 @@
+.game-grid {
+  display: grid;
+  grid-template-columns: 9fr 1fr;
+  grid-template-rows: 5fr 2fr;
+
+  height: 100%;
+}
+
+.player-bar {
+  grid-column: 2;
+}
+
+.card-panel {
+  grid-column: 1 / span 2;
+}

@@ -1,6 +1,6 @@
 <div class="header">
   <mat-toolbar>
-    <span>Munchkin</span>
+    <a [routerLink]="['/home']" tabindex="-1">Munchkin</a>
     <span class="toolbar-spacer">
       <div *ngIf="signedPlayer">Hi, {{ signedPlayer?.nickname }}!</div>
     </span>
