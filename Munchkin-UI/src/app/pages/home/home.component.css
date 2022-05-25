@@ -1,7 +1,66 @@
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
   height: 100%;
+}
+
+.game-list-container {
+  width: 35%;
+  max-height: 70%;
+  overflow: auto;
+
+  border-radius: 0.4em;
+  border: 2px solid #c4c4c4;
+
+  padding: 0;
+}
+
+.empty-list-container {
+  color: #c4c4c4;
+}
+
+.nickname-chip-list {
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  gap: 0.8em;
+
+  overflow: auto;
+  white-space: nowrap;
+
+  padding-right: 0.7em;
+}
+
+.nickname-chip {
+  border-radius: 1.2em;
+  background-color: #e0e0e0;
+
+  padding: 0.4em 0.7em;
+}
+
+.game-status-icon {
+  display: flex;
+  align-self: center;
+  margin: 0 0.5em;
+}
+
+.create-game-btn {
+  margin-top: 2em;
+}
+
+.horizontal-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::ng-deep .mat-list-item-content {
+  padding: 0 !important;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
 }
