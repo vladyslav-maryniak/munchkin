@@ -4,6 +4,6 @@
     {
         public PlayerDto? Player { get; set; }
         public CharacterDto Character { get; set; } = new();
-        public List<MunchkinCardDto> InHandCards { get; set; } = new();
+        public List<object> InHandCards { get; set; } = new();
     }
 }
