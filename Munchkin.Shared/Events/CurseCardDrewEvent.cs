@@ -4,15 +4,16 @@ using Munchkin.Shared.Models;
 
 namespace Munchkin.Shared.Events
 {
-    public record CurseCardDrewEvent(Guid GameId, Guid PlayerId, CurseCard Card) : IGameEvent
+    public record CurseCardDrewEvent(Guid GameId, Guid PlayerId) : IGameEvent
     {
         public void Apply(Game game)
         {
             var character = game.Table.Places
                 .First(x => x.Player.Id == PlayerId)
                 .Character;
+            var card = (CurseCard)game.Table.DoorDeck.Pop();
 
-            Card.Apply(character);
+            card.Apply(character);
         }
     }
 }
