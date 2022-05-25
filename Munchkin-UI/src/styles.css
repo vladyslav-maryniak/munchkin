@@ -6,3 +6,11 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.multiline-tooltip {
+  white-space: pre-line;
+}
+
+::ng-deep .multiline-tooltip {
+  white-space: pre-line;
+}

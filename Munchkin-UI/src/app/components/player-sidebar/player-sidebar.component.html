@@ -1,0 +1,13 @@
+<div class="player-sidebar">
+  <div
+    *ngFor="let place of places"
+    [matBadge]="place.character.level"
+    [matTooltip]="getEquipmentDescription(place.character.equipment)"
+    matTooltipClass="multiline-tooltip"
+    matTooltipPosition="left"
+    class="place"
+    [ngClass]="{ 'player-turn': isPlayerTurn(place.player) }"
+  >
+    <span>{{ getNicknameLabel(place.player) }}</span>
+  </div>
+</div>

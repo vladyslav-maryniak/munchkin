@@ -17,6 +17,10 @@ import { GameLobbyComponent } from './pages/game-lobby/game-lobby.component';
 import { ActionButtonComponent } from './components/action-button/action-button.component';
 import { ActionControlAreaDirective } from './directives/action-control-area.directive';
 import { MetadataDialogComponent } from './components/metadata-dialog/metadata-dialog.component';
+import { CombatFieldComponent } from './components/combat-field/combat-field.component';
+import { TableComponent } from './components/table/table.component';
+import { PlayerSidebarComponent } from './components/player-sidebar/player-sidebar.component';
+import { InHandCardPanelComponent } from './components/in-hand-card-panel/in-hand-card-panel.component';
 
 const appRoutes: Routes = [
   {
@@ -52,6 +56,10 @@ const appRoutes: Routes = [
     ActionButtonComponent,
     ActionControlAreaDirective,
     MetadataDialogComponent,
+    CombatFieldComponent,
+    TableComponent,
+    PlayerSidebarComponent,
+    InHandCardPanelComponent,
   ],
   imports: [
     BrowserModule,

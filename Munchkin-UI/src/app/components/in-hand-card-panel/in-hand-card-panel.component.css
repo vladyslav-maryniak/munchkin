@@ -1,0 +1,25 @@
+.card-panel {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  display: grid;
+  align-items: center;
+  text-align: center;
+
+  width: 7em;
+  height: 10em;
+
+  border-radius: 0.4em;
+  border: 3px solid #e4e4e4;
+
+  cursor: pointer;
+}
+
+.card:hover {
+  border: 3px solid #3f51b5;
+}
