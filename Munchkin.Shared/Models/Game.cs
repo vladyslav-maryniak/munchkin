@@ -10,6 +10,7 @@ namespace Munchkin.Shared.Models
         public Guid Id { get; set; }
         public int TurnIndex { get; set; }
         public string? State { get; set; }
+        public GameStatus Status { get; set; }
         public GameLobby Lobby { get; set; } = new();
         public Table Table { get; set; }
 

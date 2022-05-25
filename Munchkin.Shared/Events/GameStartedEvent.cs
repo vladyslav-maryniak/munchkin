@@ -18,6 +18,7 @@ namespace Munchkin.Shared.Events
             }
 
             game.Lobby.Players.Clear();
+            game.Status = GameStatus.Started;
         }
     }
 }
