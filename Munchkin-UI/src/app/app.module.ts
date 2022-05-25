@@ -14,6 +14,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { SignInComponent } from './pages/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { GameLobbyComponent } from './pages/game-lobby/game-lobby.component';
+import { ActionButtonComponent } from './components/action-button/action-button.component';
+import { ActionControlAreaDirective } from './directives/action-control-area.directive';
+import { MetadataDialogComponent } from './components/metadata-dialog/metadata-dialog.component';
 
 const appRoutes: Routes = [
   {
@@ -46,6 +49,9 @@ const appRoutes: Routes = [
     SignInComponent,
     SignUpComponent,
     GameLobbyComponent,
+    ActionButtonComponent,
+    ActionControlAreaDirective,
+    MetadataDialogComponent,
   ],
   imports: [
     BrowserModule,
