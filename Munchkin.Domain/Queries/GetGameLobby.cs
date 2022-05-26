@@ -19,7 +19,7 @@ namespace Munchkin.Domain.Queries
 
             public async Task<Response> Handle(Query request, CancellationToken cancellationToken)
             {
-                var lobby = await repository.GetGameLobbyAsync(request.GameId);
+                var lobby = await repository.GetGameLobbyAsync(request.GameId, cancellationToken);
 
                 return new Response(lobby);
             }
