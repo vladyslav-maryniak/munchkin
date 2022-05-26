@@ -6,7 +6,7 @@ namespace Munchkin.Application.DbContext.MongoDb.Base
     {
         protected IMongoDatabase Database { get; init; }
 
-        public MongoDbContext(IMongoDatabase database)
+        protected MongoDbContext(IMongoDatabase database)
         {
             Database = database;
             OnModelCreating(new());
