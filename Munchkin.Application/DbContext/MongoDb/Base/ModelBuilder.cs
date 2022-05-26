@@ -5,7 +5,7 @@ namespace Munchkin.Application.DbContext.MongoDb.Base
 {
     public class ModelBuilder
     {
-        public void ApplyConfiguration<T>()
+        public static void ApplyConfiguration<T>()
                where T : class
         {
             if (!BsonClassMap.IsClassMapRegistered(typeof(T)))
@@ -14,7 +14,7 @@ namespace Munchkin.Application.DbContext.MongoDb.Base
             }
         }
 
-        public void ApplyConfiguration<T>(IBsonClassMapConfiguration<T> configuration)
+        public static void ApplyConfiguration<T>(IBsonClassMapConfiguration<T> configuration)
             where T : class
         {
             if (!BsonClassMap.IsClassMapRegistered(typeof(T)))
