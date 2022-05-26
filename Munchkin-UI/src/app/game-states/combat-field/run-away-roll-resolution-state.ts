@@ -1,6 +1,5 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CombatFieldComponent } from 'src/app/components/combat-field/combat-field.component';
-import { GameComponent } from 'src/app/pages/game/game.component';
 import { GameState } from '../base/game-state';
 
 export class RunAwayRollResolutionState extends GameState<CombatFieldComponent> {
