@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Munchkin.Application.DbContext.MongoDb.Base
 {
-    public class ModelBuilder
+    public class MapRegistrar
     {
         public static void ApplyConfiguration<T>()
                where T : class
@@ -25,7 +25,7 @@ namespace Munchkin.Application.DbContext.MongoDb.Base
 
         public void ApplyMapConfigurationFromAssembly(Assembly assembly)
         {
-            var applyEntityConfigurationMethod = typeof(ModelBuilder)
+            var applyEntityConfigurationMethod = typeof(MapRegistrar)
                 .GetMethods()
                 .Single(
                     e => e.Name == nameof(ApplyConfiguration)

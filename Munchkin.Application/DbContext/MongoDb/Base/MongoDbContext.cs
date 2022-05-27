@@ -4,15 +4,22 @@ namespace Munchkin.Application.DbContext.MongoDb.Base
 {
     public abstract class MongoDbContext
     {
-        protected IMongoDatabase Database { get; init; }
+        private IMongoDatabase? database;
 
-        protected MongoDbContext(IMongoDatabase database)
+        protected MongoDbContext()
         {
-            Database = database;
-            OnModelCreating(new());
         }
 
-        public virtual void OnModelCreating(ModelBuilder builder)
+        public MongoDbOptions? Options { get; set; }
+        protected IMongoDatabase Database => database ??= InitializeDatabase();
+
+        private IMongoDatabase InitializeDatabase()
+        {
+            var mongoClient = new MongoClient(Options?.ConnectionString);
+            return mongoClient.GetDatabase(Options?.DatabaseName);
+        }
+
+        public virtual void OnMapConfiguration(MapRegistrar builder)
         {
         }
     }

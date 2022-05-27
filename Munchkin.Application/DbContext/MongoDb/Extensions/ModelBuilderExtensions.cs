@@ -17,35 +17,35 @@ namespace Munchkin.Application.DbContext.MongoDb.Extensions
 {
     public static class ModelBuilderExtensions
     {
-        public static void ApplyCardMapConfiguration(this ModelBuilder builder)
+        public static void ApplyCardMapConfiguration(this MapRegistrar builder)
         {
-            ModelBuilder.ApplyConfiguration<DoorCard>();
-            ModelBuilder.ApplyConfiguration<TreasureCard>();
-            ModelBuilder.ApplyConfiguration<CurseCard>();
-            ModelBuilder.ApplyConfiguration<MonsterCard>();
-            ModelBuilder.ApplyConfiguration<GoUpLevelCard>();
-            ModelBuilder.ApplyConfiguration<MunchkinCard>();
-            ModelBuilder.ApplyConfiguration<OneShotCard>();
-            ModelBuilder.ApplyConfiguration<ArmorCard>();
-            ModelBuilder.ApplyConfiguration<FootgearCard>();
-            ModelBuilder.ApplyConfiguration<HandCard>();
-            ModelBuilder.ApplyConfiguration<HeadgearCard>();
-            ModelBuilder.ApplyConfiguration<OneHandCard>();
-            ModelBuilder.ApplyConfiguration<TwoHandsCard>();
-            ModelBuilder.ApplyConfiguration<DuckOfDoom>();
-            ModelBuilder.ApplyConfiguration<FlyingFrogs>();
-            ModelBuilder.ApplyConfiguration<MaulRat>();
-            ModelBuilder.ApplyConfiguration<UndeadHorse>();
-            ModelBuilder.ApplyConfiguration<BoilAnAnthill>();
-            ModelBuilder.ApplyConfiguration<ConvenientAdditionError>();
-            ModelBuilder.ApplyConfiguration<InvokeObscureRules>();
-            ModelBuilder.ApplyConfiguration<FlamingArmor>();
-            ModelBuilder.ApplyConfiguration<BootsOfButtKicking>();
-            ModelBuilder.ApplyConfiguration<HelmOfCourage>();
-            ModelBuilder.ApplyConfiguration<SneakyBastardSword>();
-            ModelBuilder.ApplyConfiguration<ElevenFootPole>();
-            ModelBuilder.ApplyConfiguration<Doppleganger>();
-            ModelBuilder.ApplyConfiguration<LoadedDie>();
+            MapRegistrar.ApplyConfiguration<DoorCard>();
+            MapRegistrar.ApplyConfiguration<TreasureCard>();
+            MapRegistrar.ApplyConfiguration<CurseCard>();
+            MapRegistrar.ApplyConfiguration<MonsterCard>();
+            MapRegistrar.ApplyConfiguration<GoUpLevelCard>();
+            MapRegistrar.ApplyConfiguration<MunchkinCard>();
+            MapRegistrar.ApplyConfiguration<OneShotCard>();
+            MapRegistrar.ApplyConfiguration<ArmorCard>();
+            MapRegistrar.ApplyConfiguration<FootgearCard>();
+            MapRegistrar.ApplyConfiguration<HandCard>();
+            MapRegistrar.ApplyConfiguration<HeadgearCard>();
+            MapRegistrar.ApplyConfiguration<OneHandCard>();
+            MapRegistrar.ApplyConfiguration<TwoHandsCard>();
+            MapRegistrar.ApplyConfiguration<DuckOfDoom>();
+            MapRegistrar.ApplyConfiguration<FlyingFrogs>();
+            MapRegistrar.ApplyConfiguration<MaulRat>();
+            MapRegistrar.ApplyConfiguration<UndeadHorse>();
+            MapRegistrar.ApplyConfiguration<BoilAnAnthill>();
+            MapRegistrar.ApplyConfiguration<ConvenientAdditionError>();
+            MapRegistrar.ApplyConfiguration<InvokeObscureRules>();
+            MapRegistrar.ApplyConfiguration<FlamingArmor>();
+            MapRegistrar.ApplyConfiguration<BootsOfButtKicking>();
+            MapRegistrar.ApplyConfiguration<HelmOfCourage>();
+            MapRegistrar.ApplyConfiguration<SneakyBastardSword>();
+            MapRegistrar.ApplyConfiguration<ElevenFootPole>();
+            MapRegistrar.ApplyConfiguration<Doppleganger>();
+            MapRegistrar.ApplyConfiguration<LoadedDie>();
         }
     }
 }
