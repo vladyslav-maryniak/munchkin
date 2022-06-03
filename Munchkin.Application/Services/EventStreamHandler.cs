@@ -1,4 +1,6 @@
 ﻿using EventStore.Client;
+using Microsoft.AspNetCore.SignalR;
+using Munchkin.Application.Hubs;
 using Munchkin.Application.Services.Base;
 using Munchkin.Shared.Events.Base;
 
@@ -8,12 +10,17 @@ namespace Munchkin.Application.Services
     {
         private readonly IEventService service;
         private readonly IGameRepository repository;
+        private readonly IHubContext<EventHub> hub;
         private StreamSubscription? subscription;
 
-        private EventStreamHandler(IEventService service, IGameRepository repository)
+        private EventStreamHandler(
+            IEventService service,
+            IGameRepository repository,
+            IHubContext<EventHub> hub)
         {
             this.service = service;
             this.repository = repository;
+            this.hub = hub;
         }
 
         private async Task<EventStreamHandler> InitializeAsync(CancellationToken cancellationToken = default)
@@ -23,9 +30,12 @@ namespace Munchkin.Application.Services
         }
 
         public static Task<EventStreamHandler> CreateAsync(
-            IEventService service, IGameRepository repository, CancellationToken cancellationToken = default)
+            IEventService service,
+            IGameRepository repository,
+            IHubContext<EventHub> hub,
+            CancellationToken cancellationToken = default)
         {
-            var instance = new EventStreamHandler(service, repository);
+            var instance = new EventStreamHandler(service, repository, hub);
             return instance.InitializeAsync(cancellationToken);
         }
 
@@ -34,6 +44,9 @@ namespace Munchkin.Application.Services
             var game = await repository.GetGameAsync(@event.GameId);
             @event.Apply(game);
             await repository.UpdateGameAsync(game);
+
+            string eventName = @event.GetType().ToString().Split('.').Last();
+            await hub.Clients.All.SendAsync(@event.GameId.ToString(), eventName);
         }
 
         public void Dispose()

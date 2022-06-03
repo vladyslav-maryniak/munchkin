@@ -1,0 +1,7 @@
+<div class="table">
+  <div class="door-deck card" (click)="drawCard()">Doors</div>
+  <div class="treasure-deck card">Treasures</div>
+  <div *ngIf="game && player" class="combat-field">
+    <app-combat-field [game]="game" [player]="player"></app-combat-field>
+  </div>
+</div>

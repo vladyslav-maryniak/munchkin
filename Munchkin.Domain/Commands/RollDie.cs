@@ -18,9 +18,7 @@ namespace Munchkin.Domain.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                Random r = new();
-                var dieValue = r.Next(1, 7);
-                var @event = new PlayerRolledDieEvent(request.GameId, request.PlayerId, dieValue);
+                var @event = new PlayerRolledDieEvent(request.GameId, request.PlayerId);
 
                 await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 

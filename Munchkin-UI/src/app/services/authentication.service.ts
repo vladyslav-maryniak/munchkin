@@ -2,8 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { CreateUserDto } from '../dtos/create-user-dto';
-import { SignInDto } from '../dtos/sign-in-user-dto';
 import { Player } from '../models/player';
 import { StorageItems } from '../models/storage-items';
 
@@ -36,14 +34,9 @@ export class AuthenticationService {
     email: string,
     password: string
   ): Promise<boolean> {
-    const dto: CreateUserDto = {
-      nickname: nickname,
-      email: email,
-      password: password,
-    };
-
     const endpoint = `${this.identityControllerUrl}/create`;
-    const observable = this.httpClient.post<boolean>(endpoint, dto, options);
+    const body = { nickname, email, password };
+    const observable = this.httpClient.post<boolean>(endpoint, body, options);
     const response = await firstValueFrom(observable);
 
     return response.body ?? false;
@@ -55,15 +48,9 @@ export class AuthenticationService {
     password: string,
     isPersistent: boolean
   ): Promise<boolean> {
-    const dto: SignInDto = {
-      nickname: nickname,
-      email: email,
-      password: password,
-      isPersistent: isPersistent,
-    };
-
     const endpoint = `${this.identityControllerUrl}/sign-in`;
-    const observable = this.httpClient.post<boolean>(endpoint, dto, options);
+    const body = { nickname, email, password, isPersistent };
+    const observable = this.httpClient.post<boolean>(endpoint, body, options);
     const response = await firstValueFrom(observable);
 
     if (response.body) {

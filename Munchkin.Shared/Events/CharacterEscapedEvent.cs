@@ -7,7 +7,6 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            game.Table.CombatField.Clear();
         }
     }
 }

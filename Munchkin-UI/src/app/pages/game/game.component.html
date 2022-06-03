@@ -1,0 +1,14 @@
+<div class="game-grid">
+  <div *ngIf="game && player">
+    <app-table [game]="game" [player]="player"> </app-table>
+  </div>
+  <div *ngIf="game" class="player-bar">
+    <app-player-sidebar [game]="game"></app-player-sidebar>
+  </div>
+  <div *ngIf="game && player" class="card-panel">
+    <app-in-hand-card-panel
+      [game]="game"
+      [player]="player"
+    ></app-in-hand-card-panel>
+  </div>
+</div>

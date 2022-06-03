@@ -1,9 +1,63 @@
 <div class="container">
-  <div>
-    <div>
-      <button mat-raised-button color="primary" (click)="createGame()">
-        Create Game
-      </button>
+  <h1>Your games</h1>
+  <mat-action-list
+    *ngIf="playerGames.length > 0; else emptyList"
+    class="game-list-container"
+  >
+    <mat-list-item *ngFor="let game of playerGames" (click)="goTo(game)">
+      <div class="game-status-icon">
+        <mat-icon
+          matTooltip="Not started"
+          matTooltipPosition="before"
+          *ngIf="game.status == gameStatus.NotStarted"
+        >
+          play_circle_outline
+        </mat-icon>
+        <mat-icon
+          matTooltip="Started"
+          matTooltipPosition="before"
+          *ngIf="game.status == gameStatus.Started"
+        >
+          play_circle_filled
+        </mat-icon>
+        <mat-icon
+          matTooltip="Paused"
+          matTooltipPosition="before"
+          *ngIf="game.status == gameStatus.Paused"
+        >
+          pause_circle_outline
+        </mat-icon>
+        <mat-icon
+          matTooltip="Finished"
+          matTooltipPosition="before"
+          *ngIf="game.status == gameStatus.Finished"
+        >
+          check_circle_outline
+        </mat-icon>
+      </div>
+      <div class="nickname-chip-list horizontal-scroll">
+        <div
+          class="nickname-chip"
+          *ngFor="let nickname of getPlayerNicknames(game)"
+        >
+          {{ nickname }}
+        </div>
+      </div>
+    </mat-list-item>
+  </mat-action-list>
+  <ng-template #emptyList>
+    <div class="empty-list-container">
+      <p>You are not in any game</p>
     </div>
+  </ng-template>
+  <div>
+    <button
+      class="create-game-btn"
+      mat-raised-button
+      color="primary"
+      (click)="createGame()"
+    >
+      Create Game
+    </button>
   </div>
 </div>

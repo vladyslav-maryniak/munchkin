@@ -14,6 +14,14 @@ import { HomeComponent } from './pages/home/home.component';
 import { SignInComponent } from './pages/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { GameLobbyComponent } from './pages/game-lobby/game-lobby.component';
+import { GameComponent } from './pages/game/game.component';
+import { ActionButtonComponent } from './components/action-button/action-button.component';
+import { ActionControlAreaDirective } from './directives/action-control-area.directive';
+import { MetadataDialogComponent } from './components/metadata-dialog/metadata-dialog.component';
+import { CombatFieldComponent } from './components/combat-field/combat-field.component';
+import { TableComponent } from './components/table/table.component';
+import { PlayerSidebarComponent } from './components/player-sidebar/player-sidebar.component';
+import { InHandCardPanelComponent } from './components/in-hand-card-panel/in-hand-card-panel.component';
 
 const appRoutes: Routes = [
   {
@@ -32,6 +40,11 @@ const appRoutes: Routes = [
     canActivate: [AuthenticationGuard],
   },
   {
+    path: 'game/:game-id',
+    component: GameComponent,
+    canActivate: [AuthenticationGuard],
+  },
+  {
     path: 'game/:game-id/lobby',
     component: GameLobbyComponent,
     canActivate: [AuthenticationGuard],
@@ -46,6 +59,14 @@ const appRoutes: Routes = [
     SignInComponent,
     SignUpComponent,
     GameLobbyComponent,
+    GameComponent,
+    ActionButtonComponent,
+    ActionControlAreaDirective,
+    MetadataDialogComponent,
+    CombatFieldComponent,
+    TableComponent,
+    PlayerSidebarComponent,
+    InHandCardPanelComponent,
   ],
   imports: [
     BrowserModule,

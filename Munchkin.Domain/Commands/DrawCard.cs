@@ -29,16 +29,15 @@ namespace Munchkin.Domain.Commands
                     return Unit.Value;
                 }
 
-                var card = game.Table.DoorDeck.Pop();
+                var card = game.Table.DoorDeck.Peek();
                 IGameEvent @event = card switch
                 {
-                    MonsterCard monsterCard => new MonsterCardDrewEvent(request.GameId, request.PlayerId, monsterCard),
-                    CurseCard curseCard => new CurseCardDrewEvent(request.GameId, request.PlayerId, curseCard),
+                    MonsterCard => new MonsterCardDrewEvent(request.GameId, request.PlayerId),
+                    CurseCard => new CurseCardDrewEvent(request.GameId, request.PlayerId),
                     _ => throw new NotImplementedException(),
                 };
 
                 await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
-                game.TurnIndex++;
 
                 return Unit.Value;
             }

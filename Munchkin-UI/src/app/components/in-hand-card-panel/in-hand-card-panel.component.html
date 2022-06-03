@@ -1,0 +1,22 @@
+<div class="card-panel">
+  <div
+    *ngFor="let card of inHandCards"
+    [matTooltip]="getCardDescription(card)"
+    matTooltipClass="multiline-tooltip"
+    class="card"
+    (click)="playCard(card)"
+  >
+    <div>
+      <span *ngIf="card.level">Level {{ card.level }}</span>
+      <span *ngIf="card.bonus">+{{ card.bonus }} Bonus</span>
+    </div>
+    <div>
+      <span>{{ card.name }}</span>
+    </div>
+    <div>
+      <span *ngIf="card.victoryLevels && card.victoryLevels > 1">
+        {{ card.victoryLevels }} Levels
+      </span>
+    </div>
+  </div>
+</div>

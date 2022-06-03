@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
+using Munchkin.Application.DbContext.MongoDb.Base;
 using Munchkin.Application.Services.Base;
 using Munchkin.Shared.Cards.Base;
 using Munchkin.Shared.Cards.Doors.Curses;
@@ -12,21 +12,16 @@ using Munchkin.Shared.Cards.Treasures.Items.OneHand;
 using Munchkin.Shared.Cards.Treasures.Items.TwoHands;
 using Munchkin.Shared.Cards.Treasures.OneShots;
 using Munchkin.Shared.Models;
-using Munchkin.Shared.Options;
 
 namespace Munchkin.Application.Services
 {
     public class GameRepository : IGameRepository
     {
-        private readonly IMongoCollection<Game> games;
-        private readonly IMongoCollection<Player> players;
+        private readonly IMunchkinDbContext context;
 
-        public GameRepository(IOptions<GameMongoDbOptions> options)
+        public GameRepository(IMunchkinDbContext context)
         {
-            var mongoClient = new MongoClient(options.Value.ConnectionString);
-            var mongoDb = mongoClient.GetDatabase(options.Value.DatabaseName);
-            games = mongoDb.GetCollection<Game>("Games");
-            players = mongoDb.GetCollection<Player>("Players");
+            this.context = context;
         }
 
         public async Task<Game> CreateGameAsync(CancellationToken cancellationToken = default)
@@ -36,7 +31,7 @@ namespace Munchkin.Application.Services
             var table = new Table(doorDeck, treasureDeck);
             var game = new Game(table);
 
-            await games.InsertOneAsync(game, new(), cancellationToken);
+            await context.Games.InsertOneAsync(game, new(), cancellationToken);
 
             return game;
         }
@@ -45,37 +40,44 @@ namespace Munchkin.Application.Services
         {
             var player = new Player(playerId, nickname);
 
-            await players.InsertOneAsync(player, new(), cancellationToken);
+            await context.Players.InsertOneAsync(player, new(), cancellationToken);
 
             return player;
         }
 
         public Task<Game> GetGameAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return games.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+            return context.Games.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task<GameLobby> GetGameLobbyAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var game = await games.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+            var game = await context.Games.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
             return game.Lobby;
         }
 
         public Task<Player> GetPlayerAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return players.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+            return context.Players.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<List<Game>> GetPlayerGamesAsync(Guid playerId, CancellationToken cancellationToken = default)
+        {
+            return await context.Games
+                .Find(x => x.Table.Places.Any(x => x.Player.Id == playerId) || x.Lobby.Players.Any(x => x.Id == playerId))
+                .ToListAsync(cancellationToken);
         }
 
         public Task UpdateGameAsync(Game game, CancellationToken cancellationToken = default)
         {
-            return games.ReplaceOneAsync(x => x.Id == game.Id, game, cancellationToken: cancellationToken);
+            return context.Games.ReplaceOneAsync(x => x.Id == game.Id, game, cancellationToken: cancellationToken);
         }
 
         private static Stack<DoorCard> GetDoorDeck()
         {
             Stack<DoorCard> doorDeck = new();
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 10; i++)
             {
                 doorDeck.Push(new DuckOfDoom());
                 doorDeck.Push(new UndeadHorse());
@@ -90,7 +92,7 @@ namespace Munchkin.Application.Services
         {
             Stack<TreasureCard> treasureDeck = new();
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 10; i++)
             {
                 treasureDeck.Push(new InvokeObscureRules());
                 treasureDeck.Push(new FlamingArmor());

@@ -1,0 +1,55 @@
+.combat-field {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 7fr 1fr;
+
+  height: 100%;
+}
+
+.monster-squad {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.character-squad {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.character {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+
+  width: 1.75em;
+  height: 1.75em;
+  border-radius: 50%;
+
+  color: #fff;
+  border: 3px solid #e4e4e4;
+  background-color: #c4c4c4;
+}
+
+.card {
+  display: grid;
+  align-items: center;
+  text-align: center;
+
+  width: 7em;
+  height: 10em;
+
+  border-radius: 0.4em;
+  border: 3px solid #e4e4e4;
+}
+
+.action-control-area {
+  align-self: center;
+  justify-self: center;
+  grid-column: 1 / 3;
+}

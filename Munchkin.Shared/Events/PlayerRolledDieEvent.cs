@@ -3,11 +3,12 @@ using Munchkin.Shared.Models;
 
 namespace Munchkin.Shared.Events
 {
-    public record PlayerRolledDieEvent(Guid GameId, Guid PlayerId, int DieValue) : IGameEvent
+    public record PlayerRolledDieEvent(Guid GameId, Guid PlayerId) : IGameEvent
     {
         public void Apply(Game game)
         {
-            game.Table.DieValue = DieValue;
+            var random = new Random();
+            game.Table.DieValue = random.Next(1, 7);
         }
     }
 }

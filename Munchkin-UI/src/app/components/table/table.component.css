@@ -1,0 +1,42 @@
+.table {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: 1fr 10fr 2fr 10fr 1fr;
+
+  height: 100%;
+}
+
+.door-deck {
+  align-self: flex-end;
+  justify-self: center;
+  grid-row: 2;
+}
+
+.treasure-deck {
+  align-self: flex-start;
+  justify-self: center;
+  grid-row: 4;
+}
+
+.combat-field {
+  grid-row: 2 / 5;
+  grid-column: 2;
+}
+
+.card {
+  display: grid;
+  align-items: center;
+  text-align: center;
+
+  width: 7em;
+  height: 10em;
+
+  border-radius: 0.4em;
+  border: 3px solid #e4e4e4;
+
+  cursor: pointer;
+}
+
+.card:hover {
+  border: 3px solid #3f51b5;
+}

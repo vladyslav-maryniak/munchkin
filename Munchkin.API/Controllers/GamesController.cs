@@ -51,6 +51,16 @@ namespace Munchkin.API.Controllers
             return Ok(mapper.Map<GameLobbyDto>(response.Lobby));
         }
 
+        [HttpPost("{gameId:guid}/update-state")]
+        public async Task<ActionResult> UpdateGameStateAsync(
+            Guid gameId, GameStateDto dto, CancellationToken cancellationToken)
+        {
+            var command = new UpdateGameState.Command(gameId, dto.State);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
         [HttpPost("{gameId:guid}/join")]
         public async Task<ActionResult> JoinPlayerAsync(
             Guid gameId, PlayerEventDto dto, CancellationToken cancellationToken)
@@ -101,6 +111,16 @@ namespace Munchkin.API.Controllers
             return Ok();
         }
 
+        [HttpPost("{gameId:guid}/complete-combat")]
+        public async Task<ActionResult> CompleteCombatAsync(
+            Guid gameId, CancellationToken cancellationToken)
+        {
+            var command = new CompleteCombat.Command(gameId);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
         [HttpPost("{gameId:guid}/roll-die")]
         public async Task<ActionResult> RollDieAsync(
             Guid gameId, PlayerEventDto dto, CancellationToken cancellationToken)
@@ -126,6 +146,16 @@ namespace Munchkin.API.Controllers
             Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)
         {
             var command = new ComeToHelp.Command(gameId, dto.CharacterId);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPost("{gameId:guid}/stop-asking-for-help")]
+        public async Task<ActionResult> StopAskingForHelpAsync(
+            Guid gameId, CancellationToken cancellationToken)
+        {
+            var command = new StopAskingForHelp.Command(gameId);
             await mediator.Send(command, cancellationToken);
 
             return Ok();

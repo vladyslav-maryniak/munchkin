@@ -22,9 +22,8 @@ namespace Munchkin.Domain.Commands
             {
                 var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
                 var game = response.Game;
-                var character = game.Table.Places
-                    .First(x => x.Character.Id == request.CharacterId)
-                    .Character;
+                var character = game.Table.CombatField.CharacterSquad
+                    .First(x => x.Id == request.CharacterId);
 
                 var monsterCombatStrength = game.Table.CombatField.MonsterSquad
                     .Select(x => x.Level)
