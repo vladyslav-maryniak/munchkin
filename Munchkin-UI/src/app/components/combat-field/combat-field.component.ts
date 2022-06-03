@@ -19,8 +19,9 @@ import { Character } from 'src/app/models/character';
 import { CombatField } from 'src/app/models/combat-field';
 import { Equipment } from 'src/app/models/equipment';
 import { Game } from 'src/app/models/game';
-import { ItemCard } from 'src/app/models/item-card';
+import { MunchkinCard } from 'src/app/models/munchkin-card';
 import { Player } from 'src/app/models/player';
+import { CardService } from 'src/app/services/card.service';
 import { GameService } from 'src/app/services/game.service';
 import { SignalrService } from 'src/app/services/signalr.service';
 
@@ -35,10 +36,24 @@ export class CombatFieldComponent
 {
   @Input() game!: Game;
   @Input() player!: Player;
-  character!: Character;
 
-  get combatField(): CombatField {
-    return this.game.table.combatField;
+  get characterSquad(): Character[] | undefined {
+    return this.combatField?.characterSquad;
+  }
+
+  get monsterSquad(): MunchkinCard[] | undefined {
+    return this.combatField?.monsterSquad;
+  }
+
+  get combatField(): CombatField | undefined {
+    return this.game?.table.combatField;
+  }
+
+  get character(): Character {
+    return (
+      this.game?.table.places.find((x) => x.player.id == this.player?.id)
+        ?.character ?? ({} as Character)
+    );
   }
 
   @ViewChild(ActionControlAreaDirective, { static: true })
@@ -67,15 +82,13 @@ export class CombatFieldComponent
   constructor(
     private snackBar: MatSnackBar,
     private gameService: GameService,
-    private signalrService: SignalrService
+    private cardService: CardService,
+    private signalrService: SignalrService,
   ) {
     super();
   }
 
   async ngOnInit(): Promise<void> {
-    this.character =
-      this.game.table.places.find((x) => x.player.id == this.player.id)
-        ?.character ?? ({} as Character);
 
     this.initCombatFieldStates();
     const state = this.states.get(this.game.state) ?? new WaitingState();
@@ -190,8 +203,7 @@ export class CombatFieldComponent
   }
 
   isPlayerTurn(player: Player): boolean {
-    const index = this.game.turnIndex % this.game.table.places.length;
-    return this.game.table.places[index].player.id == player.id;
+    return this.gameService.isPlayerTurn(this.game, player);
   }
 
   initCombatFieldStates(): void {
@@ -216,35 +228,23 @@ export class CombatFieldComponent
     ]);
   }
 
-  getNicknameLabel(character: Character): string {
+  getPlayerNicknameAbbreviation(character: Character): string {
     const place = this.game.table.places.find(
       (x) => x.character.id === character.id
     );
-    return place?.player.nickname.trim().charAt(0).toUpperCase() ?? '';
+    return place ? this.cardService.getNicknameAbbreviation(place.player) : '';
   }
 
-  getEquipmentDescription(e: Equipment): string {
-    const total =
-      (e.headgear?.bonus ?? 0) +
-      (e.armor?.bonus ?? 0) +
-      (e.footgear?.bonus ?? 0) +
-      (e.leftHand?.bonus ?? 0) +
-      (e.leftHand?.id != e.rightHand?.id ? e.rightHand?.bonus ?? 0 : 0);
-
-    const description: string[] = [
-      `Headgear: ${this.getItemDescription(e.headgear)}`,
-      `Armor: ${this.getItemDescription(e.armor)}`,
-      `Footgear: ${this.getItemDescription(e.footgear)}`,
-      `Left hand: ${this.getItemDescription(e.leftHand)}`,
-      `Right hand: ${this.getItemDescription(e.rightHand)}`,
-      `Total: +${total}`,
-    ];
-
-    return description.join('\n');
+  getCharacterEquipmentDescription(equipment: Equipment): string {
+    return this.cardService.getCharacterEquipmentDescription(equipment);
   }
 
-  private getItemDescription(card: ItemCard): string {
-    return card ? `${card.name} +${card.bonus}` : 'none';
+  getCardDescription(card: MunchkinCard): string {
+    return this.cardService.getCardDescription(card);
+  }
+
+  getCardImageSrc(card: MunchkinCard): string {
+    return this.cardService.getCardImageSrc(card);
   }
 
   ngOnDestroy(): void {

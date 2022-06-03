@@ -24,19 +24,9 @@
 }
 
 .card {
-  display: grid;
-  align-items: center;
-  text-align: center;
-
-  width: 7em;
-  height: 10em;
-
-  border-radius: 0.4em;
-  border: 3px solid #e4e4e4;
-
   cursor: pointer;
 }
 
 .card:hover {
-  border: 3px solid #3f51b5;
+  box-shadow: 0 0 0.5em;
 }
