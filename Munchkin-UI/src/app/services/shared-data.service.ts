@@ -22,7 +22,10 @@ export class SharedDataService {
   }
 
   async getGame(gameId: string): Promise<Observable<Game>> {
-    if (this.gameSubject === undefined) {
+    if (
+      this.gameSubject === undefined ||
+      this.gameSubject.getValue().id !== gameId
+    ) {
       const game = await this.gameService.getGame(gameId);
       this.gameSubject = new BehaviorSubject<Game>(game);
     }
