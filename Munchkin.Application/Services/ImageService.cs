@@ -21,7 +21,7 @@ namespace Munchkin.Application.Services
         public async Task<GetObjectReply> GetImageAsync(
             string objectName, CancellationToken cancellationToken)
         {
-            MemoryStream memoryStream = new();
+            using var memoryStream = new MemoryStream();
 
             var statObjectArgs = new StatObjectArgs()
                 .WithBucket(options.BucketName)
