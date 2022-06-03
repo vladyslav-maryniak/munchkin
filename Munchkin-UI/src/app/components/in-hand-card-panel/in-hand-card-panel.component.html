@@ -1,22 +1,63 @@
-<div class="card-panel">
-  <div
-    *ngFor="let card of inHandCards"
-    [matTooltip]="getCardDescription(card)"
-    matTooltipClass="multiline-tooltip"
-    class="card"
-    (click)="playCard(card)"
-  >
-    <div>
-      <span *ngIf="card.level">Level {{ card.level }}</span>
-      <span *ngIf="card.bonus">+{{ card.bonus }} Bonus</span>
-    </div>
-    <div>
-      <span>{{ card.name }}</span>
-    </div>
-    <div>
-      <span *ngIf="card.victoryLevels && card.victoryLevels > 1">
-        {{ card.victoryLevels }} Levels
-      </span>
+<div class="bottom-panel">
+  <div class="info-panel">
+    <div *ngIf="multiselect">{{ totalGoldPieces }} gold pieces</div>
+  </div>
+
+  <div *ngIf="multiselect" class="select-buttons">
+    <button
+      mat-icon-button
+      color="primary"
+      [disabled]="totalGoldPieces < 1000"
+      (click)="sellCards()"
+    >
+      <mat-icon>check_circle_outline</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" (click)="clearSelectedCards()">
+      <mat-icon>highlight_off</mat-icon>
+    </button>
+  </div>
+
+  <div class="card-panel">
+    <div
+      *ngFor="let card of inHandCards"
+      [matTooltip]="getCardDescription(card)"
+      matTooltipClass="multiline-tooltip"
+      class="card"
+      [ngClass]="{ 'selected-card': isCardSelected(card) }"
+    >
+      <img
+        (click)="onClick(card)"
+        src="{{ getCardImageSrc(card) }}"
+        alt="{{ card.name }}"
+      />
+
+      <div
+        *ngIf="isCardSelected(card)"
+        class="action-background"
+        (click)="onClick(card)"
+      ></div>
+
+      <div
+        *ngIf="isCardSelected(card) && multiselect === false"
+        class="card-action-buttons"
+        (click)="onClick(card)"
+      >
+        <div class="play-button">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="playCard(card)"
+          >
+            Play
+          </button>
+        </div>
+        <div *ngIf="card.goldPieces !== undefined" class="sell-button">
+          <button mat-icon-button color="primary" (click)="switchSelectMode()">
+            <mat-icon>play_for_work</mat-icon>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

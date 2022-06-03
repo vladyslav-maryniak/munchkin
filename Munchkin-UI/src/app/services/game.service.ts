@@ -6,6 +6,7 @@ import { Game } from '../models/game';
 import { Player } from '../models/player';
 import { AuthenticationService } from './authentication.service';
 import { GameLobby } from '../models/game-lobby';
+import { WaitingState } from '../game-states/combat-field/waiting-state';
 
 const options = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -114,6 +115,16 @@ export class GameService {
     return response.ok;
   }
 
+  async applyCurse(gameId: string, characterId: string): Promise<boolean> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/apply-curse`;
+    const body = { characterId };
+
+    const observable = this.httpClient.post(endpoint, body, options);
+    const response = await firstValueFrom(observable);
+
+    return response.ok;
+  }
+
   async initiateCombat(gameId: string, characterId: string): Promise<boolean> {
     const endpoint = `${this.gameControllerUrl}/${gameId}/initiate-combat`;
     const body = { characterId };
@@ -183,5 +194,41 @@ export class GameService {
     const response = await firstValueFrom(observable);
 
     return response.ok;
+  }
+
+  async sellCards(
+    gameId: string,
+    playerId: string,
+    cardIds: string[]
+  ): Promise<boolean> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/sell-cards`;
+    const body = { playerId, cardIds };
+
+    const observable = this.httpClient.post(endpoint, body, options);
+    const response = await firstValueFrom(observable);
+
+    return response.ok;
+  }
+
+  isPlayerInCombat(game: Game, player: Player): boolean {
+    const place = game.table.places.find((x) => x.player.id === player.id);
+    if (place) {
+      if (
+        game.table.combatField.characterSquad.find(
+          (x) => x.id === place.character.id
+        )
+      )
+        return true;
+    }
+    return false;
+  }
+
+  isPlayerTurn(game: Game, player: Player): boolean {
+    const index = game.turnIndex % game.table.places.length;
+    return game.table.places[index].player.id == player.id;
+  }
+
+  isInCombatState(game: Game) {
+    return game.state !== WaitingState.name;
   }
 }

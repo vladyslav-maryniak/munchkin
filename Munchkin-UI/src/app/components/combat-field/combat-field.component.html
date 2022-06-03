@@ -1,31 +1,38 @@
 <div class="combat-field">
   <div class="monster-squad">
-    <div class="card" *ngFor="let monster of combatField.monsterSquad">
-      <div>
-        <span>Level {{ monster.level }}</span>
-      </div>
-      <div>
-        <span>{{ monster.name }}</span>
-      </div>
-      <div>
-        <span *ngIf="monster.victoryLevels && monster.victoryLevels > 1">
-          {{ monster.victoryLevels }} Levels
-        </span>
-      </div>
+    <div
+      class="card"
+      *ngIf="cursePlace"
+      [matTooltip]="getCardDescription(cursePlace)"
+    >
+      <img
+        src="{{ getCardImageSrc(cursePlace) }}"
+        alt="{{ cursePlace.name }}"
+      />
+    </div>
+
+    <div
+      class="card"
+      *ngFor="let monster of monsterSquad"
+      [matTooltip]="getCardDescription(monster)"
+    >
+      <img src="{{ getCardImageSrc(monster) }}" alt="{{ monster.name }}" />
     </div>
   </div>
+
   <div class="character-squad">
     <div
-      *ngFor="let character of combatField.characterSquad"
+      *ngFor="let character of characterSquad"
       [matBadge]="character.level"
-      [matTooltip]="getEquipmentDescription(character.equipment)"
+      [matTooltip]="getCharacterEquipmentDescription(character.equipment)"
       matTooltipClass="multiline-tooltip"
       matTooltipPosition="left"
       class="character"
     >
-      {{ getNicknameLabel(character) }}
+      {{ getPlayerNicknameAbbreviation(character) }}
     </div>
   </div>
+
   <div class="action-control-area">
     <ng-template actionControlArea></ng-template>
   </div>

@@ -3,9 +3,9 @@ using Munchkin.Shared.Events;
 
 namespace Munchkin.Domain.Commands
 {
-    public static class UpdateGameState
+    public static class SellCards
     {
-        public record Command(Guid GameId, string State) : IRequest;
+        public record Command(Guid GameId, Guid PlayerId, IEnumerable<Guid> CardIds) : IRequest;
 
         public class Handler : IRequestHandler<Command>
         {
@@ -18,7 +18,7 @@ namespace Munchkin.Domain.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var @event = new GameStateUpdatedEvent(request.GameId, request.State);
+                var @event = new PlayerSoldCardsEvent(request.GameId, request.PlayerId, request.CardIds);
 
                 await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 

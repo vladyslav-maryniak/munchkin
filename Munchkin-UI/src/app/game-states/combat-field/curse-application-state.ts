@@ -1,21 +1,15 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { CombatFieldComponent } from 'src/app/components/combat-field/combat-field.component';
 import { GameState } from '../base/game-state';
-import { WaitingState } from './waiting-state';
 
 export class CurseApplicationState extends GameState<CombatFieldComponent> {
-  constructor(private snackBar: MatSnackBar) {
-    super();
-  }
-
   public occurs(): void {
-    this.showSnackBar(
-      "You'he applied a curse!",
-      "Player's applied a curse!",
-      this.context.isCurrentPlayerTurn(),
-      this.snackBar
-    );
+    const container = this.context.actionControlAreaDirective.viewContainerRef;
+    container.clear();
 
-    this.context.transitionTo(new WaitingState());
+    const isCurrentPlayerTurn = this.context.isCurrentPlayerTurn();
+
+    if (isCurrentPlayerTurn) {
+      this.setActionButton('Apply', this.context.applyCurse, container);
+    }
   }
 }

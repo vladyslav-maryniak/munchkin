@@ -8,19 +8,16 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            var character = game.Table.Places
+            var table = game.Table;
+            var card = (CurseCard)table.DoorDeck.Pop();
+            var character = table.Places
                 .First(x => x.Player.Id == PlayerId)
                 .Character;
-            var card = (CurseCard)game.Table.DoorDeck.Pop();
 
-            card.Apply(character);
-
-            if (character.Level < 1)
-            {
-                character.Level = 1;
-            }
-
-            game.TurnIndex++;
+            character.Curses.Add(card);
+            
+            table.CombatField.CursePlace = card;
+            table.CombatField.CharacterSquad.Add(character);
         }
     }
 }

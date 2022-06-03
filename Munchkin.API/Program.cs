@@ -1,4 +1,6 @@
 using MediatR;
+using Microsoft.Extensions.Options;
+using Minio;
 using Munchkin.API;
 using Munchkin.Application.DbContext.MongoDb;
 using Munchkin.Application.DbContext.MongoDb.Base;
@@ -15,6 +17,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHostedService<EventHostedService>();
 builder.Services.AddSingleton<IEventService, EventStoreService>();
 builder.Services.AddSingleton<IGameRepository, GameRepository>();
+
+builder.Services.Configure<MinioOptions>(builder.Configuration.GetSection(nameof(MinioOptions)));
+builder.Services.AddTransient<IImageService, ImageService>(provider =>
+{
+    var minioOptions = provider.GetRequiredService<IOptions<MinioOptions>>();
+    var client = new MinioClient()
+        .WithEndpoint(minioOptions.Value.Endpoint)
+        .WithCredentials(minioOptions.Value.AccessKey, minioOptions.Value.SecretKey)
+        .Build();
+    return new ImageService(client, minioOptions);
+});
 
 builder.Services.AddSignalR();
 builder.Services.AddMediatR(typeof(Munchkin.Domain.Entrypoints.MediatREntrypoint).Assembly);

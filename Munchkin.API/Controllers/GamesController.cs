@@ -101,6 +101,16 @@ namespace Munchkin.API.Controllers
             return Ok();
         }
 
+        [HttpPost("{gameId:guid}/apply-curse")]
+        public async Task<ActionResult> ApplyCurseAsync(
+            Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)
+        {
+            var command = new ApplyCurse.Command(gameId, dto.CharacterId);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
         [HttpPost("{gameId:guid}/initiate-combat")]
         public async Task<ActionResult> InitiateCombatAsync(
             Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)
@@ -176,6 +186,16 @@ namespace Munchkin.API.Controllers
             Guid gameId, PlayCardEventDto dto, CancellationToken cancellationToken)
         {
             var command = new PlayCard.Command(gameId, dto.PlayerId, dto.CardId, dto.Metadata);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPost("{gameId:guid}/sell-cards")]
+        public async Task<ActionResult> SellCardsAsync(
+            Guid gameId, CardSaleEventDto dto, CancellationToken cancellationToken)
+        {
+            var command = new SellCards.Command(gameId, dto.PlayerId, dto.CardIds);
             await mediator.Send(command, cancellationToken);
 
             return Ok();

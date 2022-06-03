@@ -1,7 +1,11 @@
 <div class="table">
-  <div class="door-deck card" (click)="drawCard()">Doors</div>
-  <div class="treasure-deck card">Treasures</div>
+  <div class="door-deck card" (click)="drawCard()">
+    <img src="{{ getImageSrc('door_back.avif') }}" alt="Doors" />
+  </div>
+  <div class="treasure-deck card">
+    <img src="{{ getImageSrc('treasure_back.avif') }}" alt="Treasures" />
+  </div>
   <div *ngIf="game && player" class="combat-field">
-    <app-combat-field [game]="game" [player]="player"></app-combat-field>
+    <app-combat-field></app-combat-field>
   </div>
 </div>
