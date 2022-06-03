@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Munchkin.API.DTOs;
 using Munchkin.Shared.Cards.Base;
-using Munchkin.Shared.Cards.Base.Doors;
 using Munchkin.Shared.Cards.Base.Treasures.Items;
 using Munchkin.Shared.Models;
 

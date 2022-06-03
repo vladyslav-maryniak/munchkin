@@ -9,5 +9,7 @@ export class RunningAwayState extends GameState<CombatFieldComponent> {
     if (this.context.isCurrentPlayerTurn()) {
       this.setActionButton('Roll die', this.context.rollDie, container);
     }
+
+    this.showSixSidedDie(this.context.game.table.dieValue, container);
   }
 }

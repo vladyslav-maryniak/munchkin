@@ -115,6 +115,16 @@ export class GameService {
     return response.ok;
   }
 
+  async applyCurse(gameId: string, characterId: string): Promise<boolean> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/apply-curse`;
+    const body = { characterId };
+
+    const observable = this.httpClient.post(endpoint, body, options);
+    const response = await firstValueFrom(observable);
+
+    return response.ok;
+  }
+
   async initiateCombat(gameId: string, characterId: string): Promise<boolean> {
     const endpoint = `${this.gameControllerUrl}/${gameId}/initiate-combat`;
     const body = { characterId };

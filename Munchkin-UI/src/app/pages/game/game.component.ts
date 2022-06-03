@@ -16,25 +16,18 @@ import { SignalrService } from 'src/app/services/signalr.service';
 export class GameComponent implements OnInit, OnDestroy {
   game!: Game;
   player!: Player;
-  character!: Character;
+
+  get character(): Character {
+    return (
+      this.game?.table.places.find((x) => x.player.id == this.player?.id)
+        ?.character ?? ({} as Character)
+    );
+  }
 
   private subscription!: Subscription;
 
   private eventHandlers = new Map<string, (...args: any[]) => Promise<void>>([
-    ['ItemCardPlayedEvent', this.onItemCardPlayedEvent],
-    ['OneShotCardPlayedEvent', this.onOneShotCardPlayedEvent],
-    ['GoUpLevelCardPlayedEvent', this.onGoUpLevelCardPlayedEvent],
-    ['MonsterCardDrewEvent', this.onMonsterCardDrewEvent],
-    ['CurseCardDrewEvent', this.onCurseCardDrewEvent],
-    ['CharacterWonCombatEvent', this.onCharacterWonCombatEvent],
-    ['CombatCompletedEvent', this.onCombatCompletedEvent],
-    ['CharacterAskedForHelpEvent', this.onCharacterAskedForHelpEvent],
-    ['CharacterGotHelpEvent', this.onCharacterGotHelpEvent],
-    ['HelpTimeExpiredEvent', this.onHelpTimeExpiredEvent],
-    ['CharacterRanAwayEvent', this.onCharacterRanAwayEvent],
-    ['PlayerRolledDieEvent', this.onPlayerRolledDieEvent],
-    ['CharacterAppliedBadStuffEvent', this.onCharacterAppliedBadStuffEvent],
-    ['CharacterEscapedEvent', this.onCharacterEscapedEvent],
+    ['GameStateUpdatedEvent', this.onGameStateUpdatedEvent],
   ]);
 
   constructor(
@@ -48,9 +41,6 @@ export class GameComponent implements OnInit, OnDestroy {
     this.player = this.authService.signedPlayer.getValue() ?? ({} as Player);
     const gameId = this.route.snapshot.paramMap.get('game-id') ?? '';
     this.game = await this.gameService.getGame(gameId);
-    this.character =
-      this.game.table.places.find((x) => x.player.id == this.player.id)
-        ?.character ?? ({} as Character);
 
     await this.signalrService.connect();
     this.signalrService.follow(gameId);
@@ -65,33 +55,11 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   };
 
-  async onItemCardPlayedEvent(): Promise<void> {}
-
-  async onOneShotCardPlayedEvent(): Promise<void> {}
-
-  async onGoUpLevelCardPlayedEvent(): Promise<void> {}
-
-  async onMonsterCardDrewEvent(): Promise<void> {}
-
-  async onCurseCardDrewEvent(): Promise<void> {}
-
-  async onCharacterWonCombatEvent(): Promise<void> {}
-
-  async onCombatCompletedEvent(): Promise<void> {}
-
-  async onCharacterAskedForHelpEvent(): Promise<void> {}
-
-  async onCharacterGotHelpEvent(): Promise<void> {}
-
-  async onHelpTimeExpiredEvent(): Promise<void> {}
-
-  async onCharacterRanAwayEvent(): Promise<void> {}
-
-  async onPlayerRolledDieEvent(): Promise<void> {}
-
-  async onCharacterAppliedBadStuffEvent(): Promise<void> {}
-
-  async onCharacterEscapedEvent(): Promise<void> {}
+  async onGameStateUpdatedEvent(): Promise<void> {
+    if (this.game) {
+      this.game = await this.gameService.getGame(this.game.id);
+    }
+  }
 
   async ngOnDestroy(): Promise<void> {
     this.subscription.unsubscribe();

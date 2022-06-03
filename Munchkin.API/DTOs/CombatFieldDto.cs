@@ -4,5 +4,6 @@
     {
         public List<object> MonsterSquad { get; set; } = new();
         public List<CharacterDto> CharacterSquad { get; set; } = new();
+        public object? CursePlace { get; set; }
     }
 }

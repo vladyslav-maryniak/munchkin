@@ -36,6 +36,9 @@ export class CombatFieldComponent
 {
   @Input() game!: Game;
   @Input() player!: Player;
+  get cursePlace(): MunchkinCard | undefined {
+    return this.combatField?.cursePlace;
+  }
 
   get characterSquad(): Character[] | undefined {
     return this.combatField?.characterSquad;
@@ -63,11 +66,9 @@ export class CombatFieldComponent
 
   private states!: Map<string, GameState<CombatFieldComponent>>;
   private eventHandlers = new Map<string, (...args: any[]) => Promise<void>>([
-    ['ItemCardPlayedEvent', this.onItemCardPlayedEvent],
-    ['OneShotCardPlayedEvent', this.onOneShotCardPlayedEvent],
-    ['GoUpLevelCardPlayedEvent', this.onGoUpLevelCardPlayedEvent],
     ['MonsterCardDrewEvent', this.onMonsterCardDrewEvent],
     ['CurseCardDrewEvent', this.onCurseCardDrewEvent],
+    ['CharacterAppliedCurseEvent', this.onCharacterAppliedCurseEvent],
     ['CharacterWonCombatEvent', this.onCharacterWonCombatEvent],
     ['CombatCompletedEvent', this.onCombatCompletedEvent],
     ['CharacterAskedForHelpEvent', this.onCharacterAskedForHelpEvent],
@@ -117,18 +118,16 @@ export class CombatFieldComponent
     }
   }
 
-  async onItemCardPlayedEvent(): Promise<void> {}
-
-  async onOneShotCardPlayedEvent(): Promise<void> {}
-
-  async onGoUpLevelCardPlayedEvent(): Promise<void> {}
-
   async onMonsterCardDrewEvent(): Promise<void> {
     await this.transitionTo(new CombatInitiationState());
   }
 
   async onCurseCardDrewEvent(): Promise<void> {
-    await this.transitionTo(new CurseApplicationState(this.snackBar));
+    await this.transitionTo(new CurseApplicationState());
+  }
+
+  async onCharacterAppliedCurseEvent(): Promise<void> {
+    await this.transitionTo(new WaitingState());
   }
 
   async onCharacterWonCombatEvent(): Promise<void> {
@@ -157,9 +156,7 @@ export class CombatFieldComponent
 
   async onPlayerRolledDieEvent(): Promise<void> {
     this.game = await this.gameService.getGame(this.game.id);
-    await this.transitionTo(
-      new RunAwayRollResolutionState(this.game.table.dieValue, this.snackBar)
-    );
+    await this.transitionTo(new RunAwayRollResolutionState());
   }
 
   async onCharacterAppliedBadStuffEvent(): Promise<void> {
@@ -169,6 +166,10 @@ export class CombatFieldComponent
   async onCharacterEscapedEvent(): Promise<void> {
     await this.transitionTo(new EscapingState(this.snackBar));
   }
+
+  applyCurse = async (): Promise<void> => {
+    await this.gameService.applyCurse(this.game.id, this.character.id);
+  };
 
   initiateCombat = async (): Promise<void> => {
     await this.gameService.initiateCombat(this.game.id, this.character.id);
@@ -216,12 +217,9 @@ export class CombatFieldComponent
       [CombatCompletionState.name, new CombatCompletionState()],
       [CombatInitiationState.name, new CombatInitiationState()],
       [CombatResumptionState.name, new CombatResumptionState()],
-      [CurseApplicationState.name, new CurseApplicationState(this.snackBar)],
+      [CurseApplicationState.name, new CurseApplicationState()],
       [EscapingState.name, new EscapingState(this.snackBar)],
-      [
-        RunAwayRollResolutionState.name,
-        new RunAwayRollResolutionState(this.game.table.dieValue, this.snackBar),
-      ],
+      [RunAwayRollResolutionState.name, new RunAwayRollResolutionState()],
       [RunningAwayState.name, new RunningAwayState()],
       [WaitingState.name, new WaitingState()],
       [WinningState.name, new WinningState(this.snackBar)],

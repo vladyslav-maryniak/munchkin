@@ -101,6 +101,16 @@ namespace Munchkin.API.Controllers
             return Ok();
         }
 
+        [HttpPost("{gameId:guid}/apply-curse")]
+        public async Task<ActionResult> ApplyCurseAsync(
+            Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)
+        {
+            var command = new ApplyCurse.Command(gameId, dto.CharacterId);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
         [HttpPost("{gameId:guid}/initiate-combat")]
         public async Task<ActionResult> InitiateCombatAsync(
             Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)

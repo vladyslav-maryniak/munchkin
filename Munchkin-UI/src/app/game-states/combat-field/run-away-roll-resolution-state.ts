@@ -1,9 +1,8 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { CombatFieldComponent } from 'src/app/components/combat-field/combat-field.component';
 import { GameState } from '../base/game-state';
 
 export class RunAwayRollResolutionState extends GameState<CombatFieldComponent> {
-  constructor(private dieValue: number, private snackBar: MatSnackBar) {
+  constructor() {
     super();
   }
   public occurs(): void {
@@ -12,13 +11,6 @@ export class RunAwayRollResolutionState extends GameState<CombatFieldComponent> 
 
     const isCurrentPlayerTurn = this.context.isCurrentPlayerTurn();
 
-    this.showSnackBar(
-      `${this.dieValue} on top of the die.`,
-      `${this.dieValue} on top of the die.`,
-      isCurrentPlayerTurn,
-      this.snackBar
-    );
-
     if (isCurrentPlayerTurn) {
       this.setActionButton(
         'Resolve roll',
@@ -26,5 +18,7 @@ export class RunAwayRollResolutionState extends GameState<CombatFieldComponent> 
         container
       );
     }
+
+    this.showSixSidedDie(this.context.game.table.dieValue, container);
   }
 }
