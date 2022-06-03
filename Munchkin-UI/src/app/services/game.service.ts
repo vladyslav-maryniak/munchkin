@@ -196,6 +196,20 @@ export class GameService {
     return response.ok;
   }
 
+  async sellCards(
+    gameId: string,
+    playerId: string,
+    cardIds: string[]
+  ): Promise<boolean> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/sell-cards`;
+    const body = { playerId, cardIds };
+
+    const observable = this.httpClient.post(endpoint, body, options);
+    const response = await firstValueFrom(observable);
+
+    return response.ok;
+  }
+
   isPlayerInCombat(game: Game, player: Player): boolean {
     const place = game.table.places.find((x) => x.player.id === player.id);
     if (place) {

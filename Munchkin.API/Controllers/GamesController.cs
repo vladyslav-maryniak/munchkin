@@ -190,5 +190,15 @@ namespace Munchkin.API.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{gameId:guid}/sell-cards")]
+        public async Task<ActionResult> SellCardsAsync(
+            Guid gameId, CardSaleEventDto dto, CancellationToken cancellationToken)
+        {
+            var command = new SellCards.Command(gameId, dto.PlayerId, dto.CardIds);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
     }
 }
