@@ -2,6 +2,7 @@ import { ViewContainerRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActionButtonComponent } from 'src/app/components/action-button/action-button.component';
 import { GameStateControl } from 'src/app/components/base/game-state-control';
+import { SixSidedDieComponent } from 'src/app/components/six-sided-die/six-sided-die.component';
 
 export abstract class GameState<T> {
   protected context!: T;
@@ -36,5 +37,12 @@ export abstract class GameState<T> {
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });
+  }
+
+  protected showSixSidedDie(dieValue: number, container: ViewContainerRef) {
+    const component =
+      container.createComponent<GameStateControl>(SixSidedDieComponent);
+
+    component.instance.data = dieValue;
   }
 }

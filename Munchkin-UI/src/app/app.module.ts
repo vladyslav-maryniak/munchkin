@@ -22,6 +22,7 @@ import { CombatFieldComponent } from './components/combat-field/combat-field.com
 import { TableComponent } from './components/table/table.component';
 import { PlayerSidebarComponent } from './components/player-sidebar/player-sidebar.component';
 import { InHandCardPanelComponent } from './components/in-hand-card-panel/in-hand-card-panel.component';
+import { SixSidedDieComponent } from './components/six-sided-die/six-sided-die.component';
 
 const appRoutes: Routes = [
   {
@@ -67,6 +68,7 @@ const appRoutes: Routes = [
     TableComponent,
     PlayerSidebarComponent,
     InHandCardPanelComponent,
+    SixSidedDieComponent,
   ],
   imports: [
     BrowserModule,
