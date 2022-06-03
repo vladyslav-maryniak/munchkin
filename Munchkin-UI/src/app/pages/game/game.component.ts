@@ -4,8 +4,8 @@ import { Subscription } from 'rxjs';
 import { Character } from 'src/app/models/character';
 import { Game } from 'src/app/models/game';
 import { Player } from 'src/app/models/player';
-import { AuthenticationService } from 'src/app/services/authentication.service';
 import { GameService } from 'src/app/services/game.service';
+import { SharedDataService } from 'src/app/services/shared-data.service';
 import { SignalrService } from 'src/app/services/signalr.service';
 
 @Component({
@@ -14,8 +14,8 @@ import { SignalrService } from 'src/app/services/signalr.service';
   styleUrls: ['./game.component.css'],
 })
 export class GameComponent implements OnInit, OnDestroy {
-  game!: Game;
-  player!: Player;
+  game: Game | undefined;
+  player: Player | undefined;
 
   get character(): Character {
     return (
@@ -24,7 +24,7 @@ export class GameComponent implements OnInit, OnDestroy {
     );
   }
 
-  private subscription!: Subscription;
+  private subscriptions: Subscription[] = [];
 
   private eventHandlers = new Map<string, (...args: any[]) => Promise<void>>([
     ['GameStateUpdatedEvent', this.onGameStateUpdatedEvent],
@@ -33,25 +33,30 @@ export class GameComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private gameService: GameService,
-    private authService: AuthenticationService,
-    private signalrService: SignalrService
+    private signalrService: SignalrService,
+    private dataService: SharedDataService
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.player = this.authService.signedPlayer.getValue() ?? ({} as Player);
     const gameId = this.route.snapshot.paramMap.get('game-id') ?? '';
-    this.game = await this.gameService.getGame(gameId);
+    const game = await this.dataService.getGame(gameId);
+    this.subscriptions.push(game.subscribe((x: Game) => (this.game = x)));
+
+    this.subscriptions.push(
+      this.dataService.getPlayer().subscribe((x: Player) => (this.player = x))
+    );
+
+    this.subscriptions.push(
+      this.signalrService.gameEvents.subscribe(this.onEvent)
+    );
 
     await this.signalrService.connect();
     this.signalrService.follow(gameId);
-
-    this.subscription = this.signalrService.gameEvents.subscribe(this.onEvent);
   }
 
   private onEvent = async (event: string): Promise<void> => {
     if (this.eventHandlers.has(event)) {
       await this.eventHandlers.get(event)?.call(this);
-      this.game = await this.gameService.getGame(this.game.id);
     }
   };
 
@@ -62,7 +67,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy(): Promise<void> {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach((x) => x.unsubscribe());
     await this.signalrService.disconnect();
   }
 }

@@ -1,5 +1,6 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ActionControlAreaDirective } from 'src/app/directives/action-control-area.directive';
 import { GameContext } from 'src/app/game-states/base/game-context';
@@ -23,6 +24,7 @@ import { MunchkinCard } from 'src/app/models/munchkin-card';
 import { Player } from 'src/app/models/player';
 import { CardService } from 'src/app/services/card.service';
 import { GameService } from 'src/app/services/game.service';
+import { SharedDataService } from 'src/app/services/shared-data.service';
 import { SignalrService } from 'src/app/services/signalr.service';
 
 @Component({
@@ -34,8 +36,11 @@ export class CombatFieldComponent
   extends GameContext<CombatFieldComponent>
   implements OnInit, OnDestroy
 {
-  @Input() game!: Game;
-  @Input() player!: Player;
+  game!: Game;
+  player!: Player;
+
+  private subscriptions: Subscription[] = [];
+
   get cursePlace(): MunchkinCard | undefined {
     return this.combatField?.cursePlace;
   }
@@ -62,8 +67,6 @@ export class CombatFieldComponent
   @ViewChild(ActionControlAreaDirective, { static: true })
   actionControlAreaDirective!: ActionControlAreaDirective;
 
-  private subscription!: Subscription;
-
   private states!: Map<string, GameState<CombatFieldComponent>>;
   private eventHandlers = new Map<string, (...args: any[]) => Promise<void>>([
     ['MonsterCardDrewEvent', this.onMonsterCardDrewEvent],
@@ -81,27 +84,38 @@ export class CombatFieldComponent
   ]);
 
   constructor(
+    private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private gameService: GameService,
     private cardService: CardService,
     private signalrService: SignalrService,
+    private dataService: SharedDataService
   ) {
     super();
   }
 
   async ngOnInit(): Promise<void> {
+    const gameId = this.route.snapshot.paramMap.get('game-id') ?? '';
+    const game = await this.dataService.getGame(gameId);
+    this.subscriptions.push(game.subscribe((x: Game) => (this.game = x)));
 
     this.initCombatFieldStates();
     const state = this.states.get(this.game.state) ?? new WaitingState();
     this.transitionTo(state);
 
-    this.subscription = this.signalrService.gameEvents.subscribe(this.onEvent);
+    this.subscriptions.push(
+      this.signalrService.gameEvents.subscribe(this.onEvent)
+    );
+    this.subscriptions.push(
+      this.dataService.getPlayer().subscribe((x: Player) => (this.player = x))
+    );
   }
 
   private onEvent = async (event: string): Promise<void> => {
     if (this.eventHandlers.has(event)) {
       await this.eventHandlers.get(event)?.call(this);
       this.game = await this.gameService.getGame(this.game.id);
+      this.dataService.setGame(this.game);
     }
   };
 
@@ -246,6 +260,6 @@ export class CombatFieldComponent
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach((x) => x.unsubscribe());
   }
 }
