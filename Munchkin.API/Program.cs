@@ -91,6 +91,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<EventHub>("/event");
+app.MapHub<EventHub>("/api/event");
 
 app.Run();
