@@ -18,7 +18,10 @@ export class SignalrService {
 
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${environment.hostUrl}/event`)
+      .withUrl(`${environment.hostUrl}/api/event`, {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets,
+      })
       .build();
   }
 
