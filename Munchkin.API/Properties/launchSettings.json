@@ -11,7 +11,7 @@
   "profiles": {
     "Munchkin.API": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -21,7 +21,7 @@
     },
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -29,10 +29,13 @@
     },
     "Docker": {
       "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "launchBrowser": false,
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": false,
+      "httpPort": 5140,
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "http://+:5140"
+      }
     }
   }
 }
