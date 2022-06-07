@@ -59,8 +59,8 @@ services:
       - "1113:1113"
       - "2113:2113"
     volumes:
-      - "./eventstore/lib/eventstore:/var/lib/eventstore"
-      - "./eventstore/log/eventstore:/var/log/eventstore"
+      - eventstore-lib:/eventstore/lib/eventstore:/var/lib/eventstore
+      - eventstore-log:/eventstore/log/eventstore:/var/log/eventstore
 
   minio1:
     <<: *minio-common
@@ -107,6 +107,8 @@ services:
 
 volumes:
   mongodbdata:
+  eventstore-lib:
+  eventstore-log:
   data1-1:
   data1-2:
   data2-1:
