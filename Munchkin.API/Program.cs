@@ -19,6 +19,8 @@ builder.Services.AddSingleton<IEventService, EventStoreService>();
 builder.Services.AddSingleton<IGameRepository, GameRepository>();
 
 builder.Services.Configure<MinioOptions>(builder.Configuration.GetSection(nameof(MinioOptions)));
+builder.Services.Configure<EventStoreOptions>(builder.Configuration.GetSection(nameof(EventStoreOptions)));
+
 builder.Services.AddTransient<IImageService, ImageService>(provider =>
 {
     var minioOptions = provider.GetRequiredService<IOptions<MinioOptions>>();
