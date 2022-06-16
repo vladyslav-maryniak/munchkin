@@ -44,8 +44,8 @@ services:
       - "1113:1113"
       - "2113:2113"
     volumes:
-      - eventstore-lib:/eventstore/lib/eventstore:/var/lib/eventstore
-      - eventstore-log:/eventstore/log/eventstore:/var/log/eventstore
+      - eventstore-lib:/var/lib/eventstore
+      - eventstore-log:/var/log/eventstore
       
   minio:
     hostname: minio
