@@ -1,6 +1,8 @@
 ﻿using EventStore.Client;
+using Microsoft.Extensions.Options;
 using Munchkin.Application.Services.Base;
 using Munchkin.Shared.Events.Base;
+using Munchkin.Shared.Options;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -8,13 +10,14 @@ namespace Munchkin.Application.Services
 {
     public class EventStoreService : IEventService
     {
-        private const string connectionString = "esdb://localhost:2113?tls=false&keepAliveTimeout=10000&keepAliveInterval=10000";
         private readonly EventStoreClient client;
         private readonly JsonSerializerSettings jsonSerializerSettings;
 
-        public EventStoreService()
+        public EventStoreService(IOptions<EventStoreOptions> options)
         {
-            var settings = EventStoreClientSettings.Create(connectionString);
+            var settings = EventStoreClientSettings
+                .Create(options.Value.ConnectionString);
+
             client = new EventStoreClient(settings);
             jsonSerializerSettings = new JsonSerializerSettings
             {

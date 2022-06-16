@@ -19,6 +19,8 @@ builder.Services.AddSingleton<IEventService, EventStoreService>();
 builder.Services.AddSingleton<IGameRepository, GameRepository>();
 
 builder.Services.Configure<MinioOptions>(builder.Configuration.GetSection(nameof(MinioOptions)));
+builder.Services.Configure<EventStoreOptions>(builder.Configuration.GetSection(nameof(EventStoreOptions)));
+
 builder.Services.AddTransient<IImageService, ImageService>(provider =>
 {
     var minioOptions = provider.GetRequiredService<IOptions<MinioOptions>>();
@@ -77,7 +79,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(builder => builder
-    .WithOrigins("http://localhost:4200")
+    .SetIsOriginAllowed(host => true)
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials()
@@ -89,6 +91,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<EventHub>("/event");
+app.MapHub<EventHub>("/api/event");
 
 app.Run();
