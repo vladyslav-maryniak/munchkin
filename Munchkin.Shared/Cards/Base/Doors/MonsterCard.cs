@@ -7,6 +7,7 @@ namespace Munchkin.Shared.Cards.Base.Doors
         public abstract int Level { get; }
         public abstract string BadStuff { get; }
         public abstract int VictoryLevels { get; }
+        public abstract int Treasures { get; }
         public abstract void ApplyBadStuff(Character character);
     }
 }

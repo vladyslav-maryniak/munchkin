@@ -1,5 +1,5 @@
 export interface ItemCard {
-  id: number;
+  id: string;
   name: string;
   description: string;
   bonus: number;
