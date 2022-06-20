@@ -7,13 +7,28 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            var character = game.Table.Places
-                    .First(x => x.Character.Id == CharacterId)
-                    .Character;
+            var place = game.Table.Places
+                    .First(x => x.Character.Id == CharacterId);
 
-            character.Level += game.Table.CombatField.MonsterSquad
+            place.Character.Level += game.Table.CombatField.MonsterSquad
                 .Select(x => x.VictoryLevels)
                 .Aggregate((result, x) => result + x);
+
+            var victoryTreasures = game.Table.CombatField.MonsterSquad
+                .Select(x => x.Treasures)
+                .Aggregate((result, x) => result + x);
+
+            for (int i = 0; i < victoryTreasures; i++)
+            {
+                place.InHandCards.Add(game.Table.TreasureDeck.Pop());
+            }
+
+            var combatField = game.Table.CombatField;
+
+            if (combatField.Reward is not null && combatField.Reward.OffereeId != Guid.Empty)
+            {
+                combatField.Reward.Perform(game);
+            }
         }
     }
 }
