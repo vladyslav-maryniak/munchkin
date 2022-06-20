@@ -240,6 +240,71 @@ export class GameService {
     return response.ok;
   }
 
+  async offerReward(
+    gameId: string,
+    offerorId: string,
+    itemCardIds: string[],
+    cardIdsForPlay: string[],
+    numberOfTreasures: number,
+    helperPicksFirst: boolean
+  ): Promise<boolean> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/offer-reward`;
+    const body = {
+      offerorId,
+      itemCardIds,
+      cardIdsForPlay,
+      numberOfTreasures,
+      helperPicksFirst,
+    };
+
+    const observable = this.httpClient.post(endpoint, body, options);
+    const response = await firstValueFrom(observable);
+
+    return response.ok;
+  }
+
+  async offerBribe(
+    gameId: string,
+    offerorId: string,
+    offereeId: string,
+    agreement: string,
+    itemCardIds: string[]
+  ): Promise<boolean> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/offer-bribe`;
+    const body = {
+      offerorId,
+      offereeId,
+      agreement,
+      itemCardIds,
+    };
+
+    const observable = this.httpClient.post(endpoint, body, options);
+    const response = await firstValueFrom(observable);
+
+    return response.ok;
+  }
+
+  async offerTrade(
+    gameId: string,
+    offerorId: string,
+    offereeId: string,
+    offerorItemCardIds: string[],
+    offereeItemCardIds: string[]
+  ): Promise<boolean> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/offer-trade`;
+    const body = {
+      offerorId,
+      offereeId,
+      offerorItemCardIds,
+      offereeItemCardIds,
+    };
+
+    const observable = this.httpClient.post(endpoint, body, options);
+    const response = await firstValueFrom(observable);
+
+    return response.ok;
+  }
+
   isPlayerInCombat(game: Game, player: Player): boolean {
     const place = game.table.places.find((x) => x.player.id === player.id);
     if (place) {

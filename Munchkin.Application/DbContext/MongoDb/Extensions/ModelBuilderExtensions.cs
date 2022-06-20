@@ -12,6 +12,7 @@ using Munchkin.Shared.Cards.Treasures.Items.Headgear;
 using Munchkin.Shared.Cards.Treasures.Items.OneHand;
 using Munchkin.Shared.Cards.Treasures.Items.TwoHands;
 using Munchkin.Shared.Cards.Treasures.OneShots;
+using Munchkin.Shared.Offers;
 
 namespace Munchkin.Application.DbContext.MongoDb.Extensions
 {
@@ -46,6 +47,13 @@ namespace Munchkin.Application.DbContext.MongoDb.Extensions
             MapRegistrar.ApplyConfiguration<ElevenFootPole>();
             MapRegistrar.ApplyConfiguration<Doppleganger>();
             MapRegistrar.ApplyConfiguration<LoadedDie>();
+        }
+
+        public static void ApplyOfferMapConfiguration(this MapRegistrar builder)
+        {
+            MapRegistrar.ApplyConfiguration<Bribe>();
+            MapRegistrar.ApplyConfiguration<Trade>();
+            MapRegistrar.ApplyConfiguration<Reward>();
         }
     }
 }
