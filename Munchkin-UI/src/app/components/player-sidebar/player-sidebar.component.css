@@ -22,8 +22,30 @@
   color: #fff;
   border: 3px solid #e4e4e4;
   background-color: #c4c4c4;
+
+  cursor: pointer;
 }
 
 .player-turn {
   border: 3px solid #3f51b5;
+}
+
+.offer {
+  max-width: 300px;
+  padding: 0.8em;
+  background-color: #ffffff;
+  border: solid 3px #3f51b5;
+  border-radius: 1.5em 0 1.5em 1.5em;
+}
+
+.offer-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.decision-buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }

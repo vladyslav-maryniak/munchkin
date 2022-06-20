@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Bribe</h2>
+
+<div mat-dialog-content>
+  <section class="card-checkbox-list">
+    <mat-checkbox
+      *ngFor="let card of data.inHandCards"
+      color="primary"
+      (change)="onChange(card, $event)"
+      >{{ card.name }}
+    </mat-checkbox>
+  </section>
+  <mat-form-field appearance="fill">
+    <mat-label>Agreement</mat-label>
+    <textarea matInput [(ngModel)]="data.agreement"></textarea>
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions class="action-buttons">
+  <button
+    type="button"
+    mat-stroked-button
+    color="primary"
+    tabindex="-1"
+    [mat-dialog-close]="undefined"
+  >
+    Cancel
+  </button>
+  <button
+    type="button"
+    mat-stroked-button
+    color="primary"
+    tabindex="-1"
+    (click)="onConfirm()"
+  >
+    Confirm
+  </button>
+</div>

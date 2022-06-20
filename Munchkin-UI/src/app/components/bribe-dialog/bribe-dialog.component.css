@@ -1,0 +1,11 @@
+.card-checkbox-list {
+  display: flex;
+  flex-direction: column;
+
+  padding-bottom: 1.5em;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-around;
+}
