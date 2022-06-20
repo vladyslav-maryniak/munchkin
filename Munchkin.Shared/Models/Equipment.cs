@@ -1,4 +1,5 @@
-﻿using Munchkin.Shared.Cards.Base.Treasures.Items;
+﻿using Munchkin.Shared.Cards.Base.Treasures;
+using Munchkin.Shared.Cards.Base.Treasures.Items;
 
 namespace Munchkin.Shared.Models
 {
@@ -27,6 +28,39 @@ namespace Munchkin.Shared.Models
 
                 return bonus;
             }
+        }
+
+        public ItemCard TakeOff(Guid itemCardId)
+        {
+            ItemCard? takenOffItem = null;
+            
+            if (Headgear?.Id == itemCardId)
+            {
+                takenOffItem = Headgear;
+                Headgear = null;
+            }
+            if (Armor?.Id == itemCardId)
+            {
+                takenOffItem = Armor;
+                Armor = null;
+            }
+            if (Footgear?.Id == itemCardId)
+            {
+                takenOffItem = Footgear;
+                Footgear = null;
+            }
+            if (LeftHand?.Id == itemCardId)
+            {
+                takenOffItem = LeftHand;
+                LeftHand = null;
+            }
+            if (RightHand?.Id == itemCardId)
+            {
+                takenOffItem = RightHand;
+                RightHand = null;
+            }
+
+            return takenOffItem!;
         }
     }
 }

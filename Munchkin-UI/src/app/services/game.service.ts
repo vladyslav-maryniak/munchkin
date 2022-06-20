@@ -210,6 +210,36 @@ export class GameService {
     return response.ok;
   }
 
+  async acceptOffer(
+    gameId: string,
+    offerId: string,
+    offerorId: string,
+    offereeId: string
+  ): Promise<boolean> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/accept-offer`;
+    const body = { offerId, offerorId, offereeId };
+
+    const observable = this.httpClient.post(endpoint, body, options);
+    const response = await firstValueFrom(observable);
+
+    return response.ok;
+  }
+
+  async declineOffer(
+    gameId: string,
+    offerId: string,
+    offerorId: string,
+    offereeId: string
+  ): Promise<boolean> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/decline-offer`;
+    const body = { offerId, offerorId, offereeId };
+
+    const observable = this.httpClient.post(endpoint, body, options);
+    const response = await firstValueFrom(observable);
+
+    return response.ok;
+  }
+
   isPlayerInCombat(game: Game, player: Player): boolean {
     const place = game.table.places.find((x) => x.player.id === player.id);
     if (place) {
