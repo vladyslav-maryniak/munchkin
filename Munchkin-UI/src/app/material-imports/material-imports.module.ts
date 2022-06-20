@@ -12,6 +12,9 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [],
@@ -28,6 +31,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatTooltipModule,
     MatSnackBarModule,
     MatDialogModule,
+    OverlayModule,
+    MatStepperModule,
+    MatRadioModule,
   ],
   exports: [
     MatButtonModule,
@@ -41,6 +47,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatTooltipModule,
     MatSnackBarModule,
     MatDialogModule,
+    OverlayModule,
+    MatStepperModule,
+    MatRadioModule,
   ],
 })
 export class MaterialImportsModule {}

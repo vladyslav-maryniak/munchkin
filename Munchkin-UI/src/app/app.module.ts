@@ -23,6 +23,9 @@ import { TableComponent } from './components/table/table.component';
 import { PlayerSidebarComponent } from './components/player-sidebar/player-sidebar.component';
 import { InHandCardPanelComponent } from './components/in-hand-card-panel/in-hand-card-panel.component';
 import { SixSidedDieComponent } from './components/six-sided-die/six-sided-die.component';
+import { BribeDialogComponent } from './components/bribe-dialog/bribe-dialog.component';
+import { TradeDialogComponent } from './components/trade-dialog/trade-dialog.component';
+import { RewardDialogComponent } from './components/reward-dialog/reward-dialog.component';
 
 const appRoutes: Routes = [
   {
@@ -69,6 +72,9 @@ const appRoutes: Routes = [
     PlayerSidebarComponent,
     InHandCardPanelComponent,
     SixSidedDieComponent,
+    BribeDialogComponent,
+    TradeDialogComponent,
+    RewardDialogComponent,
   ],
   imports: [
     BrowserModule,

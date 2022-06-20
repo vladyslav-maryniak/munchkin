@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { ActionControlAreaDirective } from 'src/app/directives/action-control-area.directive';
 import { GameContext } from 'src/app/game-states/base/game-context';
 import { GameState } from 'src/app/game-states/base/game-state';
@@ -21,11 +22,16 @@ import { CombatField } from 'src/app/models/combat-field';
 import { Equipment } from 'src/app/models/equipment';
 import { Game } from 'src/app/models/game';
 import { MunchkinCard } from 'src/app/models/munchkin-card';
+import { Place } from 'src/app/models/place';
 import { Player } from 'src/app/models/player';
 import { CardService } from 'src/app/services/card.service';
 import { GameService } from 'src/app/services/game.service';
 import { SharedDataService } from 'src/app/services/shared-data.service';
 import { SignalrService } from 'src/app/services/signalr.service';
+import {
+  RewardDialogComponent,
+  RewardDialogData,
+} from '../reward-dialog/reward-dialog.component';
 
 @Component({
   selector: 'app-combat-field',
@@ -40,6 +46,10 @@ export class CombatFieldComponent
   player!: Player;
 
   private subscriptions: Subscription[] = [];
+
+  get place(): Place | undefined {
+    return this.game.table.places.find((x) => x.player.id === this.player.id);
+  }
 
   get cursePlace(): MunchkinCard | undefined {
     return this.combatField?.cursePlace;
@@ -89,7 +99,8 @@ export class CombatFieldComponent
     private gameService: GameService,
     private cardService: CardService,
     private signalrService: SignalrService,
-    private dataService: SharedDataService
+    private dataService: SharedDataService,
+    public dialog: MatDialog
   ) {
     super();
   }
@@ -220,6 +231,44 @@ export class CombatFieldComponent
   isPlayerTurn(player: Player): boolean {
     return this.gameService.isPlayerTurn(this.game, player);
   }
+
+  showRewardStepper = async (): Promise<void> => {
+    if (this.place === undefined) return;
+    const itemCards = this.place.inHandCards.filter((x) =>
+      this.cardService.isItemCard(x)
+    );
+
+    const cardsForPlay = this.place.inHandCards.filter(
+      (x) => this.cardService.isItemCard(x) === false
+    );
+
+    const numberOfTreasures = this.game.table.combatField.monsterSquad
+      .map((x) => x.treasures)
+      .reduce((result, value) => result! + value!);
+
+    const data = {
+      itemCards,
+      cardsForPlay,
+      numberOfTreasures,
+      selectedItemCards: [] as MunchkinCard[],
+      selectedCardsForPlay: [] as MunchkinCard[],
+    } as RewardDialogData;
+
+    const dialogRef = this.dialog.open(RewardDialogComponent, { data });
+    const result: RewardDialogData = await lastValueFrom(
+      dialogRef.afterClosed()
+    );
+    if (result === undefined) return;
+
+    await this.gameService.offerReward(
+      this.game.id,
+      this.player.id,
+      result.selectedItemCards.map((x) => x.id),
+      result.selectedCardsForPlay.map((x) => x.id),
+      result.selectedNumberOfTreasures,
+      result.helperPicksFirst
+    );
+  };
 
   initCombatFieldStates(): void {
     this.states = new Map<string, GameState<CombatFieldComponent>>([
