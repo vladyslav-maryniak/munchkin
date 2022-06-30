@@ -1,13 +1,59 @@
 ﻿using MediatR;
+using Munchkin.Application.Services.Base;
+using Munchkin.Domain.Validation;
+using Munchkin.Shared.Cards.Base.Treasures;
 using Munchkin.Shared.Events;
 
 namespace Munchkin.Domain.Commands
 {
     public static class SellCards
     {
-        public record Command(Guid GameId, Guid PlayerId, IEnumerable<Guid> CardIds) : IRequest;
+        public record Command(Guid GameId, Guid PlayerId, IEnumerable<Guid> CardIds) : IRequest<Response>;
 
-        public class Handler : IRequestHandler<Command>
+        public class Validator : IValidationHandler<Command>
+        {
+            private readonly IGameRepository repository;
+
+            public Validator(IGameRepository repository)
+            {
+                this.repository = repository;
+            }
+
+            public async Task<ValidationResult> Validate(Command request)
+            {
+                var game = await repository.GetGameAsync(request.GameId);
+
+                if (game is null)
+                {
+                    return ValidationError.NoGame;
+                }
+
+                var place = game.Table.Places.FirstOrDefault(x => x.Player.Id == request.PlayerId);
+
+                if (place is null)
+                {
+                    return ValidationError.NoPlayer;
+                }
+
+                var saleableCards = place.InHandCards
+                    .Where(x => request.CardIds.Contains(x.Id))
+                    .Cast<ISaleable>();
+
+                if (!saleableCards.Any())
+                {
+                    return ValidationError.NoSaleableCards;
+                }
+
+                if (request.CardIds.Any(cardId => !place.InHandCards.Any(x => x.Id == cardId)))
+                {
+                    return ValidationError.NoCard;
+                }
+
+                return ValidationResult.Success;
+            }
+        }
+
+        public class Handler : IRequestHandler<Command, Response>
         {
             private readonly IMediator mediator;
 
@@ -16,14 +62,16 @@ namespace Munchkin.Domain.Commands
                 this.mediator = mediator;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
             {
                 var @event = new PlayerSoldCardsEvent(request.GameId, request.PlayerId, request.CardIds);
 
                 await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 
-                return Unit.Value;
+                return new Response();
             }
         }
+
+        public record Response : CqrsResponse;
     }
 }

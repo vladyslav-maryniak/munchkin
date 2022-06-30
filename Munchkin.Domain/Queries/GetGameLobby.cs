@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Munchkin.Application.Services.Base;
+using Munchkin.Domain.Validation;
 using Munchkin.Shared.Models;
 
 namespace Munchkin.Domain.Queries
@@ -7,6 +8,22 @@ namespace Munchkin.Domain.Queries
     public static class GetGameLobby
     {
         public record Query(Guid GameId) : IRequest<Response>;
+
+        public class Validator : IValidationHandler<Query>
+        {
+            private readonly IGameRepository repository;
+
+            public Validator(IGameRepository repository)
+            {
+                this.repository = repository;
+            }
+
+            public async Task<ValidationResult> Validate(Query request)
+            {
+                var game = await repository.GetGameAsync(request.GameId);
+                return game is null ? ValidationError.NoGame : ValidationResult.Success;
+            }
+        }
 
         public class Handler : IRequestHandler<Query, Response>
         {
@@ -21,10 +38,13 @@ namespace Munchkin.Domain.Queries
             {
                 var lobby = await repository.GetGameLobbyAsync(request.GameId, cancellationToken);
 
-                return new Response(lobby);
+                return new Response() { Lobby = lobby };
             }
         }
 
-        public record Response(GameLobby Lobby);
+        public record Response : CqrsResponse
+        {
+            public GameLobby? Lobby { get; set; }
+        }
     }
 }

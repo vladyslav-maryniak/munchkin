@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using Munchkin.Application.Services.Base;
 using Munchkin.Domain.Queries;
+using Munchkin.Domain.Validation;
 using Munchkin.Shared.Events;
 
 namespace Munchkin.Domain.Commands
@@ -12,9 +14,60 @@ namespace Munchkin.Domain.Commands
         Guid[] ItemCardIds,
         Guid[] CardIdsForPlay,
         int NumberOfTreasures,
-        bool HelperPicksFirst) : IRequest;
+        bool HelperPicksFirst) : IRequest<Response>;
 
-        public class Handler : IRequestHandler<Command>
+        public class Validator : IValidationHandler<Command>
+        {
+            private readonly IGameRepository repository;
+
+            public Validator(IGameRepository repository)
+            {
+                this.repository = repository;
+            }
+
+            public async Task<ValidationResult> Validate(Command request)
+            {
+                var game = await repository.GetGameAsync(request.GameId);
+
+                if (game is null)
+                {
+                    return ValidationError.NoGame;
+                }
+
+                var places = game.Table.Places;
+
+                if (!places.Any(x => x.Player.Id == request.OfferorId))
+                {
+                    return ValidationError.NoPlayer;
+                }
+
+                var offeror = places.First(x => x.Player.Id == request.OfferorId);
+
+                if (request.ItemCardIds.Any(cardId => !offeror.InHandCards.Any(x => x.Id == cardId))
+                    || request.CardIdsForPlay.Any(cardId => !offeror.InHandCards.Any(x => x.Id == cardId)))
+                {
+                    return ValidationError.NoCard;
+                }
+
+                if (request.CardIdsForPlay.Any(x => request.ItemCardIds.Contains(x)))
+                {
+                    return ValidationError.CardDuplication;
+                }
+
+                var victoryTreasures = game.Table.CombatField.MonsterSquad
+                    .Select(x => x.Treasures)
+                    .Aggregate((result, x) => result + x);
+
+                if (request.NumberOfTreasures < 0 || request.NumberOfTreasures > victoryTreasures)
+                {
+                    return ValidationError.InvalidNumberOfTreasures;
+                }
+
+                return ValidationResult.Success;
+            }
+        }
+
+        public class Handler : IRequestHandler<Command, Response>
         {
             private readonly IMediator mediator;
 
@@ -23,10 +76,10 @@ namespace Munchkin.Domain.Commands
                 this.mediator = mediator;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
             {
                 var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
-                var game = response.Game;
+                var game = response.Game!;
                 var victoryTreasures = game.Table.CombatField.MonsterSquad
                     .Select(x => x.Treasures)
                     .Aggregate((result, x) => result + x);
@@ -42,8 +95,10 @@ namespace Munchkin.Domain.Commands
 
                 await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 
-                return Unit.Value;
+                return new Response();
             }
         }
+
+        public record Response : CqrsResponse;
     }
 }
