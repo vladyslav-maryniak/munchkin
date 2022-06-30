@@ -12,7 +12,7 @@ namespace Munchkin.Shared.Events
                 .First(x => x.Character.Id == CharacterId)
                 .Character;
             var curse = character.Curses
-                .First(x => x.Id == table.CombatField.CursePlace?.Id);
+                .First(x => x.Id == table.CombatField.CursePlace!.Id);
 
             curse.Apply(character);
             character.Curses.Remove(curse);

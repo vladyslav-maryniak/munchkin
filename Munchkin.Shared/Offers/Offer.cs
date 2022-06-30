@@ -4,13 +4,16 @@ namespace Munchkin.Shared.Offers
 {
     public abstract class Offer
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public Guid OfferorId { get; set; }
         public Guid OffereeId { get; set; }
 
+        protected Offer()
+        {
+        }
+
         protected Offer(Guid offerorId, Guid offereeId)
         {
-            Id = Guid.NewGuid();
             OfferorId = offerorId;
             OffereeId = offereeId;
         }
@@ -41,16 +44,14 @@ namespace Munchkin.Shared.Offers
             Guid fromId, Guid toId, int victoryTreasures, int numberOfTreasures, bool helperPicksFirst, Game game)
         {
             var (From, To) = GetParties(fromId, toId, game);
-            if (numberOfTreasures > 0 && numberOfTreasures <= victoryTreasures)
-            {
-                var treasureCards = From.InHandCards.TakeLast(victoryTreasures);
-                var helperCards = helperPicksFirst ?
-                    treasureCards.Take(numberOfTreasures) :
-                    treasureCards.TakeLast(numberOfTreasures);
+            
+            var treasureCards = From.InHandCards.TakeLast(victoryTreasures);
+            var helperCards = helperPicksFirst ?
+                treasureCards.Take(numberOfTreasures) :
+                treasureCards.TakeLast(numberOfTreasures);
 
-                To.InHandCards.AddRange(helperCards);
-                From.InHandCards.RemoveAll(x => helperCards.Contains(x));
-            }
+            To.InHandCards.AddRange(helperCards);
+            From.InHandCards.RemoveAll(x => helperCards.Contains(x));
         }
 
         private static (Place From, Place To) GetParties(Guid fromId, Guid toId, Game game)

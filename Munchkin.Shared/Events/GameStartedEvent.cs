@@ -11,10 +11,13 @@ namespace Munchkin.Shared.Events
             foreach (var player in game.Lobby.Players)
             {
                 var place = new Place(player, new Character());
+                game.Table.Places.Add(place);
+            }
+
+            foreach (var place in game.Table.Places)
+            {
                 place.InHandCards.AddRange(game.Table.DoorDeck.DrawCards(count: 4));
                 place.InHandCards.AddRange(game.Table.TreasureDeck.DrawCards(count: 4));
-
-                game.Table.Places.Add(place);
             }
 
             game.Lobby.Players.Clear();
