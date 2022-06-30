@@ -68,11 +68,14 @@ export class CardService {
     return card.name.toLowerCase().split(' ').join('_') + '.avif';
   }
 
-  isTreasureCard(card: MunchkinCard): boolean {
-    return card.goldPieces !== undefined;
+  isSaleable(object: Object): boolean {
+    return Object.prototype.hasOwnProperty.call(object, 'goldPieces');
   }
 
-  isItemCard(card: MunchkinCard): boolean {
-    return card.goldPieces !== undefined && card.bonus !== undefined;
+  isItemCard(object: Object): object is ItemCard {
+    return (
+      Object.prototype.hasOwnProperty.call(object, 'goldPieces') &&
+      Object.prototype.hasOwnProperty.call(object, 'bonus')
+    );
   }
 }

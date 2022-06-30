@@ -125,8 +125,8 @@ export class InHandCardPanelComponent implements OnInit, OnDestroy {
 
   selectCard(card: MunchkinCard): void {
     if (
-      (!this.cardService.isTreasureCard(card) && this.multiselect) ||
-      (this.cardService.isTreasureCard(card) && this.isPlayerInCombat())
+      (!this.cardService.isSaleable(card) && this.multiselect) ||
+      (this.cardService.isItemCard(card) && this.isPlayerInCombat())
     ) {
       return;
     }
