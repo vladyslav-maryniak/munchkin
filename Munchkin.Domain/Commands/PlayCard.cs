@@ -9,7 +9,10 @@ namespace Munchkin.Domain.Commands
     public static class PlayCard
     {
         public record Command(
-            Guid GameId, Guid PlayerId, Guid CardId, Dictionary<string, string>? Metadata = default) : IRequest;
+            Guid GameId,
+            Guid PlayerId,
+            Guid CardId,
+            Dictionary<string, string>? Metadata = default) : IRequest;
 
         public class Handler : IRequestHandler<Command>
         {
@@ -32,7 +35,7 @@ namespace Munchkin.Domain.Commands
                     ItemCard => new ItemCardPlayedEvent(
                         request.GameId, request.PlayerId, request.CardId),
                     OneShotCard => new OneShotCardPlayedEvent(
-                        request.GameId, request.PlayerId, request.CardId, request.Metadata!),
+                        request.GameId, request.PlayerId, request.CardId, request.Metadata),
                     GoUpLevelCard => new GoUpLevelCardPlayedEvent(
                         request.GameId, request.PlayerId, request.CardId),
                     _ => throw new NotImplementedException()

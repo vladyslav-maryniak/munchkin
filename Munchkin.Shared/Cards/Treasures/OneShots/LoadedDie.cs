@@ -10,9 +10,10 @@ namespace Munchkin.Shared.Cards.Treasures.OneShots
         public override int GoldPieces => 300;
         public Dictionary<string, string> Metadata => new() { ["dieValue"] = string.Empty };
 
-        public override bool TryUse(Table table, Dictionary<string, string> metadata)
+        public override bool TryUse(Table table, Dictionary<string, string>? metadata = default)
         {
-            if (metadata.TryGetValue("dieValue", out string? dieValueMeta)
+            if (metadata is not null
+                && metadata.TryGetValue("dieValue", out string? dieValueMeta)
                 && int.TryParse(dieValueMeta, out int dieValue))
             {
                 table.DieValue = dieValue;

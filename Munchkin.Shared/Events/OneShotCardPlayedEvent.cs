@@ -5,7 +5,7 @@ using Munchkin.Shared.Models;
 namespace Munchkin.Shared.Events
 {
     public record OneShotCardPlayedEvent(
-        Guid GameId, Guid PlayerId, Guid CardId, Dictionary<string, string> Metadata) : IGameEvent
+        Guid GameId, Guid PlayerId, Guid CardId, Dictionary<string, string>? Metadata = default) : IGameEvent
     {
         public void Apply(Game game)
         {

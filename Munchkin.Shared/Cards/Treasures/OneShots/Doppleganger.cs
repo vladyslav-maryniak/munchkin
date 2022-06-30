@@ -9,7 +9,7 @@ namespace Munchkin.Shared.Cards.Treasures.OneShots
         public override string Description => "Summons your exact duplicate, who fights beside you, so you double your combat strength. You may use the Doppleganger only when you are the only player in the combat. Usable once only.";
         public override int GoldPieces => 300;
 
-        public override bool TryUse(Table table, Dictionary<string, string> metadata)
+        public override bool TryUse(Table table, Dictionary<string, string>? metadata = default)
         {
             var squad = table.CombatField.CharacterSquad;
             
