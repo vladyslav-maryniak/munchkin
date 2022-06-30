@@ -1,13 +1,79 @@
 <div class="player-sidebar">
-  <div
-    *ngFor="let place of places"
-    [matBadge]="place.character.level"
-    [matTooltip]="getCharacterEquipmentDescription(place.character.equipment)"
-    matTooltipClass="multiline-tooltip"
-    matTooltipPosition="left"
-    class="place"
-    [ngClass]="{ 'player-turn': isPlayerTurn(place.player) }"
-  >
-    <span>{{ getNicknameAbbreviation(place.player) }}</span>
+  <div *ngFor="let place of places">
+    <div>
+      <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="trigger"
+        [cdkConnectedOverlayOpen]="getFirstIncomingOffer(place) !== undefined"
+        [cdkConnectedOverlayPositions]="decisionMessagePosition"
+      >
+        <div class="offer">
+          <span>{{ getOfferDescription(getFirstIncomingOffer(place)!) }}</span>
+          <div
+            *ngIf="!isReward(getFirstIncomingOffer(place)!)"
+            class="decision-buttons"
+          >
+            <button
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="acceptOffer(getFirstIncomingOffer(place)!)"
+            >
+              Accept
+            </button>
+            <button
+              type="button"
+              mat-stroked-button
+              color="warn"
+              (click)="declineOffer(getFirstIncomingOffer(place)!)"
+            >
+              Decline
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <div>
+      <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="trigger"
+        [cdkConnectedOverlayOpen]="
+          selectedPlace !== undefined && selectedPlace === place
+        "
+        [cdkConnectedOverlayPositions]="offerMenuPosition"
+      >
+        <div class="offer-menu">
+          <button
+            type="button"
+            mat-stroked-button
+            color="primary"
+            (click)="onBribe(place)"
+          >
+            Bribe
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            color="primary"
+            (click)="onTrade(place)"
+          >
+            Trade
+          </button>
+        </div>
+      </ng-template>
+    </div>
+    <div
+      [matBadge]="place.character.level"
+      [matTooltip]="getCharacterEquipmentDescription(place.character.equipment)"
+      matTooltipClass="multiline-tooltip"
+      matTooltipPosition="left"
+      class="place"
+      [ngClass]="{ 'player-turn': isPlayerTurn(place.player) }"
+      cdkOverlayOrigin
+      #trigger="cdkOverlayOrigin"
+      (click)="clickOnPlace(place)"
+    >
+      <span>{{ getNicknameAbbreviation(place.player) }}</span>
+    </div>
   </div>
 </div>

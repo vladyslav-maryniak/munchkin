@@ -10,6 +10,7 @@ namespace Munchkin.Shared.Cards.Doors.Monsters
         public override string Description => "+5 against Dwarves.";
         public override string BadStuff => "Kicks, bites, and smells awful. Lose 2 levels.";
         public override int VictoryLevels => 1;
+        public override int Treasures => 2;
 
         public override void ApplyBadStuff(Character character)
         {

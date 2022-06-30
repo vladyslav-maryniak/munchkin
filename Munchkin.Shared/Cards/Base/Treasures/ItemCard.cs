@@ -2,7 +2,7 @@
 
 namespace Munchkin.Shared.Cards.Base.Treasures
 {
-    public abstract class ItemCard : TreasureCard
+    public abstract class ItemCard : TreasureCard, ISaleable
     {
         public abstract int Bonus { get; }
         public abstract int GoldPieces { get; }

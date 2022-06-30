@@ -10,6 +10,7 @@ namespace Munchkin.Shared.Cards.Doors.Monsters
         public override string Description => "A create from Hell. +3 against Clerics.";
         public override string BadStuff => "She whacks you. Lose a level.";
         public override int VictoryLevels => 1;
+        public override int Treasures => 1;
 
         public override void ApplyBadStuff(Character character)
         {

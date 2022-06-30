@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>Reward</h2>
+
+<div mat-dialog-content>
+  <mat-vertical-stepper>
+    <mat-step label="Item cards" *ngIf="data.itemCards.length > 0">
+      <section class="step-content">
+        <mat-checkbox
+          *ngFor="let card of data.itemCards"
+          color="primary"
+          (change)="onItemCardsChange(card, $event)"
+        >
+          {{ card.name }}
+        </mat-checkbox>
+      </section>
+      <div class="step-action-buttons">
+        <button mat-stroked-button color="primary" matStepperNext>Next</button>
+      </div>
+    </mat-step>
+
+    <mat-step label="Treasures">
+      <div class="step-content">
+        <mat-form-field style="max-width: 11em; width: 100%">
+          <mat-label>Number of treasures</mat-label>
+          <input
+            matInput
+            type="number"
+            placeholder="0"
+            min="0"
+            max="{{ data.numberOfTreasures }}"
+            [(ngModel)]="data.selectedNumberOfTreasures"
+          />
+          <mat-hint align="end">max. {{ data.numberOfTreasures }}</mat-hint>
+        </mat-form-field>
+        <mat-checkbox color="primary" [(ngModel)]="data.helperPicksFirst">
+          Helper picks first
+        </mat-checkbox>
+      </div>
+      <div class="step-action-buttons">
+        <button mat-stroked-button color="primary" matStepperPrevious>
+          Back
+        </button>
+        <button mat-stroked-button color="primary" matStepperNext>Next</button>
+      </div>
+    </mat-step>
+
+    <mat-step label="Cards for play">
+      <div class="step-content">
+        <section class="step-content">
+          <mat-checkbox
+            *ngFor="let card of data.cardsForPlay"
+            color="primary"
+            (change)="onCardsForPlayChange(card, $event)"
+          >
+            {{ card.name }}
+          </mat-checkbox>
+        </section>
+      </div>
+      <div class="step-action-buttons">
+        <button mat-stroked-button color="primary" matStepperPrevious>
+          Back
+        </button>
+        <button mat-stroked-button color="primary" (click)="onConfirm()">
+          Confirm
+        </button>
+      </div>
+    </mat-step>
+  </mat-vertical-stepper>
+</div>

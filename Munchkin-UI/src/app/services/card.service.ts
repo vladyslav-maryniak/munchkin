@@ -31,7 +31,7 @@ export class CardService {
       (equipment.armor?.bonus ?? 0) +
       (equipment.footgear?.bonus ?? 0) +
       (equipment.leftHand?.bonus ?? 0) +
-      (equipment.leftHand?.id != equipment.rightHand?.id
+      (equipment.leftHand?.id !== equipment.rightHand?.id
         ? equipment.rightHand?.bonus ?? 0
         : 0);
 
@@ -66,6 +66,10 @@ export class CardService {
 
   getImageFileName(card: MunchkinCard): string {
     return card.name.toLowerCase().split(' ').join('_') + '.avif';
+  }
+
+  isTreasureCard(card: MunchkinCard): boolean {
+    return card.goldPieces !== undefined;
   }
 
   isItemCard(card: MunchkinCard): boolean {

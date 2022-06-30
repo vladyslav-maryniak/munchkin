@@ -15,6 +15,7 @@ namespace Munchkin.Application.DbContext.MongoDb
         {
             registrar.ApplyMapConfigurationFromAssembly(Assembly.GetExecutingAssembly());
             registrar.ApplyCardMapConfiguration();
+            registrar.ApplyOfferMapConfiguration();
         }
     }
 }

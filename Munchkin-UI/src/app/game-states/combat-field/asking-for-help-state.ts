@@ -12,6 +12,11 @@ export class AskingForHelpState extends GameState<CombatFieldComponent> {
         this.context.stopAskingForHelp,
         container
       );
+      this.setActionButton(
+        'Offer reward',
+        this.context.showRewardStepper,
+        container
+      );
     } else {
       this.setActionButton('Come to help', this.context.comeToHelp, container);
     }

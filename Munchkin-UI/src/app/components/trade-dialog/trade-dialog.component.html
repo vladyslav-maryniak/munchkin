@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>Trade</h2>
+
+<div mat-dialog-content class="equipment">
+  <div class="equipment-column">
+    <h3>Supply</h3>
+    <section
+      class="equipment-list"
+      *ngIf="offerorEquipment.length > 0; else nothing"
+    >
+      <mat-checkbox
+        *ngFor="let card of offerorEquipment"
+        color="primary"
+        (change)="onSupplyChange(card, $event)"
+        >{{ card.name }}
+      </mat-checkbox>
+    </section>
+    <ng-template #nothing>nothing</ng-template>
+  </div>
+  <div class="equipment-column">
+    <h3>Demand</h3>
+    <section
+      class="equipment-list"
+      *ngIf="offereeEquipment.length > 0; else nothing"
+    >
+      <mat-checkbox
+        *ngFor="let card of offereeEquipment"
+        color="primary"
+        (change)="onDemandChange(card, $event)"
+      >
+        {{ card.name }}
+      </mat-checkbox>
+    </section>
+    <ng-template #nothing>nothing</ng-template>
+  </div>
+</div>
+
+<div mat-dialog-actions class="action-buttons">
+  <button
+    type="button"
+    mat-stroked-button
+    color="primary"
+    tabindex="-1"
+    [mat-dialog-close]="undefined"
+  >
+    Cancel
+  </button>
+  <button
+    type="button"
+    mat-stroked-button
+    color="primary"
+    tabindex="-1"
+    (click)="onConfirm()"
+  >
+    Confirm
+  </button>
+</div>

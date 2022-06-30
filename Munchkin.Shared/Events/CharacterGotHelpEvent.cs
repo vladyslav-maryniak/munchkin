@@ -7,11 +7,16 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            var character = game.Table.Places
-                .First(x => x.Character.Id == CharacterId)
-                .Character;
+            var combatField = game.Table.CombatField;
+            var place = game.Table.Places
+                .First(x => x.Character.Id == CharacterId);
 
-            game.Table.CombatField.CharacterSquad.Add(character);
+            combatField.CharacterSquad.Add(place.Character);
+
+            if (combatField.Reward is not null)
+            {
+                combatField.Reward.OffereeId = place.Player.Id;
+            }
         }
     }
 }

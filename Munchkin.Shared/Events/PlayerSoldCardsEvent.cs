@@ -1,6 +1,8 @@
-﻿using Munchkin.Shared.Cards.Base.Treasures;
+﻿using Munchkin.Shared.Cards.Base;
+using Munchkin.Shared.Cards.Base.Treasures;
 using Munchkin.Shared.Events.Base;
 using Munchkin.Shared.Models;
+using System.Linq;
 
 namespace Munchkin.Shared.Events
 {
@@ -11,8 +13,10 @@ namespace Munchkin.Shared.Events
         public void Apply(Game game)
         {
             var place = game.Table.Places.First(x => x.Player.Id == PlayerId);
-            var cardsForSale = place.InHandCards.Where(x => CardIds.Contains(x.Id)).Cast<ItemCard>();
-
+            var cardsForSale = place.InHandCards
+                .Where(x => CardIds.Contains(x.Id))
+                .Cast<ISaleable>();
+            
             if (cardsForSale is null || !cardsForSale.Any())
             {
                 return;
@@ -26,7 +30,7 @@ namespace Munchkin.Shared.Events
             if (upLevels > 0)
             {
                 place.Character.Level += upLevels;
-                place.InHandCards.RemoveAll(x => cardsForSale.Contains(x));
+                place.InHandCards.RemoveAll(x => cardsForSale.Select(x => x.Id).Contains(x.Id));
             }
         }
     }

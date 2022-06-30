@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Munchkin.API.DTOs;
 using Munchkin.Domain.Commands;
 using Munchkin.Domain.Queries;
+using Munchkin.Shared.Offers;
 
 namespace Munchkin.API.Controllers
 {
@@ -196,6 +197,75 @@ namespace Munchkin.API.Controllers
             Guid gameId, CardSaleEventDto dto, CancellationToken cancellationToken)
         {
             var command = new SellCards.Command(gameId, dto.PlayerId, dto.CardIds);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPost("{gameId:guid}/offer-reward")]
+        public async Task<ActionResult> OfferRewardAsync(
+            Guid gameId, RewardDto dto, CancellationToken cancellationToken)
+        {
+            var command = new OfferReward.Command(
+                gameId,
+                dto.OfferorId,
+                dto.ItemCardIds,
+                dto.CardIdsForPlay,
+                dto.NumberOfTreasures,
+                dto.HelperPicksFirst);
+
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPost("{gameId:guid}/offer-bribe")]
+        public async Task<ActionResult> OfferBribeAsync(
+            Guid gameId, BribeDto dto, CancellationToken cancellationToken)
+        {
+            var command = new OfferBribe.Command(
+                gameId,
+                dto.OfferorId,
+                dto.OffereeId,
+                dto.Agreement,
+                dto.ItemCardIds);
+
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPost("{gameId:guid}/offer-trade")]
+        public async Task<ActionResult> OfferTradeAsync(
+            Guid gameId, TradeDto dto, CancellationToken cancellationToken)
+        {
+            var command = new OfferTrade.Command(
+                gameId,
+                dto.OfferorId,
+                dto.OffereeId,
+                dto.OfferorItemCardIds,
+                dto.OffereeItemCardIds);
+
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPost("{gameId:guid}/accept-offer")]
+        public async Task<ActionResult> AcceptOfferAsync(
+            Guid gameId, OfferDesicionDto dto, CancellationToken cancellationToken)
+        {
+            var command = new AcceptOffer.Command(gameId, dto.OfferId);
+            await mediator.Send(command, cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPost("{gameId:guid}/decline-offer")]
+        public async Task<ActionResult> DeclineOfferAsync(
+            Guid gameId, OfferDesicionDto dto, CancellationToken cancellationToken)
+        {
+            var command = new DeclineOffer.Command(gameId, dto.OfferId);
             await mediator.Send(command, cancellationToken);
 
             return Ok();

@@ -29,14 +29,20 @@
   grid-row: 2;
   grid-column: 2;
 
+  overflow: auto;
+  white-space: nowrap;
+
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 1rem;
+
+  padding: 1rem;
 }
 
 .card {
+  flex: 0 0 auto;
   cursor: pointer;
   position: relative;
 }
@@ -84,4 +90,13 @@
 
 .selected-card {
   box-shadow: 0 0 1em #3f51b5;
+}
+
+.horizontal-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
 }
