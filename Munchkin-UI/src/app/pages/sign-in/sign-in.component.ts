@@ -38,14 +38,14 @@ export class SignInComponent implements OnInit {
       nickname = this.login;
     }
 
-    const isSucceeded = await this.authService.signInUser(
+    const result = await this.authService.signInUser(
       nickname,
       email,
       this.password,
       this.rememberMe
     );
 
-    if (isSucceeded) {
+    if (result.succeeded) {
       await this.router.navigateByUrl(this.returnUrl ?? '/');
     }
   }
