@@ -91,6 +91,7 @@ export class CombatFieldComponent
     ['PlayerRolledDieEvent', this.onPlayerRolledDieEvent],
     ['CharacterAppliedBadStuffEvent', this.onCharacterAppliedBadStuffEvent],
     ['CharacterEscapedEvent', this.onCharacterEscapedEvent],
+    ['OneShotCardPlayedEvent', this.onOneShotCardPlayedEvent],
   ]);
 
   constructor(
@@ -186,6 +187,10 @@ export class CombatFieldComponent
 
   async onCharacterAppliedBadStuffEvent(): Promise<void> {
     await this.transitionTo(new BadStuffApplicationState(this.snackBar));
+  }
+
+  async onOneShotCardPlayedEvent(): Promise<void> {
+    await this.transitionTo(new RunAwayRollResolutionState());
   }
 
   async onCharacterEscapedEvent(): Promise<void> {
