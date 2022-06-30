@@ -2,12 +2,15 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using Minio;
 using Munchkin.API;
+using Munchkin.API.Filters;
 using Munchkin.Application.DbContext.MongoDb;
 using Munchkin.Application.DbContext.MongoDb.Base;
 using Munchkin.Application.DbContext.MongoDb.Extensions;
 using Munchkin.Application.Hubs;
 using Munchkin.Application.Services;
 using Munchkin.Application.Services.Base;
+using Munchkin.Domain.Behaviours;
+using Munchkin.Domain.Validation;
 using Munchkin.Shared.Identity;
 using Munchkin.Shared.Options;
 
@@ -41,6 +44,9 @@ builder.Services.AddAutoMapper(
     }
 );
 
+builder.Services.AddValidators();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
 builder.Services.AddMongoDbContext<IMunchkinDbContext,MunchkinDbContext>(options =>
 {
     options.ConnectionString = builder.Configuration["MongoDbOptions:ConnectionString"];
@@ -64,7 +70,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => options.Filters.Add(typeof(ResponseMappingFilter)));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
