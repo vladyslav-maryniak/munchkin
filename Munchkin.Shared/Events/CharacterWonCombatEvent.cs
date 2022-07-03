@@ -8,7 +8,7 @@ namespace Munchkin.Shared.Events
         public void Apply(Game game)
         {
             var place = game.Table.Places
-                    .First(x => x.Character.Id == CharacterId);
+                .First(x => x.Character.Id == CharacterId);
 
             place.Character.Level += game.Table.CombatField.MonsterSquad
                 .Select(x => x.VictoryLevels)

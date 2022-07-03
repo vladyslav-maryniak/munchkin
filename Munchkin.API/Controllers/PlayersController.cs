@@ -28,7 +28,7 @@ namespace Munchkin.API.Controllers
             var query = new GetPlayerGames.Query(playerId);
             var response = await mediator.Send(query, cancellationToken);
 
-            return Ok(mapper.Map<List<PlayerGameDto>>(response.Games));
+            return Ok(response.Games is null ? response : mapper.Map<List<PlayerGameDto>>(response.Games));
         }
     }
 }

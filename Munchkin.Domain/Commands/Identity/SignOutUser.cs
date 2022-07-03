@@ -6,9 +6,9 @@ namespace Munchkin.Domain.Commands.Identity
 {
     public static class SignOutUser
     {
-        public record Command : IRequest<Response>;
+        public record Command : IRequest;
 
-        public class Handler : IRequestHandler<Command, Response>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly SignInManager<ApplicationUser> signInManager;
 
@@ -17,14 +17,12 @@ namespace Munchkin.Domain.Commands.Identity
                 this.signInManager = signInManager;
             }
 
-            public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 await signInManager.SignOutAsync();
 
-                return new Response();
+                return Unit.Value;
             }
         }
-
-        public record Response;
     }
 }

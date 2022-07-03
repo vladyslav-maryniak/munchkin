@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using Munchkin.Application.Services.Base;
 using Munchkin.Domain.Queries;
+using Munchkin.Domain.Validation;
 using Munchkin.Shared.Events;
 using Munchkin.Shared.Events.Base;
 
@@ -7,9 +9,36 @@ namespace Munchkin.Domain.Commands
 {
     public static class ResolveRunAwayRoll
     {
-        public record Command(Guid GameId, Guid CharacterId) : IRequest;
+        public record Command(Guid GameId, Guid CharacterId) : IRequest<Response>;
 
-        public class Handler : IRequestHandler<Command>
+        public class Validator : IValidationHandler<Command>
+        {
+            private readonly IGameRepository repository;
+
+            public Validator(IGameRepository repository)
+            {
+                this.repository = repository;
+            }
+
+            public async Task<ValidationResult> Validate(Command request)
+            {
+                var game = await repository.GetGameAsync(request.GameId);
+
+                if (game is null)
+                {
+                    return ValidationError.NoGame;
+                }
+
+                if (!game.Table.Places.Any(x => x.Character.Id == request.CharacterId))
+                {
+                    return ValidationError.NoCharacter;
+                }
+
+                return ValidationResult.Success;
+            }
+        }
+
+        public class Handler : IRequestHandler<Command, Response>
         {
             private readonly IMediator mediator;
 
@@ -18,18 +47,20 @@ namespace Munchkin.Domain.Commands
                 this.mediator = mediator;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
             {
                 var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
 
-                IGameEvent @event = response.Game.Table.DieValue > 4 ?
+                IGameEvent @event = response.Game!.Table.DieValue > 4 ?
                     new CharacterEscapedEvent(request.GameId, request.CharacterId) :
                     new CharacterAppliedBadStuffEvent(request.GameId, request.CharacterId);
 
                 await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 
-                return Unit.Value;
+                return new Response();
             }
         }
+
+        public record Response : CqrsResponse;
     }
 }

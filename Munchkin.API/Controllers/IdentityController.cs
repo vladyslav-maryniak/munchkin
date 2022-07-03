@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Munchkin.API.DTOs.Identity;
@@ -12,30 +13,35 @@ namespace Munchkin.API.Controllers
     public class IdentityController : ControllerBase
     {
         private readonly IMediator mediator;
+        private readonly IMapper mapper;
 
-        public IdentityController(IMediator mediator)
+        public IdentityController(IMediator mediator, IMapper mapper)
         {
             this.mediator = mediator;
+            this.mapper = mapper;
         }
 
         [AllowAnonymous]
         [HttpPost("create")]
-        public async Task<ActionResult<bool>> CreateUserAsync(CreateUserDto dto, CancellationToken cancellationToken)
+        public async Task<ActionResult<IdentityResultDto>> CreateUserAsync(
+            CreateUserDto dto, CancellationToken cancellationToken)
         {
             var command = new CreateUser.Command(dto.Nickname, dto.Email, dto.Password);
             var response = await mediator.Send(command, cancellationToken);
 
-            return Ok(response.Result.Succeeded);
+            return Ok(response.Result is null ?
+                response : mapper.Map<IdentityResultDto>(response.Result));
         }
 
         [AllowAnonymous]
         [HttpPost("sign-in")]
-        public async Task<ActionResult<bool>> SignInUserAsync(SignInUserDto dto, CancellationToken cancellationToken)
+        public async Task<ActionResult<SignInResultDto>> SignInUserAsync(
+            SignInUserDto dto, CancellationToken cancellationToken)
         {
             var command = new SignInUser.Command(dto.Nickname, dto.Email, dto.Password, dto.IsPersistent);
             var response = await mediator.Send(command, cancellationToken);
 
-            return Ok(response.Result.Succeeded);
+            return Ok(response.Result is null ? response : mapper.Map<SignInResultDto>(response.Result));
         }
 
         [HttpPost("sign-out")]
@@ -49,12 +55,12 @@ namespace Munchkin.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("check-sign-in")]
-        public async Task<ActionResult<bool>> CheckSignInAsync(CancellationToken cancellationToken)
+        public async Task<ActionResult<CheckSignInDto>> CheckSignInAsync(CancellationToken cancellationToken)
         {
             var command = new CheckSignIn.Command(User);
             var response = await mediator.Send(command, cancellationToken);
 
-            return Ok(response.Result);
+            return Ok(new CheckSignInDto { Authenticated = response.Result });
         }
 
         [HttpGet("user")]
@@ -63,9 +69,8 @@ namespace Munchkin.API.Controllers
             var command = new GetUser.Query(User);
             var response = await mediator.Send(command, cancellationToken);
 
-            var dto = new UserDto { Id = response.Id, Nickname = response.Nickname };
-            
-            return Ok(dto);
+            return Ok(response.Nickname is null ?
+                response : new UserDto { Id = response.Id, Nickname = response.Nickname });
         }
     }
 }

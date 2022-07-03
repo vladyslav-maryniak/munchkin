@@ -2,7 +2,7 @@
 {
     public class Game
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public int TurnIndex { get; set; }
         public string? State { get; set; }
         public GameStatus Status { get; set; }

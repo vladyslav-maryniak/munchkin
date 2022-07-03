@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Munchkin.API.DTOs;
 using Munchkin.Domain.Commands;
 using Munchkin.Domain.Queries;
-using Munchkin.Shared.Offers;
 
 namespace Munchkin.API.Controllers
 {
@@ -39,7 +38,7 @@ namespace Munchkin.API.Controllers
             var query = new GetGame.Query(gameId);
             var response = await mediator.Send(query, cancellationToken);
 
-            return Ok(mapper.Map<GameDto>(response.Game));
+            return Ok(response.Game is null ? response : mapper.Map<GameDto>(response.Game));
         }
 
         [HttpGet("{gameId:guid}/lobby")]
@@ -49,7 +48,7 @@ namespace Munchkin.API.Controllers
             var query = new GetGameLobby.Query(gameId);
             var response = await mediator.Send(query, cancellationToken);
 
-            return Ok(mapper.Map<GameLobbyDto>(response.Lobby));
+            return Ok(response.Lobby is null ? response : mapper.Map<GameLobbyDto>(response.Lobby));
         }
 
         [HttpPost("{gameId:guid}/update-state")]
@@ -57,9 +56,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, GameStateDto dto, CancellationToken cancellationToken)
         {
             var command = new UpdateGameState.Command(gameId, dto.State);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/join")]
@@ -67,9 +66,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, PlayerEventDto dto, CancellationToken cancellationToken)
         {
             var command = new JoinPlayer.Command(gameId, dto.PlayerId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
             
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/leave")]
@@ -77,9 +76,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, PlayerEventDto dto, CancellationToken cancellationToken)
         {
             var command = new LeavePlayer.Command(gameId, dto.PlayerId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/start-game")]
@@ -87,9 +86,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, CancellationToken cancellationToken)
         {
             var command = new StartGame.Command(gameId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/draw-card")]
@@ -97,9 +96,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, PlayerEventDto dto, CancellationToken cancellationToken)
         {
             var command = new DrawCard.Command(gameId, dto.PlayerId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/apply-curse")]
@@ -107,9 +106,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)
         {
             var command = new ApplyCurse.Command(gameId, dto.CharacterId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/initiate-combat")]
@@ -117,9 +116,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)
         {
             var command = new InitiateCombat.Command(gameId, dto.CharacterId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/complete-combat")]
@@ -127,9 +126,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, CancellationToken cancellationToken)
         {
             var command = new CompleteCombat.Command(gameId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/roll-die")]
@@ -137,9 +136,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, PlayerEventDto dto, CancellationToken cancellationToken)
         {
             var command = new RollDie.Command(gameId, dto.PlayerId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/resolve-run-away-roll")]
@@ -147,9 +146,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)
         {
             var command = new ResolveRunAwayRoll.Command(gameId, dto.CharacterId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/come-to-help")]
@@ -157,9 +156,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)
         {
             var command = new ComeToHelp.Command(gameId, dto.CharacterId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/stop-asking-for-help")]
@@ -167,9 +166,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, CancellationToken cancellationToken)
         {
             var command = new StopAskingForHelp.Command(gameId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/resume-combat")]
@@ -177,9 +176,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, CharacterEventDto dto, CancellationToken cancellationToken)
         {
             var command = new ResumeCombat.Command(gameId, dto.CharacterId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/play-card")]
@@ -187,9 +186,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, PlayCardEventDto dto, CancellationToken cancellationToken)
         {
             var command = new PlayCard.Command(gameId, dto.PlayerId, dto.CardId, dto.Metadata);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/sell-cards")]
@@ -197,9 +196,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, CardSaleEventDto dto, CancellationToken cancellationToken)
         {
             var command = new SellCards.Command(gameId, dto.PlayerId, dto.CardIds);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/offer-reward")]
@@ -214,9 +213,9 @@ namespace Munchkin.API.Controllers
                 dto.NumberOfTreasures,
                 dto.HelperPicksFirst);
 
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/offer-bribe")]
@@ -230,9 +229,9 @@ namespace Munchkin.API.Controllers
                 dto.Agreement,
                 dto.ItemCardIds);
 
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/offer-trade")]
@@ -246,9 +245,9 @@ namespace Munchkin.API.Controllers
                 dto.OfferorItemCardIds,
                 dto.OffereeItemCardIds);
 
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/accept-offer")]
@@ -256,9 +255,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, OfferDesicionDto dto, CancellationToken cancellationToken)
         {
             var command = new AcceptOffer.Command(gameId, dto.OfferId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpPost("{gameId:guid}/decline-offer")]
@@ -266,9 +265,9 @@ namespace Munchkin.API.Controllers
             Guid gameId, OfferDesicionDto dto, CancellationToken cancellationToken)
         {
             var command = new DeclineOffer.Command(gameId, dto.OfferId);
-            await mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
-            return Ok();
+            return Ok(response);
         }
     }
 }

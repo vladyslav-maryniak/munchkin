@@ -1,14 +1,12 @@
-﻿using Munchkin.Shared.Cards.Base;
-using Munchkin.Shared.Cards.Base.Treasures;
+﻿using Munchkin.Shared.Cards.Base.Treasures;
 using Munchkin.Shared.Events.Base;
 using Munchkin.Shared.Models;
-using System.Linq;
 
 namespace Munchkin.Shared.Events
 {
     public record PlayerSoldCardsEvent(Guid GameId, Guid PlayerId, IEnumerable<Guid> CardIds) : IGameEvent
     {
-        private const int minAmountOfGoldPiecesForSale = 1000;
+        public static int MinAmountOfGoldPiecesForSale => 1000;
 
         public void Apply(Game game)
         {
@@ -16,17 +14,12 @@ namespace Munchkin.Shared.Events
             var cardsForSale = place.InHandCards
                 .Where(x => CardIds.Contains(x.Id))
                 .Cast<ISaleable>();
-            
-            if (cardsForSale is null || !cardsForSale.Any())
-            {
-                return;
-            }
 
             var goldPieces = cardsForSale
                 .Select(x => x.GoldPieces)
                 .Aggregate((total, x) => total + x);
 
-            int upLevels = goldPieces / minAmountOfGoldPiecesForSale;
+            int upLevels = goldPieces / MinAmountOfGoldPiecesForSale;
             if (upLevels > 0)
             {
                 place.Character.Level += upLevels;

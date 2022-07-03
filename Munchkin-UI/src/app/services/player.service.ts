@@ -20,6 +20,9 @@ export class PlayerService {
   constructor(private httpClient: HttpClient) {}
 
   async getPlayerGames(playerId: string): Promise<PlayerGame[]> {
+    if (playerId === '') {
+      playerId = '00000000-0000-0000-0000-000000000000';
+    }
     const endpoint: string = `${this.playerControllerUrl}/${playerId}/games`;
     const observable = this.httpClient.get<PlayerGame[]>(endpoint, options);
     const response = await firstValueFrom(observable);

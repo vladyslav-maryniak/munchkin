@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Munchkin.Application.Services.Base;
+using Munchkin.Domain.Validation;
+using Munchkin.Shared.Extensions;
 using Munchkin.Shared.Identity;
 
 namespace Munchkin.Domain.Commands.Identity
@@ -27,12 +29,18 @@ namespace Munchkin.Domain.Commands.Identity
                 var user = new ApplicationUser(request.Nickname, request.Email);
                 var result = await userManager.CreateAsync(user, request.Password);
 
-                _ = await repository.CreatePlayerAsync(user.Id, request.Nickname, cancellationToken);
+                if (!result.Errors.Any())
+                {
+                    _ = await repository.CreatePlayerAsync(user.Id, request.Nickname, cancellationToken);
+                }
 
-                return new Response(result);
+                return new Response() { Result = result };
             }
         }
 
-        public record Response(IdentityResult Result);
+        public record Response
+        {
+            public IdentityResult? Result { get; set; }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Munchkin.Shared.Cards.Base.Treasures;
+﻿using Munchkin.Shared.Cards.Base;
+using Munchkin.Shared.Cards.Base.Treasures;
 using Munchkin.Shared.Cards.Base.Treasures.Items;
 
 namespace Munchkin.Shared.Models
@@ -61,6 +62,34 @@ namespace Munchkin.Shared.Models
             }
 
             return takenOffItem!;
+        }
+
+        public IEnumerable<MunchkinCard> ToEnumerable()
+        {
+            List<MunchkinCard> equipment = new();
+
+            if (Headgear is not null)
+            {
+                equipment.Add(Headgear);
+            }
+            if (Armor is not null)
+            {
+                equipment.Add(Armor);
+            }
+            if (Footgear is not null)
+            {
+                equipment.Add(Footgear);
+            }
+            if (LeftHand is not null)
+            {
+                equipment.Add(LeftHand);
+            }
+            if (RightHand is not null)
+            {
+                equipment.Add(RightHand);
+            }
+
+            return equipment;
         }
     }
 }

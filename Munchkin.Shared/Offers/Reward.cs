@@ -4,11 +4,15 @@ namespace Munchkin.Shared.Offers
 {
     public class Reward : Offer
     {
-        public Guid[] ItemCardIds { get; set; }
-        public Guid[] CardIdsForPlay { get; set; }
+        public Guid[] ItemCardIds { get; set; } = Array.Empty<Guid>();
+        public Guid[] CardIdsForPlay { get; set; } = Array.Empty<Guid>();
         public int VictoryTreasures { get; set; }
         public int NumberOfTreasures { get; set; }
         public bool HelperPicksFirst { get; set; }
+
+        public Reward()
+        {
+        }
 
         public Reward(
             Guid offerorId,

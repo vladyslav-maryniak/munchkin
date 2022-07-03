@@ -20,12 +20,12 @@ export class AuthenticationGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean> {
-    const isSignedIn = await this.authService.checkSignIn();
-    if (isSignedIn && this.isSignPage(route)) {
+    const result = await this.authService.checkSignIn();
+    if (result.authenticated && this.isSignPage(route)) {
       await this.router.navigate(['/']);
       return false;
     }
-    if (!isSignedIn && !this.isSignPage(route)) {
+    if (!result.authenticated && !this.isSignPage(route)) {
       await this.router.navigate(['/sign-in'], {
         queryParams: { returnUrl: state.url },
       });
