@@ -72,5 +72,16 @@ namespace Munchkin.API.Controllers
             return Ok(response.Nickname is null ?
                 response : new UserDto { Id = response.Id, Nickname = response.Nickname });
         }
+
+        [AllowAnonymous]
+        [HttpPost("check-nickname")]
+        public async Task<ActionResult<CheckNicknameResultDto>> CheckNicknameAsync(
+            CheckNicknameDto dto, CancellationToken cancellationToken)
+        {
+            var command = new CheckNickname.Command(dto.Nickname);
+            var response = await mediator.Send(command, cancellationToken);
+            
+            return Ok(new CheckNicknameResultDto { IsUnique = response.IsUnique });
+        }
     }
 }

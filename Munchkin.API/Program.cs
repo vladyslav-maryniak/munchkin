@@ -57,7 +57,11 @@ var identityMongoDbOptions = builder.Configuration
     .GetSection(nameof(IdentityMongoDbOptions))
     .Get<IdentityMongoDbOptions>();
 builder.Services
-    .AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddIdentity<ApplicationUser, ApplicationRole>(
+        options =>
+        {
+            options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-";
+        })
     .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>(
         identityMongoDbOptions.ConnectionString, identityMongoDbOptions.DatabaseName);
 
