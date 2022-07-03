@@ -26,6 +26,9 @@ import { SixSidedDieComponent } from './components/six-sided-die/six-sided-die.c
 import { BribeDialogComponent } from './components/bribe-dialog/bribe-dialog.component';
 import { TradeDialogComponent } from './components/trade-dialog/trade-dialog.component';
 import { RewardDialogComponent } from './components/reward-dialog/reward-dialog.component';
+import { NicknameValidatorDirective } from './directives/validation/nickname-validator.directive';
+import { EmailValidatorDirective } from './directives/validation/email-validator.directive';
+import { PasswordMatchingValidatorDirective } from './directives/validation/password-matching-validator.directive';
 
 const appRoutes: Routes = [
   {
@@ -75,6 +78,9 @@ const appRoutes: Routes = [
     BribeDialogComponent,
     TradeDialogComponent,
     RewardDialogComponent,
+    NicknameValidatorDirective,
+    EmailValidatorDirective,
+    PasswordMatchingValidatorDirective,
   ],
   imports: [
     BrowserModule,
