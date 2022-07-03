@@ -8,19 +8,17 @@
 .form-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 0.7em;
 }
 
-.form-fields-container {
+.form-title {
+  align-self: start;
+}
+
+.field-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.sign-up-link {
-  align-self: center;
-}
-
-.submit-btn {
-  margin-top: 20px;
-  align-self: center;
+  gap: 0.5em;
+  padding-bottom: 0.5em;
 }
