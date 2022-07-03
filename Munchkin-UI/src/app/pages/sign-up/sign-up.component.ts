@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IdentityError } from 'src/app/models/identity/identity-error';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
@@ -12,11 +12,9 @@ export class SignUpComponent implements OnInit {
   nickname!: string;
   email!: string;
   password!: string;
-  pwdConfirmation!: string;
+  passwordConfirmation!: string;
 
   returnUrl!: string;
-
-  errors: IdentityError[] = [];
 
   constructor(
     private authService: AuthenticationService,
@@ -29,7 +27,7 @@ export class SignUpComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    if (this.password == this.pwdConfirmation) {
+    if (this.password == this.passwordConfirmation) {
       const result = await this.authService.createUser(
         this.nickname,
         this.email,
@@ -37,9 +35,35 @@ export class SignUpComponent implements OnInit {
       );
       if (result.succeeded) {
         await this.router.navigateByUrl(this.returnUrl ?? '/');
-      } else {
-        this.errors = result.errors;
       }
     }
+  }
+
+  getFirstErrorDescription(
+    inputName: string,
+    errors: ValidationErrors | null
+  ): string {
+    if (errors?.['required']) {
+      return `${inputName} is required`;
+    }
+    if (errors?.['minlength']) {
+      return `${inputName} is too short`;
+    }
+    if (errors?.['pattern']) {
+      return `Login contains not allowed character`;
+    }
+    if (errors?.['email']) {
+      return 'Email is invalid';
+    }
+    if (errors?.['nicknameIsNotUnique']) {
+      return 'Nickname is already taken';
+    }
+    if (errors?.['emailIsNotUnique']) {
+      return 'Email is already taken';
+    }
+    if (errors?.['passwordsDoNotMatch']) {
+      return 'Passwords do not match';
+    }
+    return '';
   }
 }
