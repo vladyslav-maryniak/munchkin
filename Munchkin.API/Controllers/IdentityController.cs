@@ -36,7 +36,7 @@ namespace Munchkin.API.Controllers
         [AllowAnonymous]
         [HttpPost("sign-in")]
         public async Task<ActionResult<SignInResultDto>> SignInUserAsync(
-            SignInUserDto dto, CancellationToken cancellationToken)
+            SignInDto dto, CancellationToken cancellationToken)
         {
             var command = new SignInUser.Command(dto.Nickname, dto.Email, dto.Password, dto.IsPersistent);
             var response = await mediator.Send(command, cancellationToken);
@@ -55,12 +55,12 @@ namespace Munchkin.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("check-sign-in")]
-        public async Task<ActionResult<CheckSignInDto>> CheckSignInAsync(CancellationToken cancellationToken)
+        public async Task<ActionResult<CheckSignInResultDto>> CheckSignInAsync(CancellationToken cancellationToken)
         {
             var command = new CheckSignIn.Command(User);
             var response = await mediator.Send(command, cancellationToken);
 
-            return Ok(new CheckSignInDto { Authenticated = response.Result });
+            return Ok(new CheckSignInResultDto { Authenticated = response.Result });
         }
 
         [HttpGet("user")]
