@@ -61,6 +61,7 @@ builder.Services
         options =>
         {
             options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-";
+            options.User.RequireUniqueEmail = true;
         })
     .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>(
         identityMongoDbOptions.ConnectionString, identityMongoDbOptions.DatabaseName);

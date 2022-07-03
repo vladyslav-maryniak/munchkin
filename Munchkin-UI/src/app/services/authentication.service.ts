@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CheckEmail } from '../models/identity/check-email';
 import { CheckNickname } from '../models/identity/check-nickname';
 import { CheckSignIn } from '../models/identity/check-sign-in';
 import { IdentityResult } from '../models/identity/identity-result';
@@ -93,6 +94,19 @@ export class AuthenticationService {
     const endpoint = `${this.identityControllerUrl}/check-nickname`;
     const body = { nickname };
     const observable = this.httpClient.post<CheckNickname>(
+      endpoint,
+      body,
+      options
+    );
+    const response = await firstValueFrom(observable);
+
+    return response.body ?? ({} as CheckNickname);
+  }
+
+  async checkEmail(email: string): Promise<CheckEmail> {
+    const endpoint = `${this.identityControllerUrl}/check-email`;
+    const body = { email };
+    const observable = this.httpClient.post<CheckEmail>(
       endpoint,
       body,
       options
