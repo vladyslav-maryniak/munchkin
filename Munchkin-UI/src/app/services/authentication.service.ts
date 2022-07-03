@@ -4,6 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CheckEmail } from '../models/identity/check-email';
 import { CheckNickname } from '../models/identity/check-nickname';
+import { CheckPassword } from '../models/identity/check-password';
 import { CheckSignIn } from '../models/identity/check-sign-in';
 import { IdentityResult } from '../models/identity/identity-result';
 import { SignInResult } from '../models/identity/sign-in-result';
@@ -114,6 +115,23 @@ export class AuthenticationService {
     const response = await firstValueFrom(observable);
 
     return response.body ?? ({} as CheckNickname);
+  }
+
+  async checkPassword(
+    nickname: string,
+    email: string,
+    password: string
+  ): Promise<CheckPassword> {
+    const endpoint = `${this.identityControllerUrl}/check-password`;
+    const body = { nickname, email, password };
+    const observable = this.httpClient.post<CheckPassword>(
+      endpoint,
+      body,
+      options
+    );
+    const response = await firstValueFrom(observable);
+
+    return response.body ?? ({} as CheckPassword);
   }
 
   async getUser(): Promise<Player | null> {
