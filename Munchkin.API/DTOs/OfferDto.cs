@@ -3,7 +3,7 @@
     public class OfferDto
     {
         public Guid Id { get; set; }
-        public Guid OfferorId { get; set; } = new();
-        public Guid OffereeId { get; set; } = new();
+        public Guid OfferorId { get; set; }
+        public Guid OffereeId { get; set; }
     }
 }
