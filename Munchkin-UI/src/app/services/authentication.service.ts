@@ -2,6 +2,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CheckEmail } from '../models/identity/check-email';
+import { CheckNickname } from '../models/identity/check-nickname';
+import { CheckPassword } from '../models/identity/check-password';
 import { CheckSignIn } from '../models/identity/check-sign-in';
 import { IdentityResult } from '../models/identity/identity-result';
 import { SignInResult } from '../models/identity/sign-in-result';
@@ -86,6 +89,49 @@ export class AuthenticationService {
     const response = await firstValueFrom(observable);
 
     return response.body ?? ({} as CheckSignIn);
+  }
+
+  async checkNickname(nickname: string): Promise<CheckNickname> {
+    const endpoint = `${this.identityControllerUrl}/check-nickname`;
+    const body = { nickname };
+    const observable = this.httpClient.post<CheckNickname>(
+      endpoint,
+      body,
+      options
+    );
+    const response = await firstValueFrom(observable);
+
+    return response.body ?? ({} as CheckNickname);
+  }
+
+  async checkEmail(email: string): Promise<CheckEmail> {
+    const endpoint = `${this.identityControllerUrl}/check-email`;
+    const body = { email };
+    const observable = this.httpClient.post<CheckEmail>(
+      endpoint,
+      body,
+      options
+    );
+    const response = await firstValueFrom(observable);
+
+    return response.body ?? ({} as CheckNickname);
+  }
+
+  async checkPassword(
+    nickname: string,
+    email: string,
+    password: string
+  ): Promise<CheckPassword> {
+    const endpoint = `${this.identityControllerUrl}/check-password`;
+    const body = { nickname, email, password };
+    const observable = this.httpClient.post<CheckPassword>(
+      endpoint,
+      body,
+      options
+    );
+    const response = await firstValueFrom(observable);
+
+    return response.body ?? ({} as CheckPassword);
   }
 
   async getUser(): Promise<Player | null> {

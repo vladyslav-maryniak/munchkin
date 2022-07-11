@@ -15,6 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [],
@@ -34,6 +35,7 @@ import { MatRadioModule } from '@angular/material/radio';
     OverlayModule,
     MatStepperModule,
     MatRadioModule,
+    MatFormFieldModule,
   ],
   exports: [
     MatButtonModule,
@@ -50,6 +52,7 @@ import { MatRadioModule } from '@angular/material/radio';
     OverlayModule,
     MatStepperModule,
     MatRadioModule,
+    MatFormFieldModule,
   ],
 })
 export class MaterialImportsModule {}

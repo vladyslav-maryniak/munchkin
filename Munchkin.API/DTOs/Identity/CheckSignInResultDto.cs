@@ -1,6 +1,6 @@
 ﻿namespace Munchkin.API.DTOs.Identity
 {
-    public class CheckSignInDto
+    public class CheckSignInResultDto
     {
         public bool Authenticated { get; set; }
     }

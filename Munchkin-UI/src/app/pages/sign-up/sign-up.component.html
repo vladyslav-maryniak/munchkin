@@ -1,62 +1,102 @@
 <div class="container">
   <div>
-    <h1>Sign Up</h1>
-    <form (ngSubmit)="onSubmit()">
+    <form
+      name="form"
+      #form="ngForm"
+      (ngSubmit)="form.valid && onSubmit()"
+      novalidate
+      [passwordMatching]="['password-input', 'password-confirmation-input']"
+    >
       <div class="form-container">
-        <mat-form-field>
-          <mat-label id="nickname-label">Nickname</mat-label>
-          <input
-            type="text"
-            [(ngModel)]="nickname"
-            matInput
-            name="nickname-input"
-            aria-labelledby="nickname-label"
-          />
-        </mat-form-field>
+        <h1 class="form-title">Sign Up</h1>
+        <div class="field-container">
+          <mat-form-field>
+            <mat-label for="nickname-input">Nickname</mat-label>
+            <input
+              type="text"
+              [(ngModel)]="nickname"
+              #nicknameInput="ngModel"
+              matInput
+              name="nickname-input"
+              required
+              pattern="^[a-zA-Z0-9_.-]*$"
+              uniqueNickname
+              minlength="2"
+              maxlength="32"
+            />
+            <mat-error>
+              {{ getFirstErrorDescription("Nickname", nicknameInput.errors) }}
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field>
-          <mat-label id="email-label">Email</mat-label>
-          <input
-            type="text"
-            [(ngModel)]="email"
-            matInput
-            name="email-input"
-            aria-labelledby="email-label"
-          />
-        </mat-form-field>
+          <mat-form-field>
+            <mat-label for="email-input">Email</mat-label>
+            <input
+              type="text"
+              [(ngModel)]="email"
+              #emailInput="ngModel"
+              matInput
+              name="email-input"
+              email
+              required
+              uniqueEmail
+              maxlength="64"
+            />
+            <mat-error>
+              {{ getFirstErrorDescription("Email", emailInput.errors) }}
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field>
-          <mat-label id="password-label">Password</mat-label>
-          <input
-            type="password"
-            [(ngModel)]="password"
-            matInput
-            name="password-input"
-            aria-labelledby="password-label"
-          />
-        </mat-form-field>
+          <mat-form-field>
+            <mat-label id="password-input">Password</mat-label>
+            <input
+              type="password"
+              [(ngModel)]="password"
+              #passwordInput="ngModel"
+              matInput
+              name="password-input"
+              required
+              minlength="6"
+              maxlength="32"
+            />
+            <mat-error>
+              {{ getFirstErrorDescription("Password", passwordInput.errors) }}
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field>
-          <mat-label id="pwd-confirmation-label">Confirm password</mat-label>
-          <input
-            type="password"
-            [(ngModel)]="pwdConfirmation"
-            matInput
-            name="pwd-confirmation-input"
-            aria-labelledby="pwd-confirmation-label"
-          />
-        </mat-form-field>
-
-        <div class="sign-up-link">
-          <a [routerLink]="['/sign-in']" [queryParams]="{ returnUrl }">
-            Sign in
-          </a>
+          <mat-form-field>
+            <mat-label for="password-confirmation-input">
+              Confirm password
+            </mat-label>
+            <input
+              type="password"
+              [(ngModel)]="passwordConfirmation"
+              #passwordConfirmationInput="ngModel"
+              matInput
+              name="password-confirmation-input"
+              required
+            />
+            <mat-error>
+              {{
+                getFirstErrorDescription(
+                  "Password confirmation",
+                  passwordConfirmationInput.errors
+                )
+              }}
+            </mat-error>
+          </mat-form-field>
         </div>
 
-        <div class="submit-btn">
+        <div>
           <button mat-raised-button color="primary" type="submit">
             Sing up
           </button>
+        </div>
+
+        <div>
+          <a [routerLink]="['/sign-in']" [queryParams]="{ returnUrl }">
+            Sign in
+          </a>
         </div>
       </div>
     </form>

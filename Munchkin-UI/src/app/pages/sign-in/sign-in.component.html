@@ -1,30 +1,50 @@
 <div class="container">
   <div>
-    <h1>Sign In</h1>
-    <form (ngSubmit)="onSubmit()">
+    <form
+      name="form"
+      #form="ngForm"
+      (ngSubmit)="form.valid && onSubmit(form)"
+      novalidate
+    >
       <div class="form-container">
-        <div class="form-fields-container">
+        <h1 class="form-title">Sign In</h1>
+        <div class="field-container">
           <mat-form-field>
-            <mat-label id="login-label">Login</mat-label>
+            <mat-label for="login-input">Login</mat-label>
             <input
               matInput
               type="text"
               [(ngModel)]="login"
+              #loginInput="ngModel"
               placeholder="Nickname or email"
               name="login-input"
-              aria-labelledby="login-label"
+              required
+              minlength="2"
+              maxlength="64"
+              pattern="^[a-zA-Z0-9@_.-]*$"
+              (ngModelChange)="onLoginInputChange(passwordInput)"
             />
+            <mat-error>
+              {{ getFirstErrorDescription("Login", loginInput.errors) }}
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field>
-            <mat-label id="password-label">Password</mat-label>
+            <mat-label for="password-input">Password</mat-label>
             <input
               matInput
               type="password"
               [(ngModel)]="password"
+              #passwordInput="ngModel"
               name="password-input"
-              aria-labelledby="password-label"
+              required
+              minlength="6"
+              maxlength="32"
+              (ngModelChange)="onPasswordInputChange(loginInput)"
             />
+            <mat-error>
+              {{ getFirstErrorDescription("Password", passwordInput.errors) }}
+            </mat-error>
           </mat-form-field>
 
           <section>
@@ -34,16 +54,16 @@
           </section>
         </div>
 
-        <div class="sign-up-link">
-          <a [routerLink]="['/sign-up']" [queryParams]="{ returnUrl }">
-            Sign up
-          </a>
-        </div>
-
-        <div class="submit-btn">
+        <div>
           <button mat-raised-button color="primary" type="submit">
             Sign in
           </button>
+        </div>
+
+        <div>
+          <a [routerLink]="['/sign-up']" [queryParams]="{ returnUrl }">
+            Sign up
+          </a>
         </div>
       </div>
     </form>

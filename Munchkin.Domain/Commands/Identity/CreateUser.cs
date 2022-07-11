@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Munchkin.Application.Services.Base;
-using Munchkin.Domain.Validation;
-using Munchkin.Shared.Extensions;
 using Munchkin.Shared.Identity;
 
 namespace Munchkin.Domain.Commands.Identity
