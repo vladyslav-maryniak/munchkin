@@ -1,16 +1,9 @@
 ﻿using MongoDB.Driver;
 using Munchkin.Application.DbContext.MongoDb.Base;
 using Munchkin.Application.Services.Base;
+using Munchkin.Shared.Cards;
 using Munchkin.Shared.Cards.Base;
-using Munchkin.Shared.Cards.Doors.Curses;
-using Munchkin.Shared.Cards.Doors.Monsters;
-using Munchkin.Shared.Cards.Treasures.GoUpLevels;
-using Munchkin.Shared.Cards.Treasures.Items.Armor;
-using Munchkin.Shared.Cards.Treasures.Items.Footgear;
-using Munchkin.Shared.Cards.Treasures.Items.Headgear;
-using Munchkin.Shared.Cards.Treasures.Items.OneHand;
-using Munchkin.Shared.Cards.Treasures.Items.TwoHands;
-using Munchkin.Shared.Cards.Treasures.OneShots;
+using Munchkin.Shared.Extensions;
 using Munchkin.Shared.Models;
 
 namespace Munchkin.Application.Services
@@ -74,39 +67,9 @@ namespace Munchkin.Application.Services
         }
 
         private static Stack<DoorCard> GetDoorDeck()
-        {
-            Stack<DoorCard> doorDeck = new();
-
-            for (int i = 0; i < 10; i++)
-            {
-                doorDeck.Push(new DuckOfDoom());
-                doorDeck.Push(new UndeadHorse());
-                doorDeck.Push(new FlyingFrogs());
-                doorDeck.Push(new MaulRat());
-            }
-
-            return doorDeck;
-        }
+            => new(MunchkinCards.DoorCards.Shuffle());
 
         private static Stack<TreasureCard> GetTreasureDeck()
-        {
-            Stack<TreasureCard> treasureDeck = new();
-
-            for (int i = 0; i < 10; i++)
-            {
-                treasureDeck.Push(new InvokeObscureRules());
-                treasureDeck.Push(new FlamingArmor());
-                treasureDeck.Push(new BootsOfButtKicking());
-                treasureDeck.Push(new HelmOfCourage());
-                treasureDeck.Push(new LoadedDie());
-                treasureDeck.Push(new ConvenientAdditionError());
-                treasureDeck.Push(new SneakyBastardSword());
-                treasureDeck.Push(new ElevenFootPole());
-                treasureDeck.Push(new Doppleganger());
-                treasureDeck.Push(new BoilAnAnthill());
-            }
-
-            return treasureDeck;
-        }
+            => new(MunchkinCards.TreasureCards.Shuffle());
     }
 }
