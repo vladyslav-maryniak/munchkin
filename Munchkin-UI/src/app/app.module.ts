@@ -29,6 +29,7 @@ import { RewardDialogComponent } from './components/reward-dialog/reward-dialog.
 import { NicknameValidatorDirective } from './directives/validation/nickname-validator.directive';
 import { EmailValidatorDirective } from './directives/validation/email-validator.directive';
 import { PasswordMatchingValidatorDirective } from './directives/validation/password-matching-validator.directive';
+import { GameCompletionComponent } from './components/game-completion/game-completion.component';
 
 const appRoutes: Routes = [
   {
@@ -81,6 +82,7 @@ const appRoutes: Routes = [
     NicknameValidatorDirective,
     EmailValidatorDirective,
     PasswordMatchingValidatorDirective,
+    GameCompletionComponent,
   ],
   imports: [
     BrowserModule,

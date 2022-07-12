@@ -34,7 +34,6 @@ export abstract class GameState<T> {
   ): void {
     snackBar.open(isCurrentPlayerTurn ? forPlayer : forOthers, '', {
       duration: 3000,
-      horizontalPosition: 'center',
       verticalPosition: 'top',
     });
   }

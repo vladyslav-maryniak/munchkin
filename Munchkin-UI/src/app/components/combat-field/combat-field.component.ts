@@ -14,6 +14,7 @@ import { CombatResumptionState } from 'src/app/game-states/combat-field/combat-r
 import { CurseApplicationState } from 'src/app/game-states/combat-field/curse-application-state';
 import { DangerousDecisionMakingState } from 'src/app/game-states/combat-field/dangerous-decision-making-state';
 import { EscapingState } from 'src/app/game-states/combat-field/escaping-state';
+import { GameCompletion } from 'src/app/game-states/combat-field/game-completion';
 import { RunAwayRollResolutionState } from 'src/app/game-states/combat-field/run-away-roll-resolution-state';
 import { RunningAwayState } from 'src/app/game-states/combat-field/running-away-state';
 import { WaitingState } from 'src/app/game-states/combat-field/waiting-state';
@@ -94,6 +95,7 @@ export class CombatFieldComponent
     ['CharacterAppliedBadStuffEvent', this.onCharacterAppliedBadStuffEvent],
     ['CharacterEscapedEvent', this.onCharacterEscapedEvent],
     ['OneShotCardPlayedEvent', this.onOneShotCardPlayedEvent],
+    ['PlayerWonGameEvent', this.onPlayerWonGameEvent],
     ['MonsterCardPlayedEvent', this.onMonsterCardPlayedEvent],
     ['CurseCardPlayedEvent', this.onCurseCardPlayedEvent],
   ]);
@@ -205,6 +207,10 @@ export class CombatFieldComponent
 
   async onCharacterEscapedEvent(): Promise<void> {
     await this.transitionTo(new EscapingState(this.snackBar));
+  }
+
+  async onPlayerWonGameEvent(): Promise<void> {
+    await this.transitionTo(new GameCompletion(this.dialog));
   }
 
   async onMonsterCardPlayedEvent(): Promise<void> {

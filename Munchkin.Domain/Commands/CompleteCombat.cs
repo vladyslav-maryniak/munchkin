@@ -35,6 +35,7 @@ namespace Munchkin.Domain.Commands
         public class Handler : IRequestHandler<Command, Response>
         {
             private readonly IMediator mediator;
+            private const int maxCharacterLevel = 10;
 
             public Handler(IMediator mediator)
             {
@@ -49,7 +50,17 @@ namespace Munchkin.Domain.Commands
                 await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 
                 var game = response.Game!;
+                var places = game.Table.Places;
 
+                if (places.Any(x => x.Character.Level >= maxCharacterLevel))
+                {
+                    var winner = places.MaxBy(x => x.Character.Level)!;
+
+                    var victoryEvent = new PlayerWonGameEvent(game.Id, winner.Player.Id);
+                    await mediator.Send(new PublishEvent.Command(victoryEvent), cancellationToken);
+
+                    return new Response();
+                }
 
                 var combatField = game.Table.CombatField;
                 var reward = combatField.Reward;
