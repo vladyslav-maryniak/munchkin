@@ -9,6 +9,8 @@ namespace Munchkin.Shared.Models
         public List<Offer> Offers { get; set; } = new();
         public Stack<DoorCard> DoorDeck { get; set; }
         public Stack<TreasureCard> TreasureDeck { get; set; }
+        public Stack<DoorCard> DoorDiscards { get; set; } = new();
+        public Stack<TreasureCard> TreasureDiscards { get; set; } = new();
         public CombatField CombatField { get; set; } = new();
         public int DieValue { get; set; } = 1;
 
@@ -16,6 +18,22 @@ namespace Munchkin.Shared.Models
         {
             DoorDeck = doorDeck;
             TreasureDeck = treasureDeck;
+        }
+
+        public void Discard(params MunchkinCard[] cards)
+        {
+            foreach (var card in cards)
+            {
+                switch (card)
+                {
+                    case DoorCard d:
+                        DoorDiscards.Push(d);
+                        break;
+                    case TreasureCard t:
+                        TreasureDiscards.Push(t);
+                        break;
+                }
+            }
         }
     }
 }

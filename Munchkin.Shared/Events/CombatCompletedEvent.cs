@@ -7,8 +7,9 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
+            var cards = game.Table.CombatField.Clear();
+            game.Table.Discard(cards.ToArray());
             game.TurnIndex++;
-            game.Table.CombatField.Clear();
         }
     }
 }
