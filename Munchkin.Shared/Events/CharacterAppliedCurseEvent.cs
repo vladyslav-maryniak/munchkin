@@ -14,7 +14,7 @@ namespace Munchkin.Shared.Events
             var curse = character.Curses
                 .First(x => x.Id == table.CombatField.CursePlace!.Id);
 
-            curse.Apply(character);
+            curse.Apply(game, character);
             character.Curses.Remove(curse);
 
             table.CombatField.Clear();

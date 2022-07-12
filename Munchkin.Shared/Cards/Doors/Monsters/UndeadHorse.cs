@@ -13,7 +13,7 @@ namespace Munchkin.Shared.Cards.Doors.Monsters
         public override int VictoryLevels => 1;
         public override int Treasures => 2;
 
-        public override void ApplyBadStuff(Character character)
+        public override void ApplyBadStuff(Game game, Character character)
         {
             character.Level -= 2;
         }
