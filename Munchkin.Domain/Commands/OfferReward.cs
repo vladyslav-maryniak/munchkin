@@ -54,11 +54,9 @@ namespace Munchkin.Domain.Commands
                     return ValidationError.CardDuplication;
                 }
 
-                var victoryTreasures = game.Table.CombatField.MonsterSquad
-                    .Select(x => x.Treasures)
-                    .Aggregate((result, x) => result + x);
+                var combatField = game.Table.CombatField;
 
-                if (request.NumberOfTreasures < 0 || request.NumberOfTreasures > victoryTreasures)
+                if (request.NumberOfTreasures < 0 || request.NumberOfTreasures > combatField.VictoryTreasures)
                 {
                     return ValidationError.InvalidNumberOfTreasures;
                 }
@@ -80,16 +78,14 @@ namespace Munchkin.Domain.Commands
             {
                 var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
                 var game = response.Game!;
-                var victoryTreasures = game.Table.CombatField.MonsterSquad
-                    .Select(x => x.Treasures)
-                    .Aggregate((result, x) => result + x);
+                var combatField = game.Table.CombatField;
 
                 var @event = new PlayerOfferedRewardEvent(
                     request.GameId,
                     request.OfferorId,
                     request.ItemCardIds,
                     request.CardIdsForPlay,
-                    victoryTreasures,
+                    combatField.VictoryTreasures,
                     request.NumberOfTreasures,
                     request.HelperPicksFirst);
 

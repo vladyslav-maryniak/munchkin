@@ -44,33 +44,23 @@ namespace Munchkin.Domain.Commands
             public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
             {
                 var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
+
+                var @event = new CombatCompletedEvent(request.GameId);
+                await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
+
                 var game = response.Game!;
 
-                var monsterCombatStrength = game.Table.CombatField.MonsterSquad
-                    .Select(x => x.Level)
-                    .Aggregate((result, x) => result + x);
 
-                var characterSquad = game.Table.CombatField.CharacterSquad;
-                var squadCombatStrength =
-                    characterSquad
-                        .Select(x => x.Level)
-                        .Aggregate((result, x) => result + x) +
-                    characterSquad
-                        .Select(x => x.Equipment.Bonus)
-                        .Aggregate((result, x) => result + x);
+                var combatField = game.Table.CombatField;
+                var reward = combatField.Reward;
 
-                var reward = game.Table.CombatField.Reward;
-                if (reward is not null && squadCombatStrength > monsterCombatStrength)
+                if (reward is not null && combatField.CharacterSquadStrength > combatField.MonsterSquadStrength)
                 {
                     foreach (var cardId in reward.CardIdsForPlay)
                     {
                         await mediator.Send(new PlayCard.Command(request.GameId, reward.OffereeId, cardId));
                     }
                 }
-
-                var @event = new CombatCompletedEvent(request.GameId);
-
-                await mediator.Send(new PublishEvent.Command(@event), cancellationToken);
 
                 return new Response();
             }

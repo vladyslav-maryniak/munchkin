@@ -12,6 +12,50 @@ namespace Munchkin.Shared.Models
         public Reward? Reward { get; set; }
         public CurseCard? CursePlace { get; set; }
 
+        public int VictoryLevels
+            => MonsterSquad.Select(x => x.VictoryLevels)
+                           .Aggregate((result, x) => result + x);
+
+        public int VictoryTreasures
+        {
+            get
+            {
+                var monsterTreasures = MonsterSquad
+                    .Select(x => x.Treasures);
+                var enhancerTreasures = MonsterEnhancers
+                    .SelectMany(x => x.Value)
+                    .Select(x => x.Treasures);
+
+                return monsterTreasures.Concat(enhancerTreasures)
+                                       .Aggregate((result, x) => result + x);
+            }
+        }
+
+        public int MonsterSquadStrength
+        {
+            get
+            {
+                var levels = MonsterSquad.Select(x => x.Level);
+                var enhancers = MonsterEnhancers
+                    .SelectMany(x => x.Value)
+                    .Select(x => x.Bonus);
+
+                return levels.Concat(enhancers)
+                             .Aggregate((result, x) => result + x);
+            }
+        }
+
+        public int CharacterSquadStrength
+        {
+            get
+            {
+                var levels = CharacterSquad.Select(x => x.Level);
+                var bonuses = CharacterSquad.Select(x => x.Equipment.Bonus);
+
+                return levels.Concat(bonuses)
+                             .Aggregate((result, x) => result + x);
+            }
+        }
 
         public IEnumerable<MunchkinCard> Clear()
         {

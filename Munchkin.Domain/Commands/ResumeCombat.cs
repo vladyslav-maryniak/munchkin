@@ -51,21 +51,9 @@ namespace Munchkin.Domain.Commands
             {
                 var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
                 var game = response.Game!;
+                var combatField = game.Table.CombatField;
 
-                var monsterCombatStrength = game.Table.CombatField.MonsterSquad
-                    .Select(x => x.Level)
-                    .Aggregate((result, x) => result + x);
-
-                var characterSquad = game.Table.CombatField.CharacterSquad;
-                var squadCombatStrength =
-                    characterSquad
-                        .Select(x => x.Level)
-                        .Aggregate((result, x) => result + x) +
-                    characterSquad
-                        .Select(x => x.Equipment.Bonus)
-                        .Aggregate((result, x) => result + x);
-
-                IGameEvent @event = squadCombatStrength > monsterCombatStrength ?
+                IGameEvent @event = combatField.CharacterSquadStrength > combatField.MonsterSquadStrength ?
                     new CharacterWonCombatEvent(request.GameId, request.CharacterId) :
                     new CharacterRanAwayEvent(request.GameId, request.CharacterId);
 
