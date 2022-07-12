@@ -1,5 +1,4 @@
-﻿using Munchkin.Shared.Cards.Base;
-using Munchkin.Shared.Cards.Base.Treasures;
+﻿using Munchkin.Shared.Cards.Base.Treasures;
 using Munchkin.Shared.Cards.Base.Treasures.Items;
 
 namespace Munchkin.Shared.Models
@@ -31,7 +30,27 @@ namespace Munchkin.Shared.Models
             }
         }
 
-        public ItemCard TakeOff(Guid itemCardId)
+        public ItemCard[] TakeOff(params ItemCard?[] itemCards)
+        {
+            List<ItemCard> takenOffItems = new();
+            foreach (var item in itemCards)
+            {
+                if (item is null)
+                {
+                    continue;
+                }
+
+                var takenOffItem = TakeOff(item.Id);
+
+                if (takenOffItem is not null)
+                {
+                    takenOffItems.Add(takenOffItem);
+                }
+            }
+            return takenOffItems.ToArray();
+        }
+
+        public ItemCard? TakeOff(Guid itemCardId)
         {
             ItemCard? takenOffItem = null;
             
@@ -64,9 +83,9 @@ namespace Munchkin.Shared.Models
             return takenOffItem!;
         }
 
-        public IEnumerable<MunchkinCard> ToEnumerable()
+        public IEnumerable<ItemCard> ToEnumerable()
         {
-            List<MunchkinCard> equipment = new();
+            List<ItemCard> equipment = new();
 
             if (Headgear is not null)
             {
@@ -91,5 +110,15 @@ namespace Munchkin.Shared.Models
 
             return equipment;
         }
+
+        public bool Has(ItemCard card) => card switch
+        {
+            HeadgearCard => Headgear is not null,
+            ArmorCard => Armor is not null,
+            FootgearCard => Footgear is not null,
+            OneHandCard => LeftHand is not null && RightHand is not null,
+            TwoHandsCard => LeftHand is not null || RightHand is not null,
+            _ => false,
+        };
     }
 }

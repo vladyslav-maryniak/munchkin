@@ -269,5 +269,15 @@ namespace Munchkin.API.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("{gameId:guid}/loot-room")]
+        public async Task<ActionResult> LootRoomAsync(
+            Guid gameId, PlayerEventDto dto, CancellationToken cancellationToken)
+        {
+            var command = new LootRoom.Command(gameId, dto.PlayerId);
+            var response = await mediator.Send(command, cancellationToken);
+
+            return Ok(response);
+        }
     }
 }

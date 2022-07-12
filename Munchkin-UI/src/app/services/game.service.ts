@@ -314,6 +314,17 @@ export class GameService {
     return response.ok;
   }
 
+  lootRoom(gameId: string, playerId: string): Observable<HttpResponse<Object>> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/loot-room`;
+    const body = { playerId };
+
+    return this.httpClient.post(endpoint, body, options).pipe(
+      catchError((response: HttpErrorResponse) => {
+        return this.handleHttpError(response, this.matSnackBar);
+      })
+    );
+  }
+
   handleHttpError(
     response: HttpErrorResponse,
     matSnackBar: MatSnackBar

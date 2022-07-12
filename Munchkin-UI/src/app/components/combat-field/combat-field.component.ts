@@ -98,6 +98,7 @@ export class CombatFieldComponent
     ['PlayerWonGameEvent', this.onPlayerWonGameEvent],
     ['MonsterCardPlayedEvent', this.onMonsterCardPlayedEvent],
     ['CurseCardPlayedEvent', this.onCurseCardPlayedEvent],
+    ['PlayerLootedRoomEvent', this.onPlayerLootedRoomEvent],
   ]);
 
   constructor(
@@ -218,6 +219,10 @@ export class CombatFieldComponent
   }
 
   async onCurseCardPlayedEvent(): Promise<void> {}
+
+  async onPlayerLootedRoomEvent(): Promise<void> {
+    await this.transitionTo(new WaitingState());
+  }
 
   applyCurse = async (): Promise<void> => {
     await this.gameService.applyCurse(this.game.id, this.character.id);
