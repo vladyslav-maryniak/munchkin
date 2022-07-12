@@ -3,6 +3,7 @@
     public abstract class MunchkinCard
     {
         public Guid Id { get; set; }
+        public abstract string Code { get; }
         public abstract string Name { get; }
         public abstract string Description { get; }
 

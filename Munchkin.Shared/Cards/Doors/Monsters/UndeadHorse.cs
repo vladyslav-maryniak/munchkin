@@ -5,6 +5,7 @@ namespace Munchkin.Shared.Cards.Doors.Monsters
 {
     public class UndeadHorse : MonsterCard
     {
+        public override string Code => "undead_horse";
         public override int Level => 4;
         public override string Name => "Undead Horse";
         public override string Description => "+5 against Dwarves.";

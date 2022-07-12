@@ -5,6 +5,7 @@ namespace Munchkin.Shared.Cards.Treasures.OneShots
 {
     public class Doppleganger : OneShotCard
     {
+        public override string Code => "doppleganger";
         public override string Name => "Doppleganger";
         public override string Description => "Summons your exact duplicate, who fights beside you, so you double your combat strength. You may use the Doppleganger only when you are the only player in the combat. Usable once only.";
         public override int GoldPieces => 300;

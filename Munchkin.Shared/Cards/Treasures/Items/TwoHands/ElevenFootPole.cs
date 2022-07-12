@@ -4,6 +4,7 @@ namespace Munchkin.Shared.Cards.Treasures.Items.TwoHands
 {
     public class ElevenFootPole : TwoHandsCard
     {
+        public override string Code => "eleven_foot_pole";
         public override int Bonus => 1;
         public override int GoldPieces => 200;
         public override string Name => "Eleven-foot pole";
