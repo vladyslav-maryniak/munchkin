@@ -1,5 +1,6 @@
 ﻿using Munchkin.Shared.Events.Base;
 using Munchkin.Shared.Models;
+using System.Security.Cryptography;
 
 namespace Munchkin.Shared.Events
 {
@@ -7,8 +8,7 @@ namespace Munchkin.Shared.Events
     {
         public void Apply(Game game)
         {
-            var random = new Random();
-            game.Table.DieValue = random.Next(1, 7);
+            game.Table.DieValue = RandomNumberGenerator.GetInt32(1, 7);
         }
     }
 }
