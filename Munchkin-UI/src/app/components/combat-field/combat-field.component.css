@@ -1,7 +1,7 @@
 .combat-field {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 7fr 1fr;
+  grid-template-rows: 7fr 1.1fr;
 
   height: 100%;
 }
@@ -45,4 +45,8 @@
   align-items: center;
 
   width: 50%;
+}
+
+.monster .mat-badge-content {
+  font-size: 10px;
 }

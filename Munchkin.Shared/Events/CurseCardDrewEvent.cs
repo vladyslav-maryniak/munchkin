@@ -9,7 +9,7 @@ namespace Munchkin.Shared.Events
         public void Apply(Game game)
         {
             var table = game.Table;
-            var card = (CurseCard)table.DoorDeck.Pop();
+            var card = (CurseCard)table.DrawDoorCard(out bool _);
             var character = table.Places
                 .First(x => x.Player.Id == PlayerId)
                 .Character;

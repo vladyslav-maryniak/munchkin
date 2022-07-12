@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-export interface DialogData {
-  title: string;
+export interface MetaDialogData {
+  key: string;
   value: string;
 }
 
@@ -14,7 +14,7 @@ export interface DialogData {
 export class MetadataDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<MetadataDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: MetaDialogData
   ) {}
 
   onSubmit(): void {
@@ -26,6 +26,6 @@ export class MetadataDialogComponent {
   }
 
   get title(): string {
-    return this.data.title.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
+    return this.data.key.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
   }
 }

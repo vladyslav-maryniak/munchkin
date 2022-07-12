@@ -2,6 +2,7 @@
 using Munchkin.Application.Services.Base;
 using Munchkin.Domain.Queries;
 using Munchkin.Domain.Validation;
+using Munchkin.Shared.Cards.Base.Doors;
 using Munchkin.Shared.Cards.Base.Treasures;
 using Munchkin.Shared.Events;
 using Munchkin.Shared.Events.Base;
@@ -74,6 +75,12 @@ namespace Munchkin.Domain.Commands
                         request.GameId, request.PlayerId, request.CardId, request.Metadata),
                     GoUpLevelCard => new GoUpLevelCardPlayedEvent(
                         request.GameId, request.PlayerId, request.CardId),
+                    MonsterCard => new MonsterCardPlayedEvent(
+                        request.GameId, request.PlayerId, request.CardId),
+                    MonsterEnhancerCard => new MonsterEnhancerCardPlayedEvent(
+                        request.GameId, request.PlayerId, request.CardId, request.Metadata),
+                    CurseCard => new CurseCardPlayedEvent(
+                        request.GameId, request.PlayerId, request.CardId, request.Metadata),
                     _ => throw new NotImplementedException()
                 };
 

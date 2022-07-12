@@ -64,6 +64,7 @@ namespace Munchkin.Domain.Commands
                 {
                     MonsterCard => new MonsterCardDrewEvent(request.GameId, request.PlayerId),
                     CurseCard => new CurseCardDrewEvent(request.GameId, request.PlayerId),
+                    MonsterEnhancerCard => new MonsterEnhancerCardDrewEvent(request.GameId, request.PlayerId),
                     _ => throw new NotImplementedException(),
                 };
 

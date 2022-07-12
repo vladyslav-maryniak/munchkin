@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Munchkin.API.DTOs;
-using Munchkin.Shared.Cards.Base;
 using Munchkin.Shared.Cards.Base.Treasures.Items;
 using Munchkin.Shared.Models;
 
@@ -21,8 +20,6 @@ namespace Munchkin.API.AutoMapperProfiles
             CreateMap<Place, PlaceDto>();
             CreateMap<CombatField, CombatFieldDto>();
             CreateMap<Equipment, EquipmentDto>();
-            
-            CreateMap<MunchkinCard, MunchkinCardDto>();
 
             CreateMap<HeadgearCard, ItemCardDto>();
             CreateMap<ArmorCard, ItemCardDto>();
