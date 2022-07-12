@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { firstValueFrom, lastValueFrom, Subscription } from 'rxjs';
 import { Game } from 'src/app/models/game';
 import { MunchkinCard } from 'src/app/models/munchkin-card';
 import { Player } from 'src/app/models/player';
@@ -110,11 +110,8 @@ export class InHandCardPanelComponent implements OnInit, OnDestroy {
       }
     }
 
-    await this.gameService.playCard(
-      this.game.id,
-      this.player.id,
-      card.id,
-      metadata
+    await firstValueFrom(
+      this.gameService.playCard(this.game.id, this.player.id, card.id, metadata)
     );
   }
 
@@ -127,7 +124,9 @@ export class InHandCardPanelComponent implements OnInit, OnDestroy {
   async sellCards(): Promise<void> {
     const cardIds = this.selectedCards.map((x) => x.id);
     this.clearSelectedCards();
-    await this.gameService.sellCards(this.game.id, this.player.id, cardIds);
+    await firstValueFrom(
+      this.gameService.sellCards(this.game.id, this.player.id, cardIds)
+    );
   }
 
   async onItemCardPlayedEvent(): Promise<void> {}

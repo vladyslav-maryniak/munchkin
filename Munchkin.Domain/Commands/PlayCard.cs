@@ -47,6 +47,51 @@ namespace Munchkin.Domain.Commands
                     return ValidationError.NoCard;
                 }
 
+                var card = place.InHandCards.First(x => x.Id == request.CardId);
+                var equipment = place.Character.Equipment;
+
+                switch (card)
+                {
+                    case ItemCard itemCard:
+                        if (equipment.Has(itemCard))
+                        {
+                            return ValidationError.ItemIsEquipped;
+                        }
+                        if (game.Table.CombatField.CharacterSquad.Any(x => x.Id == place.Character.Id))
+                        {
+                            return ValidationError.EquipmentDuringCombat;
+                        }
+                        break;
+
+                    case GoUpLevelCard:
+                        if (place.Character.Level > 8)
+                        {
+                            return ValidationError.TooHighLevel;
+                        }
+                        if (game.Table.CombatField.CharacterSquad.Any(x => x.Id == place.Character.Id))
+                        {
+                            return ValidationError.GoUpLevelDuringCombat;
+                        }
+                        break;
+
+                    case MonsterCard:
+                        if (game.State != "DangerousDecisionMakingState")
+                        {
+                            return ValidationError.UnexpectedCommand;
+                        }
+                        break;
+
+                    case MonsterEnhancerCard:
+                        if (!game.Table.CombatField.MonsterSquad.Any())
+                        {
+                            return ValidationError.EnhancementOnEmptyCombatField;
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+
                 return ValidationResult.Success;
             }
         }

@@ -30,6 +30,17 @@ namespace Munchkin.Domain.Commands
                     return ValidationError.NoGame;
                 }
 
+                if (!game.IsPlayerTurn(request.PlayerId))
+                {
+                    return ValidationError.UnexpectedTurn;
+                }
+
+                var allowedStates = new[] { "WaitingState", "DangerousDecisionMakingState" };
+                if (!allowedStates.Contains(game.State))
+                {
+                    return ValidationError.UnexpectedCommand;
+                }
+
                 if (!game.Table.Places.Any(x => x.Player.Id == request.PlayerId))
                 {
                     return ValidationError.NoPlayer;

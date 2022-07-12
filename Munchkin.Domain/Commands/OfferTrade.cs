@@ -43,10 +43,12 @@ namespace Munchkin.Domain.Commands
                 var offeror = places.First(x => x.Player.Id == request.OfferorId);
                 var offeree = places.First(x => x.Player.Id == request.OffereeId);
 
-                if (!request.OfferorItemCardIds.Any(cardId
-                        => offeror.Character.Equipment.ToEnumerable().Any(x => x.Id == cardId)) ||
-                    !request.OffereeItemCardIds.Any(cardId
-                        => offeree.Character.Equipment.ToEnumerable().Any(x => x.Id == cardId)))
+                if (!(!request.OfferorItemCardIds.Any()
+                      || offeror.Character.Equipment.ToEnumerable()
+                                                    .Any(x => request.OfferorItemCardIds.Contains(x.Id))) ||
+                    !(!request.OffereeItemCardIds.Any()
+                      || offeree.Character.Equipment.ToEnumerable()
+                                                    .Any(x => request.OffereeItemCardIds.Contains(x.Id))))
                 {
                     return ValidationError.NoCard;
                 }

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { Game } from 'src/app/models/game';
 import { Player } from 'src/app/models/player';
 import { CardService } from 'src/app/services/card.service';
@@ -37,7 +37,15 @@ export class TableComponent implements OnInit, OnDestroy {
 
   async drawCard(): Promise<void> {
     if (this.game && this.player) {
-      await this.gameService.drawCard(this.game.id, this.player.id);
+      if (this.game.state === 'DangerousDecisionMakingState') {
+        await firstValueFrom(
+          this.gameService.lootRoom(this.game.id, this.player.id)
+        );
+      } else {
+        await firstValueFrom(
+          this.gameService.drawCard(this.game.id, this.player.id)
+        );
+      }
     }
   }
 
