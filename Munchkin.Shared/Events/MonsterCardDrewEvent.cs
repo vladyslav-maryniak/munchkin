@@ -10,7 +10,7 @@ namespace Munchkin.Shared.Events
         {
             var place = game.Table.Places
                 .First(x => x.Player.Id == PlayerId);
-            var card = (MonsterCard)game.Table.DoorDeck.Pop();
+            var card = (MonsterCard)game.Table.DrawDoorCard(out bool _);
             
             game.Table.CombatField.CharacterSquad.Add(place.Character);
             game.Table.CombatField.MonsterSquad.Add(card);

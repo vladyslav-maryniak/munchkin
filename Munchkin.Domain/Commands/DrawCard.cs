@@ -53,12 +53,13 @@ namespace Munchkin.Domain.Commands
                 var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
                 var game = response.Game!;
 
-                if (game.IsPlayerTurn(request.PlayerId) == false)
+                var card = game.Table.PeekDoorCard(out bool shuffled);
+                if (shuffled)
                 {
-                    return new Response();
+                    var innerEvent = new DoorDeckRanOutEvent(game.Id, game.Table.DoorDeck.Select(x => x.Id).ToList());
+                    await mediator.Send(new PublishEvent.Command(innerEvent), cancellationToken);
                 }
 
-                var card = game.Table.DoorDeck.Peek();
                 IGameEvent @event = card switch
                 {
                     MonsterCard => new MonsterCardDrewEvent(request.GameId, request.PlayerId),

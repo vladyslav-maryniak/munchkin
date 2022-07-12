@@ -15,7 +15,7 @@ namespace Munchkin.Shared.Events
 
             for (int i = 0; i < combatField.VictoryTreasures; i++)
             {
-                place.InHandCards.Add(game.Table.TreasureDeck.Pop());
+                place.InHandCards.Add(game.Table.DrawTreasureCard(out bool _));
             }
 
             if (combatField.Reward is not null && combatField.Reward.OffereeId != Guid.Empty)
