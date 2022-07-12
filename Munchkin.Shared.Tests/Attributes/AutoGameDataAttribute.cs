@@ -27,6 +27,7 @@ namespace Munchkin.Shared.Tests.Attributes
                 fixture.Register(() => Mock.Of<GoUpLevelCard>());
                 fixture.Register(() => Mock.Of<ItemCard>());
                 fixture.Register(() => Mock.Of<OneShotCard>());
+                fixture.Register(() => Mock.Of<MonsterEnhancerCard>());
 
                 fixture.Register(() => Mock.Of<Offer>());
 

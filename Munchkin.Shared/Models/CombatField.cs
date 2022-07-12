@@ -1,4 +1,5 @@
-﻿using Munchkin.Shared.Cards.Base.Doors;
+﻿using Munchkin.Shared.Cards.Base;
+using Munchkin.Shared.Cards.Base.Doors;
 using Munchkin.Shared.Offers;
 
 namespace Munchkin.Shared.Models
@@ -6,6 +7,7 @@ namespace Munchkin.Shared.Models
     public class CombatField
     {
         public List<MonsterCard> MonsterSquad { get; set; } = new();
+        public Dictionary<Guid, List<MonsterEnhancerCard>> MonsterEnhancers { get; set; } = new();
         public List<Character> CharacterSquad { get; set; } = new();
         public Reward? Reward { get; set; }
         public CurseCard? CursePlace { get; set; }
