@@ -1,4 +1,5 @@
 export interface MunchkinCard {
+  code: string;
   id: string;
   name: string;
   description: string;

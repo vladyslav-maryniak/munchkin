@@ -65,7 +65,7 @@ export class CardService {
   }
 
   getImageFileName(card: MunchkinCard): string {
-    return card.name.toLowerCase().split(' ').join('_') + '.avif';
+    return card.code + '.avif';
   }
 
   isSaleable(object: Object): boolean {
