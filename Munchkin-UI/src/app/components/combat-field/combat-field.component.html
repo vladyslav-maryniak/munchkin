@@ -12,9 +12,12 @@
     </div>
 
     <div
-      class="card"
+      class="card monster"
       *ngFor="let monster of monsterSquad"
       [matTooltip]="getCardDescription(monster)"
+      [matBadge]="getMonsterEnhancers(monster)"
+      [matBadgeHidden]="getMonsterEnhancers(monster) === '0'"
+      matBadgeSize="medium"
     >
       <img src="{{ getCardImageSrc(monster) }}" alt="{{ monster.name }}" />
     </div>

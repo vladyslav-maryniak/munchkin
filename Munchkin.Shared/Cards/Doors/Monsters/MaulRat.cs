@@ -5,6 +5,7 @@ namespace Munchkin.Shared.Cards.Doors.Monsters
 {
     public class MaulRat : MonsterCard
     {
+        public override string Code => "maul_rat";
         public override int Level => 1;
         public override string Name => "Maul Rat";
         public override string Description => "A create from Hell. +3 against Clerics.";
@@ -12,9 +13,9 @@ namespace Munchkin.Shared.Cards.Doors.Monsters
         public override int VictoryLevels => 1;
         public override int Treasures => 1;
 
-        public override void ApplyBadStuff(Character character)
+        public override void ApplyBadStuff(Game game, Character character)
         {
-            character.Level -= 1;
+            character.Level--;
         }
     }
 }

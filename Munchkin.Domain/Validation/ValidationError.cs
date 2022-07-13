@@ -52,5 +52,26 @@
 
         public static ValidationResult NoSaleableCards
             => ValidationResult.Fail("There are no saleable cards in the specified collection of card IDs.");
+
+        public static ValidationResult UnexpectedTurn
+            => ValidationResult.Fail("The other player must take the turn now.");
+
+        public static ValidationResult UnexpectedCommand
+            => ValidationResult.Fail("Now is not the time for that action.");
+
+        public static ValidationResult ItemIsEquipped
+            => ValidationResult.Fail("This type of item is already on the character.");
+
+        public static ValidationResult TooHighLevel
+            => ValidationResult.Fail("The character has too high a level for this action.");
+
+        public static ValidationResult EnhancementOnEmptyCombatField
+            => ValidationResult.Fail("There is not a monster on the combat field to apply enhancement.");
+
+        public static ValidationResult EquipmentDuringCombat
+            => ValidationResult.Fail("The character cannot be equipped on the combat field.");
+
+        public static ValidationResult GoUpLevelDuringCombat
+            => ValidationResult.Fail("The character's level cannot be raised on the combat field.");
     }
 }

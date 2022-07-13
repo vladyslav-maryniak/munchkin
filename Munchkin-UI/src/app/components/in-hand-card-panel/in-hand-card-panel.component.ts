@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { firstValueFrom, lastValueFrom, Subscription } from 'rxjs';
 import { Game } from 'src/app/models/game';
 import { MunchkinCard } from 'src/app/models/munchkin-card';
 import { Player } from 'src/app/models/player';
@@ -9,7 +9,10 @@ import { CardService } from 'src/app/services/card.service';
 import { GameService } from 'src/app/services/game.service';
 import { SharedDataService } from 'src/app/services/shared-data.service';
 import { SignalrService } from 'src/app/services/signalr.service';
-import { MetadataDialogComponent } from '../metadata-dialog/metadata-dialog.component';
+import {
+  MetadataDialogComponent,
+  MetaDialogData,
+} from '../metadata-dialog/metadata-dialog.component';
 
 @Component({
   selector: 'app-in-hand-card-panel',
@@ -42,6 +45,7 @@ export class InHandCardPanelComponent implements OnInit, OnDestroy {
     ['ItemCardPlayedEvent', this.onItemCardPlayedEvent],
     ['OneShotCardPlayedEvent', this.onOneShotCardPlayedEvent],
     ['GoUpLevelCardPlayedEvent', this.onGoUpLevelCardPlayedEvent],
+    ['MonsterEnhancerCardPlayedEvent', this.onMonsterEnhancerCardPlayedEvent],
     ['PlayerSoldCardsEvent', this.onPlayerSoldCardsEvent],
   ]);
 
@@ -78,33 +82,51 @@ export class InHandCardPanelComponent implements OnInit, OnDestroy {
 
   async playCard(card: MunchkinCard): Promise<void> {
     let metadata = card.metadata;
+
     if (card.metadata) {
       metadata = new Map<string, string>(Object.entries(card.metadata));
-      const dialogConfig = new MatDialogConfig();
 
       for (var key of metadata.keys()) {
-        dialogConfig.data = { title: key };
-        const dialogRef = this.dialog.open(
-          MetadataDialogComponent,
-          dialogConfig
-        );
-        const value = await lastValueFrom(dialogRef.afterClosed());
-        metadata.set(key, value);
+        switch (key) {
+          case 'monsterCardId':
+            const monsterId =
+              this.game.table.combatField.monsterSquad[0]?.id ??
+              '00000000-0000-0000-0000-000000000000';
+            metadata.set(key, monsterId);
+            break;
+
+          case 'cursedCharacterId':
+            const places = this.game.table.places.filter(
+              (x) => x.player.id !== this.player.id
+            );
+            metadata.set(key, places[0].character.id);
+            break;
+
+          case 'dieValue':
+            const dieValue = await this.getDieValue();
+            metadata.set(key, dieValue);
+            break;
+        }
       }
     }
 
-    await this.gameService.playCard(
-      this.game.id,
-      this.player.id,
-      card.id,
-      metadata
+    await firstValueFrom(
+      this.gameService.playCard(this.game.id, this.player.id, card.id, metadata)
     );
+  }
+
+  private getDieValue(): Promise<string> {
+    const data = { key: 'dieValue' } as MetaDialogData;
+    const dialogRef = this.dialog.open(MetadataDialogComponent, { data });
+    return lastValueFrom(dialogRef.afterClosed());
   }
 
   async sellCards(): Promise<void> {
     const cardIds = this.selectedCards.map((x) => x.id);
     this.clearSelectedCards();
-    await this.gameService.sellCards(this.game.id, this.player.id, cardIds);
+    await firstValueFrom(
+      this.gameService.sellCards(this.game.id, this.player.id, cardIds)
+    );
   }
 
   async onItemCardPlayedEvent(): Promise<void> {}
@@ -112,6 +134,8 @@ export class InHandCardPanelComponent implements OnInit, OnDestroy {
   async onOneShotCardPlayedEvent(): Promise<void> {}
 
   async onGoUpLevelCardPlayedEvent(): Promise<void> {}
+
+  async onMonsterEnhancerCardPlayedEvent(): Promise<void> {}
 
   async onPlayerSoldCardsEvent(): Promise<void> {}
 
@@ -124,10 +148,7 @@ export class InHandCardPanelComponent implements OnInit, OnDestroy {
   }
 
   selectCard(card: MunchkinCard): void {
-    if (
-      (!this.cardService.isSaleable(card) && this.multiselect) ||
-      (this.cardService.isItemCard(card) && this.isPlayerInCombat())
-    ) {
+    if (!this.cardService.isSaleable(card) && this.multiselect) {
       return;
     }
 

@@ -38,7 +38,7 @@ namespace Munchkin.Shared.Tests.Events
             @event.Apply(game);
 
             // Assert
-            Mock.Get(curseCard).Verify(m => m.Apply(It.IsAny<Character>()));
+            Mock.Get(curseCard).Verify(m => m.Apply(It.IsAny<Game>(), It.IsAny<Character>()));
         }
 
         [Theory, AutoGameData]

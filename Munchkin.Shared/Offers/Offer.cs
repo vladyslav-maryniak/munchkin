@@ -36,7 +36,10 @@ namespace Munchkin.Shared.Offers
             foreach (var itemCardId in itemCardIds)
             {
                 var takenOffItem = From.Character.Equipment.TakeOff(itemCardId);
-                To.InHandCards.Add(takenOffItem);
+                if (takenOffItem is not null)
+                {
+                    To.InHandCards.Add(takenOffItem);
+                }
             }
         }
 

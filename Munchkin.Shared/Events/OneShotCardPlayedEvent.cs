@@ -16,6 +16,7 @@ namespace Munchkin.Shared.Events
 
             if (card.TryUse(game.Table, Metadata))
             {
+                game.Table.Discard(card);
                 place.InHandCards.Remove(card);
             }
         }

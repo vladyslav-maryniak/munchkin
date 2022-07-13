@@ -12,7 +12,9 @@ import { CombatCompletionState } from 'src/app/game-states/combat-field/combat-c
 import { CombatInitiationState } from 'src/app/game-states/combat-field/combat-initiation-state';
 import { CombatResumptionState } from 'src/app/game-states/combat-field/combat-resumption-state';
 import { CurseApplicationState } from 'src/app/game-states/combat-field/curse-application-state';
+import { DangerousDecisionMakingState } from 'src/app/game-states/combat-field/dangerous-decision-making-state';
 import { EscapingState } from 'src/app/game-states/combat-field/escaping-state';
+import { GameCompletion } from 'src/app/game-states/combat-field/game-completion';
 import { RunAwayRollResolutionState } from 'src/app/game-states/combat-field/run-away-roll-resolution-state';
 import { RunningAwayState } from 'src/app/game-states/combat-field/running-away-state';
 import { WaitingState } from 'src/app/game-states/combat-field/waiting-state';
@@ -81,6 +83,7 @@ export class CombatFieldComponent
   private eventHandlers = new Map<string, (...args: any[]) => Promise<void>>([
     ['MonsterCardDrewEvent', this.onMonsterCardDrewEvent],
     ['CurseCardDrewEvent', this.onCurseCardDrewEvent],
+    ['MonsterEnhancerCardDrewEvent', this.onMonsterEnhancerCardDrewEvent],
     ['CharacterAppliedCurseEvent', this.onCharacterAppliedCurseEvent],
     ['CharacterWonCombatEvent', this.onCharacterWonCombatEvent],
     ['CombatCompletedEvent', this.onCombatCompletedEvent],
@@ -92,6 +95,10 @@ export class CombatFieldComponent
     ['CharacterAppliedBadStuffEvent', this.onCharacterAppliedBadStuffEvent],
     ['CharacterEscapedEvent', this.onCharacterEscapedEvent],
     ['OneShotCardPlayedEvent', this.onOneShotCardPlayedEvent],
+    ['PlayerWonGameEvent', this.onPlayerWonGameEvent],
+    ['MonsterCardPlayedEvent', this.onMonsterCardPlayedEvent],
+    ['CurseCardPlayedEvent', this.onCurseCardPlayedEvent],
+    ['PlayerLootedRoomEvent', this.onPlayerLootedRoomEvent],
   ]);
 
   constructor(
@@ -152,6 +159,10 @@ export class CombatFieldComponent
     await this.transitionTo(new CurseApplicationState());
   }
 
+  async onMonsterEnhancerCardDrewEvent(): Promise<void> {
+    await this.transitionTo(new DangerousDecisionMakingState());
+  }
+
   async onCharacterAppliedCurseEvent(): Promise<void> {
     await this.transitionTo(new WaitingState());
   }
@@ -190,11 +201,27 @@ export class CombatFieldComponent
   }
 
   async onOneShotCardPlayedEvent(): Promise<void> {
-    await this.transitionTo(new RunAwayRollResolutionState());
+    if (this.game.state === 'RunAwayRollResolutionState') {
+      await this.transitionTo(new RunAwayRollResolutionState());
+    }
   }
 
   async onCharacterEscapedEvent(): Promise<void> {
     await this.transitionTo(new EscapingState(this.snackBar));
+  }
+
+  async onPlayerWonGameEvent(): Promise<void> {
+    await this.transitionTo(new GameCompletion(this.dialog));
+  }
+
+  async onMonsterCardPlayedEvent(): Promise<void> {
+    await this.transitionTo(new CombatInitiationState());
+  }
+
+  async onCurseCardPlayedEvent(): Promise<void> {}
+
+  async onPlayerLootedRoomEvent(): Promise<void> {
+    await this.transitionTo(new WaitingState());
   }
 
   applyCurse = async (): Promise<void> => {
@@ -311,6 +338,21 @@ export class CombatFieldComponent
 
   getCardImageSrc(card: MunchkinCard): string {
     return this.cardService.getCardImageSrc(card);
+  }
+
+  getMonsterEnhancers(card: MunchkinCard): string {
+    let bonus = 0;
+    if (this.combatField) {
+      const enhancers = new Map<string, MunchkinCard[]>(
+        Object.entries(this.combatField.monsterEnhancers)
+      );
+      bonus =
+        enhancers
+          ?.get(card.id)
+          ?.map((x) => x.bonus ?? 0)
+          .reduce((amount, current) => amount + current, 0) ?? 0;
+    }
+    return bonus > 0 ? '+' + bonus.toString() : bonus.toString();
   }
 
   ngOnDestroy(): void {

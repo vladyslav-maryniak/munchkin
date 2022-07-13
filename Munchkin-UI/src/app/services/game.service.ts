@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpResponse,
+} from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, Observable } from 'rxjs';
 import { Game } from '../models/game';
 import { Player } from '../models/player';
 import { AuthenticationService } from './authentication.service';
 import { GameLobby } from '../models/game-lobby';
 import { WaitingState } from '../game-states/combat-field/waiting-state';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const options = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -23,7 +29,8 @@ export class GameService {
 
   constructor(
     private httpClient: HttpClient,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private matSnackBar: MatSnackBar
   ) {}
 
   async createGame(): Promise<Game> {
@@ -83,14 +90,13 @@ export class GameService {
     return response.ok;
   }
 
-  async playCard(
+  playCard(
     gameId: string,
     playerId: string,
     cardId: string,
     metadata: Map<string, string> | null
-  ): Promise<boolean> {
+  ): Observable<HttpResponse<Object>> {
     const endpoint = `${this.gameControllerUrl}/${gameId}/play-card`;
-    const bodyMetadata = [];
     metadata?.entries();
 
     const convMap: { [key: string]: string } = {};
@@ -99,20 +105,22 @@ export class GameService {
     });
     const body = { playerId, cardId, metadata: convMap };
 
-    const observable = this.httpClient.post(endpoint, body, options);
-    const response = await firstValueFrom(observable);
-
-    return response.ok;
+    return this.httpClient.post(endpoint, body, options).pipe(
+      catchError((response: HttpErrorResponse) => {
+        return this.handleHttpError(response, this.matSnackBar);
+      })
+    );
   }
 
-  async drawCard(gameId: string, playerId: string): Promise<boolean> {
+  drawCard(gameId: string, playerId: string): Observable<HttpResponse<Object>> {
     const endpoint = `${this.gameControllerUrl}/${gameId}/draw-card`;
     const body = { playerId };
 
-    const observable = this.httpClient.post(endpoint, body, options);
-    const response = await firstValueFrom(observable);
-
-    return response.ok;
+    return this.httpClient.post(endpoint, body, options).pipe(
+      catchError((response: HttpErrorResponse) => {
+        return this.handleHttpError(response, this.matSnackBar);
+      })
+    );
   }
 
   async applyCurse(gameId: string, characterId: string): Promise<boolean> {
@@ -196,18 +204,19 @@ export class GameService {
     return response.ok;
   }
 
-  async sellCards(
+  sellCards(
     gameId: string,
     playerId: string,
     cardIds: string[]
-  ): Promise<boolean> {
+  ): Observable<HttpResponse<Object>> {
     const endpoint = `${this.gameControllerUrl}/${gameId}/sell-cards`;
     const body = { playerId, cardIds };
 
-    const observable = this.httpClient.post(endpoint, body, options);
-    const response = await firstValueFrom(observable);
-
-    return response.ok;
+    return this.httpClient.post(endpoint, body, options).pipe(
+      catchError((response: HttpErrorResponse) => {
+        return this.handleHttpError(response, this.matSnackBar);
+      })
+    );
   }
 
   async acceptOffer(
@@ -303,6 +312,28 @@ export class GameService {
     const response = await firstValueFrom(observable);
 
     return response.ok;
+  }
+
+  lootRoom(gameId: string, playerId: string): Observable<HttpResponse<Object>> {
+    const endpoint = `${this.gameControllerUrl}/${gameId}/loot-room`;
+    const body = { playerId };
+
+    return this.httpClient.post(endpoint, body, options).pipe(
+      catchError((response: HttpErrorResponse) => {
+        return this.handleHttpError(response, this.matSnackBar);
+      })
+    );
+  }
+
+  handleHttpError(
+    response: HttpErrorResponse,
+    matSnackBar: MatSnackBar
+  ): Observable<never> {
+    matSnackBar.open(response.error.errorMessage, undefined, {
+      duration: 3000,
+      verticalPosition: 'top',
+    });
+    throw response;
   }
 
   isPlayerInCombat(game: Game, player: Player): boolean {

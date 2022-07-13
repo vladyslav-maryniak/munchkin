@@ -11,7 +11,7 @@ namespace Munchkin.Shared.Events
                 .First(x => x.Character.Id == CharacterId)
                 .Character;
 
-            game.Table.CombatField.MonsterSquad.ForEach(x => x.ApplyBadStuff(character));
+            game.Table.CombatField.MonsterSquad.ForEach(x => x.ApplyBadStuff(game, character));
 
             if (character.Level < 1)
             {

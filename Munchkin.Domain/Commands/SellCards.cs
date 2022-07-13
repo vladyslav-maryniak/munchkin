@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Munchkin.Application.Services.Base;
 using Munchkin.Domain.Validation;
-using Munchkin.Shared.Cards.Base.Treasures;
+using Munchkin.Shared.Cards.Base;
 using Munchkin.Shared.Events;
 
 namespace Munchkin.Domain.Commands
@@ -35,9 +35,14 @@ namespace Munchkin.Domain.Commands
                     return ValidationError.NoPlayer;
                 }
 
+                if (place.Character.Level > 8)
+                {
+                    return ValidationError.TooHighLevel;
+                }
+
                 var saleableCards = place.InHandCards
                     .Where(x => request.CardIds.Contains(x.Id))
-                    .Cast<ISaleable>();
+                    .Cast<SaleableCard>();
 
                 if (!saleableCards.Any())
                 {

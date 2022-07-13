@@ -15,6 +15,7 @@ namespace Munchkin.Shared.Events
 
             if (card.TryRiseLevel(place.Character))
             {
+                game.Table.Discard(card);
                 place.InHandCards.Remove(card);
             }
         }

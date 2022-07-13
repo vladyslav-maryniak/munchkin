@@ -30,6 +30,17 @@ namespace Munchkin.Domain.Commands
                     return ValidationError.NoGame;
                 }
 
+                if (!game.IsPlayerTurn(request.PlayerId))
+                {
+                    return ValidationError.UnexpectedTurn;
+                }
+
+                var allowedStates = new[] { "WaitingState", "DangerousDecisionMakingState" };
+                if (!allowedStates.Contains(game.State))
+                {
+                    return ValidationError.UnexpectedCommand;
+                }
+
                 if (!game.Table.Places.Any(x => x.Player.Id == request.PlayerId))
                 {
                     return ValidationError.NoPlayer;
@@ -53,16 +64,18 @@ namespace Munchkin.Domain.Commands
                 var response = await mediator.Send(new GetGame.Query(request.GameId), cancellationToken);
                 var game = response.Game!;
 
-                if (game.IsPlayerTurn(request.PlayerId) == false)
+                var card = game.Table.PeekDoorCard(out bool shuffled);
+                if (shuffled)
                 {
-                    return new Response();
+                    var innerEvent = new DoorDeckRanOutEvent(game.Id, game.Table.DoorDeck.Select(x => x.Id).ToList());
+                    await mediator.Send(new PublishEvent.Command(innerEvent), cancellationToken);
                 }
 
-                var card = game.Table.DoorDeck.Peek();
                 IGameEvent @event = card switch
                 {
                     MonsterCard => new MonsterCardDrewEvent(request.GameId, request.PlayerId),
                     CurseCard => new CurseCardDrewEvent(request.GameId, request.PlayerId),
+                    MonsterEnhancerCard => new MonsterEnhancerCardDrewEvent(request.GameId, request.PlayerId),
                     _ => throw new NotImplementedException(),
                 };
 

@@ -36,8 +36,8 @@ namespace Munchkin.Shared.Tests.Events
             @event.Apply(game);
 
             // Assert
-            Mock.Get(firstMonster).Verify(m => m.ApplyBadStuff(It.IsAny<Character>()));
-            Mock.Get(secondMonster).Verify(m => m.ApplyBadStuff(It.IsAny<Character>()));
+            Mock.Get(firstMonster).Verify(m => m.ApplyBadStuff(It.IsAny<Game>(), It.IsAny<Character>()));
+            Mock.Get(secondMonster).Verify(m => m.ApplyBadStuff(It.IsAny<Game>(), It.IsAny<Character>()));
         }
 
         [Theory, InlineData(-1), InlineData(0)]
